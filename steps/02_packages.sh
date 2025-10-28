@@ -13,6 +13,15 @@ PACKAGES=(
   mc
   htop
   flatpak
+  chromium
+  qalc
+  mpv
+  xournalpp
+  okular
+  feh
+  texlive-scheme-medium
+  gimp
+  inkscape
 )
 
 for pkg in "${PACKAGES[@]}"; do

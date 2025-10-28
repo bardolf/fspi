@@ -5,7 +5,7 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$SCRIPT_DIR/lib/logging.sh"
 source "$SCRIPT_DIR/lib/utils.sh"
 
-log_info "Step 22_: Import iTerm2 color schemes for WezTerm"
+log_info "Step 22: Import iTerm2 color schemes for WezTerm"
 
 # --- Target directory for color schemes ---
 COLOR_SCHEMES_DIR="$HOME/.local/share/iTerm2-color-schemes"

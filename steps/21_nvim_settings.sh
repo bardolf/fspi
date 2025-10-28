@@ -5,7 +5,7 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$SCRIPT_DIR/lib/logging.sh"
 source "$SCRIPT_DIR/lib/utils.sh"
 
-log_info "Step 25_: Applying permanent Neovim settings"
+log_info "Step 21: Applying permanent Neovim settings"
 
 # --- Functions (copied from step 20_) ---
 config_step_copy() {
@@ -72,5 +72,3 @@ config_step_copy "$CUSTOM_SETTINGS_SRC" "$NVIM_SETTINGS_DEST"
 
 # Clean up temp files
 rm -rf "$TEMP_DIR"
-
-log_info "Step 21_ completed successfully."

@@ -39,8 +39,4 @@ if ! grep -q "$SHIMS_DIR" "$SHELL_RC"; then
   echo "export PATH=\"$SHIMS_DIR:\$PATH\"" >>"$SHELL_RC"
 fi
 
-# --- Activate Mise automatically (non-interactive) ---
-log_info "Activating Mise (non-interactive)"
-mise activate --non-interactive || log_warn "Mise activation failed. Check documentation at https://mise.jdx.dev"
-
-log_info "Mise installation and activation complete"
+log_info "Mise installation complete"

@@ -5,7 +5,7 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$SCRIPT_DIR/lib/logging.sh"
 source "$SCRIPT_DIR/lib/utils.sh"
 
-log_info "Step 20_: Installing and managing configuration files"
+log_info "Step 20: Installing and managing configuration files"
 
 # -------------------------
 # Functions for copying configs
@@ -69,5 +69,3 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/foot/foot.ini" "$HOME/.config/foot/foot.ini" \
   "$SCRIPT_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua" \
   "$SCRIPT_DIR/config/sway/sway.conf" "$HOME/.config/sway/config"
-
-log_info "Step 20_ completed successfully."
