@@ -26,6 +26,9 @@ APPS=(
     "org.signal.Signal"
     "com.rtosta.zapzap"
     "com.vivaldi.Vivaldi"
+    "com.bitwarden.desktop"
+    "net.cozic.joplin_desktop"
+    "com.jetbrains.IntelliJ-IDEA-Ultimate"
 )
 
 for app in "${APPS[@]}"; do

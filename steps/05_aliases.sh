@@ -15,6 +15,9 @@ declare -A ALIASES=(
     ["zapzap"]="flatpak run com.rtosta.zapzap"
     ["whatsapp"]="flatpak run com.rtosta.zapzap"
     ["vivaldi"]="flatpak run com.vivaldi.Vivaldi"
+    ["bitwarden"]="flatpak run com.bitwarden.desktop"
+    ["joplin"]="flatpak run net.cozic.joplin_desktop"
+    ["idea"]="flatpak run com.jetbrains.IntelliJ-IDEA-Ultimate"
 )
 
 mkdir -p "$(dirname "$ALIASES_FILE")"
