@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Ovládání jasu Dell monitoru přes ddcutil
+# Použití:
+#   dell-brightness +10   # zvýší jas o 10 %
+#   dell-brightness -15   # sníží jas o 15 %
+
+STEP="$1"
+
+if [[ -z "$STEP" ]]; then
+  echo "Použití: $0 [+/-HODNOTA]"
+  exit 1
+fi
+
+# Zjisti aktuální jas (jen číslo)
+CURRENT=$(ddcutil getvcp 10 | awk -F'current value = ' '{print $2}' | awk '{print $1}' | tr -d ',')
+
+if [[ -z "$CURRENT" ]]; then
+  echo "Nepodařilo se přečíst jas monitoru"
+  exit 2
+fi
+
+# Spočítej nový jas
+NEW=$((CURRENT + STEP))
+
+# Ořízni do rozsahu 0–100
+if ((NEW < 0)); then
+  NEW=0
+elif ((NEW > 100)); then
+  NEW=100
+fi
+
+# Nastav nový jas
+ddcutil setvcp 10 "$NEW"
+
+echo "Jas změněn: ${CURRENT}% → ${NEW}%"
