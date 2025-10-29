@@ -2,14 +2,12 @@
 - waybar
 - vpn 
 - app shortcuts  
-- graphviz
 - sway - parents? hide title bars?
-- dpi?  
 - mise settings add idiomatic_version_file_enable_tools java
-- grim slurp jq satty wl-clipboard libnotify flameshot
 - zsh
 - screenshot / sceenrecords
 - desktop files pro webapps
 - otevreny terminal na stavajici ceste
 - k9s
-- libreoffice
+
+

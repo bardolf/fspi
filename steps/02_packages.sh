@@ -22,6 +22,14 @@ PACKAGES=(
   texlive-scheme-medium
   gimp
   inkscape
+  graphviz
+  libreoffice
+  grim
+  slurp
+  flameshot
+  jq
+  wl-clipboard
+  libnotify
 )
 
 for pkg in "${PACKAGES[@]}"; do

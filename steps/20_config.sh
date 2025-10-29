@@ -68,4 +68,4 @@ log_info "Installing Foot and Sway configuration files"
 config_step_copy_collection \
   "$SCRIPT_DIR/config/foot/foot.ini" "$HOME/.config/foot/foot.ini" \
   "$SCRIPT_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua" \
-  "$SCRIPT_DIR/config/sway/sway.conf" "$HOME/.config/sway/config"
+  "$SCRIPT_DIR/config/sway/config" "$HOME/.config/sway/config"

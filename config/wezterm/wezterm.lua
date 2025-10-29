@@ -3,8 +3,7 @@ local wezterm = require("wezterm")
 return {
 	-- Font settings
 	font = wezterm.font("CaskaydiaMono Nerd Font Mono", { weight = "DemiLight", stretch = "Normal", style = "Normal" }),
-	font_size = 14,
-	--font_antialias = "Subpixel",
+	font_size = 12,
 
 	-- Scrollbar visible
 	enable_scroll_bar = true,
