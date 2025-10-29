@@ -9,3 +9,6 @@
 - grim slurp jq satty wl-clipboard libnotify flameshot
 - zsh
 - screenshot / sceenrecords
+- desktop files pro webapps
+- otevreny terminal na stavajici ceste
+
