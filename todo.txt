@@ -11,4 +11,5 @@
 - screenshot / sceenrecords
 - desktop files pro webapps
 - otevreny terminal na stavajici ceste
-
+- k9s
+- libreoffice
