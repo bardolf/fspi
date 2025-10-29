@@ -27,7 +27,6 @@ fi
 # --- Prepare Neovim config directories ---
 NVIM_CONFIG_DIR="$HOME/.config/nvim"
 NVIM_DATA_DIR="$HOME/.local/share/nvim"
-mkdir -p "$NVIM_CONFIG_DIR" "$NVIM_DATA_DIR"
 
 # --- Clone LazyVim starter config ---
 STARTER_REPO="https://github.com/LazyVim/starter.git"
