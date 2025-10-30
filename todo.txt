@@ -8,6 +8,7 @@
 - screenshot / sceenrecords
 - desktop files pro webapps
 - otevreny terminal na stavajici ceste
-- k9s
-
-
+- notifikace9s
+- vpn-slice - sudo dnf install python3-pip   # pokud nemáš pip
+     sudo pip3 install vpn-slice
+- osd - napr. pro audio controls
