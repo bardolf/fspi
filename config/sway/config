@@ -4,6 +4,12 @@
 #
 # Read `man 5 sway` for a complete reference.
 
+default_border pixel 2
+hide_edge_borders smart
+gaps outer 2
+gaps inner 2
+
+
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
@@ -88,7 +94,7 @@ input type:keyboard {
 # Basics:
 #
     # Start a terminal
-    bindsym $mod+Return exec $term
+    bindsym $mod+Return exec --no-startup-id $term
 
     # Kill focused window
     bindsym $mod+w kill
@@ -243,6 +249,11 @@ bindsym $mod+r mode "resizer
 
 # Show current Spotify track in a notification
 bindsym $mod+slash exec ~/scripts/current_player_metadata.sh
+
+# Applications
+
+# bindsym $mod+a exec ~/scripts/launch_webapp.sh https://chatgpt.com
+
 
 
 # Include configs from 3 locations:
