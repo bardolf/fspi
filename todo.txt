@@ -3,12 +3,11 @@
 - vpn 
 - app shortcuts  
 - sway - parents? hide title bars?
-- mise settings add idiomatic_version_file_enable_tools java
 - zsh
 - screenshot / sceenrecords
 - desktop files pro webapps
 - otevreny terminal na stavajici ceste
 - notifikace9s
-- vpn-slice - sudo dnf install python3-pip   # pokud nemáš pip
-     sudo pip3 install vpn-slice
 - osd - napr. pro audio controls
+- ssh/config 
+- webapps
