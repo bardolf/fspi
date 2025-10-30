@@ -1,4 +1,3 @@
-- notifikace - remove spotify
 - waybar
 - vpn 
 - app shortcuts  
@@ -7,7 +6,8 @@
 - screenshot / sceenrecords
 - desktop files pro webapps
 - otevreny terminal na stavajici ceste
-- notifikace9s
+- notifikace
+- k9s
 - osd - napr. pro audio controls
 - ssh/config 
 - webapps

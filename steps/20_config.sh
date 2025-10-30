@@ -68,4 +68,7 @@ log_info "Installing Foot and Sway configuration files"
 config_step_copy_collection \
   "$SCRIPT_DIR/config/foot/foot.ini" "$HOME/.config/foot/foot.ini" \
   "$SCRIPT_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua" \
-  "$SCRIPT_DIR/config/sway/config" "$HOME/.config/sway/config"
+  "$SCRIPT_DIR/config/dunst/dunstrc" "$HOME/.config/dunst/dunstrc" \
+  "$SCRIPT_DIR/config/nvim/lua/config/options.lua" "$HOME/.config/nvim/lua/config/options.lua" \
+  "$SCRIPT_DIR/config/nvim/lua/plugins/disabled.lua" "$HOME/.config/nvim/lua/plugins/disabled.lua" \
+  "$SCRIPT_DIR/config/nvim/lua/plugins/blink.lua" "$HOME/.config/nvim/lua/plugins/blink.lua"
