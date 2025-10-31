@@ -6,8 +6,7 @@
 - screenshot / sceenrecords
 - desktop files pro webapps
 - otevreny terminal na stavajici ceste
-- notifikace
-- k9s
+- k9s plugin secret 
 - osd - napr. pro audio controls
 - ssh/config 
 - webapps

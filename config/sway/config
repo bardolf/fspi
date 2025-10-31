@@ -10,6 +10,11 @@ gaps outer 2
 gaps inner 2
 
 
+client.focused          #88C0D0 #88C0D0 #2E3440 #88C0D0 #88C0D0
+client.focused_inactive #4C566A #3B4252 #D8DEE9 #4C566A #3B4252
+client.unfocused        #3B4252 #2E3440 #888888 #2E3440 #2E3440
+client.urgent           #BF616A #BF616A #ECEFF4 #BF616A #BF616A
+
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
@@ -21,7 +26,7 @@ set $mod Mod4
 #set $right l
 # Your preferred terminal emulator
 # Recommends: foot
-set $term 'flatpak run org.wezfurlong.wezterm'
+set $term 'flatpak run org.wezfurlong.wezterm start --always-new-process'
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
@@ -94,7 +99,8 @@ input type:keyboard {
 # Basics:
 #
     # Start a terminal
-    bindsym $mod+Return exec --no-startup-id $term
+#    bindsym $mod+Return exec --no-startup-id $term
+    bindsym $mod+Return exec $term
 
     # Kill focused window
     bindsym $mod+w kill
@@ -113,7 +119,7 @@ input type:keyboard {
     bindsym $mod+Shift+r reload
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+#    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
 
 #
 # Moving around:

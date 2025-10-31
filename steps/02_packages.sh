@@ -30,6 +30,8 @@ PACKAGES=(
   jq
   wl-clipboard
   libnotify
+  azure-cli
+  k9s
 )
 
 for pkg in "${PACKAGES[@]}"; do

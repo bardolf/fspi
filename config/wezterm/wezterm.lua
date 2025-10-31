@@ -22,6 +22,8 @@ return {
 	color_scheme_dirs = { os.getenv("HOME") .. "/.local/share/iTerm2-color-schemes/wezterm" },
 	--color_scheme = "GitLab Dark Grey",
 	--color_scheme = "C64",
-	color_scheme = "Citruszest",
+	--color_scheme = "Citruszest",
 	--color_scheme = "Dark Modern",
+	--color_scheme = "Nvim Light",
+	color_scheme = "TokyoNight Moon",
 }
