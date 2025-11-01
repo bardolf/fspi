@@ -32,6 +32,7 @@ PACKAGES=(
   libnotify
   azure-cli
   k9s
+  wayland-utils
 )
 
 for pkg in "${PACKAGES[@]}"; do
