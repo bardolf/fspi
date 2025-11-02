@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$SCRIPT_DIR/lib/logging.sh"
 
-log_info "Adding essential repositories (RPM Fusion, Flathub)"
+log_info "Adding essential repositories (RPM Fusion, Flathub, Vivaldi)"
 
 # --- RPM Fusion ---
 FREE_URL="https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
@@ -30,6 +30,23 @@ if ! flatpak remotes | grep -q flathub; then
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 else
   log_debug "Flathub already added"
+fi
+
+# --- Vivaldi ---
+VIVALDI_REPO="/etc/yum.repos.d/vivaldi.repo"
+if [[ ! -f "$VIVALDI_REPO" ]]; then
+  log_info "Adding Vivaldi repository"
+  sudo tee "$VIVALDI_REPO" >/dev/null <<'EOF'
+[vivaldi]
+name=Vivaldi browser stable repository
+baseurl=https://repo.vivaldi.com/stable/rpm/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.vivaldi.com/stable/linux_signing_key.pub
+EOF
+  sudo dnf makecache -y || sudo dnf5 makecache -y
+else
+  log_debug "Vivaldi repository already present"
 fi
 
 log_info "Repository setup complete."

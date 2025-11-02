@@ -33,6 +33,7 @@ PACKAGES=(
   azure-cli
   k9s
   wayland-utils
+  vivaldi-stable
 )
 
 for pkg in "${PACKAGES[@]}"; do
