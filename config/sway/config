@@ -231,6 +231,8 @@ bindsym $mod+i exec ~/scripts/launch_webapp.sh https://chatgpt.com
 bindsym $mod+Shift+i exec ~/scripts/launch_webapp.sh https://gemini.google.com/app
 bindsym $mod+escape exec ~/scripts/menu_shutdown.sh
 
+# Lock
+bindsym $mod+l exec ~/scripts/swaylock_blurry
 
 
 # Include configs from 3 locations:

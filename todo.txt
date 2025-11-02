@@ -8,3 +8,4 @@
 - osd - napr. pro audio controls
 - ssh/config 
 - webapps
+- screensaver

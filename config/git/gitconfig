@@ -40,3 +40,5 @@
 [include]
     path = ~/.gitconfig.d/custom  # add user details here
 
+[includeIf "gitdir:~/work/"]
+    path = ~/work/.gitconfig
