@@ -73,3 +73,4 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/nvim/lua/config/options.lua" "$HOME/.config/nvim/lua/config/options.lua" \
   "$SCRIPT_DIR/config/nvim/lua/plugins/disabled.lua" "$HOME/.config/nvim/lua/plugins/disabled.lua" \
   "$SCRIPT_DIR/config/nvim/lua/plugins/blink.lua" "$HOME/.config/nvim/lua/plugins/blink.lua"
+"$SCRIPT_DIR/config/git/gitconfig" "$HOME/.gitconfig"

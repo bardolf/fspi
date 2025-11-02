@@ -1,8 +1,6 @@
 - waybar
 - vpn 
 - app shortcuts  
-- sway - parents? hide title bars?
-- zsh
 - screenshot / sceenrecords
 - desktop files pro webapps
 - otevreny terminal na stavajici ceste
