@@ -67,10 +67,15 @@ log_info "Installing Foot and Sway configuration files"
 
 config_step_copy_collection \
   "$SCRIPT_DIR/config/foot/foot.ini" "$HOME/.config/foot/foot.ini" \
+  "$SCRIPT_DIR/config/git/gitconfig" "$HOME/.gitconfig" \
+  "$SCRIPT_DIR/config/mise/config.toml" "$HOME/.config/mise/config.toml" \
   "$SCRIPT_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua" \
-  "$SCRIPT_DIR/config/sway/config" "$HOME/.config/sway/config" \
   "$SCRIPT_DIR/config/dunst/dunstrc" "$HOME/.config/dunst/dunstrc" \
   "$SCRIPT_DIR/config/nvim/lua/config/options.lua" "$HOME/.config/nvim/lua/config/options.lua" \
   "$SCRIPT_DIR/config/nvim/lua/plugins/disabled.lua" "$HOME/.config/nvim/lua/plugins/disabled.lua" \
-  "$SCRIPT_DIR/config/nvim/lua/plugins/blink.lua" "$HOME/.config/nvim/lua/plugins/blink.lua"
-"$SCRIPT_DIR/config/git/gitconfig" "$HOME/.gitconfig"
+  "$SCRIPT_DIR/config/nvim/lua/plugins/blink.lua" "$HOME/.config/nvim/lua/plugins/blink.lua" \
+  "$SCRIPT_DIR/config/satty/config.toml" "$HOME/.config/satty/config.toml" \
+  "$SCRIPT_DIR/config/sway/config" "$HOME/.config/sway/config" \
+  "$SCRIPT_DIR/config/sway/config.d/50-rules-browser.conf" "$HOME/.config/sway/config.d/50-rules-browser.conf" \
+  "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf" \
+  "$SCRIPT_DIR/config/sway/config.d/90-swayidle.conf" "$HOME/.config/sway/config.d/90-swayidle.conf"

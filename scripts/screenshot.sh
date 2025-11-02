@@ -1,82 +1,74 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Načti výchozí adresář pro screenshoty
-[[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
-OUTPUT_DIR="${OMARCHY_SCREENSHOT_DIR:-${XDG_PICTURES_DIR:-$HOME/Pictures}}"
+# ---------------------------
+# CONFIG
+# ---------------------------
+OUTPUT_DIR="${XDG_PICTURES_DIR:-$HOME/Pictures}/Screenshots"
+mkdir -p "$OUTPUT_DIR"
 
-if [[ ! -d "$OUTPUT_DIR" ]]; then
-  notify-send "Screenshot directory does not exist: $OUTPUT_DIR" -u critical -t 3000
-  exit 1
-fi
+MODE="${1:-region}" # region | fullscreen | window
+TMPFILE="$(mktemp --suffix=.png)"
 
-MODE="${1:-smart}"
-PROCESSING="${2:-slurp}"
-
-# Získání geometrie obrazovky (jediný výstup)
-get_output_geometry() {
-  swaymsg -t get_outputs -r | jq -r '.[] | select(.active == true) | "\(.rect.x),\(.rect.y) \(.rect.width)x\(.rect.height)"' | head -n1
+# ---------------------------
+# HELPER FUNCTIONS
+# ---------------------------
+notify() {
+  command -v notify-send >/dev/null && notify-send -t 2000 "📸 Screenshot" "$1"
 }
 
-# Získání viditelných oken aktuálního workspace
-get_window_rects() {
-  swaymsg -t get_tree -r |
-    jq -r '
-      .. | objects
-      | select(.type? == "con" and .visible == true)
-      | "\(.rect.x),\(.rect.y) \(.rect.width)x\(.rect.height)"'
+get_windows() {
+  # Obtain approximate window rectangles (sway outputs clients with rects)
+  swaymsg -t get_tree |
+    jq -r '.. | objects | select(.type? == "con" and .window_rect?) |
+        "\(.rect.x),\(.rect.y) \(.rect.width)x\(.rect.height)"'
 }
 
-# Výběr podle režimu
+# ---------------------------
+# SELECT REGION
+# ---------------------------
 case "$MODE" in
 region)
-  SELECTION=$(slurp 2>/dev/null)
-  ;;
-windows)
-  RECTS=$(get_window_rects)
-  SELECTION=$(echo "$RECTS" | slurp -r 2>/dev/null)
+  wayfreeze &
+  PID=$!
+  sleep 0.1
+  SELECTION=$(slurp 2>/dev/null || true)
+  kill $PID 2>/dev/null
   ;;
 fullscreen)
-  SELECTION=$(get_output_geometry)
+  SELECTION=$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | "\(.rect.x),\(.rect.y) \(.rect.width)x\(.rect.height)"')
   ;;
-smart | *)
-  RECTS=$(get_window_rects)
-  SELECTION=$(echo "$RECTS" | slurp 2>/dev/null)
-
-  # Pokud je výběr příliš malý, klik = vyber nejbližší okno
-  if [[ "$SELECTION" =~ ^([0-9]+),([0-9]+)[[:space:]]([0-9]+)x([0-9]+)$ ]]; then
-    if ((${BASH_REMATCH[3]} * ${BASH_REMATCH[4]} < 20)); then
-      click_x="${BASH_REMATCH[1]}"
-      click_y="${BASH_REMATCH[2]}"
-
-      while IFS= read -r rect; do
-        if [[ "$rect" =~ ^([0-9]+),([0-9]+)[[:space:]]([0-9]+)x([0-9]+) ]]; then
-          rect_x="${BASH_REMATCH[1]}"
-          rect_y="${BASH_REMATCH[2]}"
-          rect_width="${BASH_REMATCH[3]}"
-          rect_height="${BASH_REMATCH[4]}"
-
-          if ((click_x >= rect_x && click_x < rect_x + rect_width && click_y >= rect_y && click_y < rect_y + rect_height)); then
-            SELECTION="${rect_x},${rect_y} ${rect_width}x${rect_height}"
-            break
-          fi
-        fi
-      done <<<"$RECTS"
-    fi
-  fi
+window)
+  wayfreeze &
+  PID=$!
+  sleep 0.1
+  SELECTION=$(get_windows | slurp -r 2>/dev/null || true)
+  kill $PID 2>/dev/null
+  ;;
+*)
+  echo "Usage: $0 [region|fullscreen|window]"
+  exit 1
   ;;
 esac
 
 [ -z "$SELECTION" ] && exit 0
 
-# Název souboru
-FILENAME="$OUTPUT_DIR/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png"
+# ---------------------------
+# TAKE & PROCESS IMAGE
+# ---------------------------
+grim -g "$SELECTION" "$TMPFILE"
 
-# Pořízení screenshotu
-grim -g "$SELECTION" "$FILENAME"
+if command -v satty >/dev/null; then
+  satty \
+    --filename "$TMPFILE" \
+    --output-filename "$OUTPUT_DIR/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png" \
+    --early-exit \
+    --actions-on-enter save-to-clipboard \
+    --save-after-copy \
+    --copy-command 'wl-copy'
+else
+  wl-copy <"$TMPFILE"
+  notify "Screenshot copied to clipboard"
+fi
 
-# Zkopírování do schránky
-wl-copy <"$FILENAME"
-
-# Notifikace
-notify-send "📸 Screenshot captured" "Saved to $FILENAME" -t 1500
+rm -f "$TMPFILE"
