@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ChatGPT
+Comment=Open ChatGPT in browser
+Exec=/home/milan/scripts/launch_webapp.sh https://chatgpt.com
+Icon=/home/milan/.local/share/icons/chat-gpt.svg
+Terminal=false
+Categories=Network;WebBrowser;
+StartupNotify=true

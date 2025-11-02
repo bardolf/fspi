@@ -43,7 +43,7 @@ set $rofi_cmd rofi -terminal '$term'
 # Shows a combined list of the applications with desktop files and
 # executables from PATH.
 # TODO: add window with the next release of rofi-wayland
-set $menu $rofi_cmd -show combi -combi-modes drun#run -modes combi
+set $menu $rofi_cmd -show drun -show-icons
 
 ### Output configuration
 #
@@ -227,7 +227,9 @@ bindsym $mod+r mode "resizer
 bindsym $mod+slash exec ~/scripts/current_player_metadata.sh
 
 # Applications
-# bindsym $mod+a exec ~/scripts/launch_webapp.sh https://chatgpt.com
+bindsym $mod+i exec ~/scripts/launch_webapp.sh https://chatgpt.com
+bindsym $mod+Shift+i exec ~/scripts/launch_webapp.sh https://gemini.google.com/app
+bindsym $mod+escape exec ~/scripts/menu_shutdown.sh
 
 
 
