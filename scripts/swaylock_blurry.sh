@@ -24,7 +24,7 @@ FONT="Monospace 12"
 grim "$LOCKSCREEN"
 
 # --- Apply blur ---
-ffmpeg -i "$LOCKSCREEN" -vf "gblur=sigma=14" -y "$BLUR_TEMP"
+ffmpeg -loglevel error -i "$LOCKSCREEN" -vf "gblur=sigma=14" -y "$BLUR_TEMP"
 #magick "$LOCKSCREEN" -filter Gaussian -resize "${RESIZE_PERCENT}%" -blur 0x$BLUR_SIGMA -resize "${RESIZE_BACK}%" "$BLUR_TEMP"
 mv "$BLUR_TEMP" "$LOCKSCREEN"
 

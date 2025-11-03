@@ -34,6 +34,7 @@ PACKAGES=(
   k9s
   wayland-utils
   vivaldi-stable
+  libxkbcommon-devel
 )
 
 for pkg in "${PACKAGES[@]}"; do

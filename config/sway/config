@@ -232,7 +232,7 @@ bindsym $mod+Shift+i exec ~/scripts/launch_webapp.sh https://gemini.google.com/a
 bindsym $mod+escape exec ~/scripts/menu_shutdown.sh
 
 # Lock
-bindsym $mod+l exec ~/scripts/swaylock_blurry
+bindsym $mod+l exec ~/scripts/swaylock_blurry.sh
 
 
 # Include configs from 3 locations:
