@@ -212,17 +212,6 @@ mode "resize" {
 bindsym $mod+r mode "resizer
 
 
-# 📸 Screenshots
-#bindsym Print exec ~/scripts/omarchy-cmd-screenshot
-#bindsym Shift+Print exec omarchy-cmd-screenshot window
-#bindsym Ctrl+Print exec omarchy-cmd-screenshot output
-
-# 🎥 Screen recordings
-#bindsym Alt+Print exec omarchy-cmd-screenrecord region
-#bindsym Alt+Shift+Print exec omarchy-cmd-screenrecord region audio
-#bindsym Ctrl+Alt+Print exec omarchy-cmd-screenrecord output
-#bindsym Ctrl+Alt+Shift+Print exec omarchy-cmd-screenrecord output audio
-
 # Show current Spotify track in a notification
 bindsym $mod+slash exec ~/scripts/current_player_metadata.sh
 
@@ -234,6 +223,7 @@ bindsym $mod+escape exec ~/scripts/menu_shutdown.sh
 # Lock
 bindsym $mod+l exec ~/scripts/swaylock_blurry.sh
 
+for_window [app_id="satty"] border pixel 2
 
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d

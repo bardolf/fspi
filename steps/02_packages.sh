@@ -35,6 +35,7 @@ PACKAGES=(
   wayland-utils
   vivaldi-stable
   libxkbcommon-devel
+  postgresql
 )
 
 for pkg in "${PACKAGES[@]}"; do

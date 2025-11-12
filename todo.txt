@@ -9,3 +9,4 @@
 - ssh/config 
 - webapps
 - screensaver
+- zavolat `flatpak override --user --socket=wayland`
