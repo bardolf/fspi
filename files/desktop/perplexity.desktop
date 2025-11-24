@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Perplexity
+Comment=Open Perplexity AI in browser
+Exec=/home/milan/scripts/launch_webapp.sh https://www.perplexity.ai
+Icon=/home/milan/.local/share/icons/perplexity.svg
+Terminal=false
+Categories=Network;WebBrowser;
+StartupNotify=true

@@ -90,6 +90,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
 # Custom aliases
 alias k=kubectl
+alias open='xdg-open'
 EOF
 
 # -------------------------

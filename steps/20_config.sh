@@ -77,5 +77,4 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/satty/config.toml" "$HOME/.config/satty/config.toml" \
   "$SCRIPT_DIR/config/sway/config" "$HOME/.config/sway/config" \
   "$SCRIPT_DIR/config/sway/config.d/50-rules-browser.conf" "$HOME/.config/sway/config.d/50-rules-browser.conf" \
-  "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf" \
-  "$SCRIPT_DIR/config/sway/config.d/90-swayidle.conf" "$HOME/.config/sway/config.d/90-swayidle.conf"
+  "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf"
