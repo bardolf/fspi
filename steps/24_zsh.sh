@@ -88,6 +88,10 @@ source $ZSH/oh-my-zsh.sh
 # Optional: make suggestions visible
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
+# History
+HISTSIZE=500000
+SAVEHIST=500000
+
 # Custom aliases
 alias k=kubectl
 alias open='xdg-open'
