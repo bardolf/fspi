@@ -36,6 +36,8 @@ PACKAGES=(
   vivaldi-stable
   libxkbcommon-devel
   postgresql
+  ocrmypdf
+  tesseract-langpack-ces
 )
 
 for pkg in "${PACKAGES[@]}"; do
