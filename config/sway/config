@@ -221,7 +221,7 @@ bindsym $mod+Shift+i exec ~/scripts/launch_webapp.sh https://gemini.google.com/a
 bindsym $mod+escape exec ~/scripts/menu_shutdown.sh
 
 # Lock
-bindsym $mod+l exec ~/scripts/swaylock_blurry.sh
+bindsym $mod+l exec swaylock
 
 for_window [app_id="satty"] border pixel 2
 
