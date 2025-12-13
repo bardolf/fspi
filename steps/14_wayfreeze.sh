@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+set -x
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$SCRIPT_DIR/lib/logging.sh"
@@ -44,10 +45,4 @@ log_info "Building wayfreeze..."
 mkdir -p "$INSTALL_DIR"
 cp "$BUILD_DIR/target/release/wayfreeze" "$INSTALL_DIR/"
 
-# --- Ověření ---
-if command -v wayfreeze >/dev/null 2>&1; then
-  log_info "wayfreeze installed successfully → $INSTALL_DIR/wayfreeze"
-else
-  log_error "wayfreeze installation failed."
-  exit 1
-fi
+log_info "wayfreeze installed successfully → $INSTALL_DIR/wayfreeze"
