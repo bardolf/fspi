@@ -10,6 +10,7 @@ fi
 VPN_SERVER="zamevpn.cetin.cz"
 CERT="/home/milan/work/cetin/vpn/nemecm.crt.pem"
 KEY="/home/milan/work/cetin/vpn/nemecm.key.pem"
+CAFILE="/home/milan/work/cetin/vpn/cacerts/complete-with-defaults.crt"
 
 # Původní DNS uložíme pro obnovu
 ORIG_DNS=$(resolvectl status | awk '/DNS Servers:/ {print $3}' | head -n1)
@@ -19,7 +20,7 @@ echo "Původní DNS: $ORIG_DNS, původní domain: $ORIG_DOMAIN"
 
 # Spustíme openconnect s vpn-slice na pozadí
 openconnect --protocol=anyconnect $VPN_SERVER \
-  --servercert pin-sha256:izBJKUz1G5AZn6GY1b5BtdeGe7VYklkdMxveiFtjzh0= \
+  --cafile=$CAFILE \
   --certificate=$CERT \
   --sslkey=$KEY \
   --script "vpn-slice \
@@ -39,8 +40,10 @@ echo "Čekám, až se vytvoří tun0..."
 while ! ip link show tun0 &>/dev/null; do
   sleep 1
 done
-echo "tun0 existuje, nastavujeme DNS..."
+echo "tun0 existuje, čekám na inicializaci vpn-slice..."
+sleep 3
 
+echo "Nastavujeme DNS..."
 # Nastavení firemních DNS a search domén
 resolvectl dns tun0 172.29.128.11 172.29.128.10
 resolvectl domain tun0 cetin ad.cetin \
