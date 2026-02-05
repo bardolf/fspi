@@ -4,13 +4,14 @@
 #
 # Read `man 5 sway` for a complete reference.
 
-default_border pixel 2
+default_border pixel 3
 hide_edge_borders smart
 gaps outer 2
 gaps inner 2
 
 
-client.focused          #88C0D0 #88C0D0 #2E3440 #88C0D0 #88C0D0
+#client.focused          #88C0D0 #88C0D0 #2E3440 #88C0D0 #88C0D0
+client.focused          #EE0000 #88C0D0 #2E3440 #FF4040 #FF4040
 client.focused_inactive #4C566A #3B4252 #D8DEE9 #4C566A #3B4252
 client.unfocused        #3B4252 #2E3440 #888888 #2E3440 #2E3440
 client.urgent           #BF616A #BF616A #ECEFF4 #BF616A #BF616A
@@ -20,29 +21,22 @@ client.urgent           #BF616A #BF616A #ECEFF4 #BF616A #BF616A
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
 
-# Home row direction keys, like vim
-#set $left h
-#set $down j
-#set $up k
-#set $right l
-
 # Default applications
 exec_always {
     xdg-settings set default-web-browser vivaldi-stable.desktop
 }
 
+# Run once
+exec ~/scripts/sway_last_workspace.sh
+
 # Your preferred terminal emulator
 set $term 'flatpak run org.wezfurlong.wezterm start --always-new-process'
 
-# Your preferred application launcher
-# Note: pass the final command to swaymsg so that the resulting window can be opened
-# on the original workspace that the command was run on.
-# Recommends: rofi-wayland
+# Application launcher
 set $rofi_cmd rofi -terminal '$term'
 
 # Shows a combined list of the applications with desktop files and
 # executables from PATH.
-# TODO: add window with the next release of rofi-wayland
 set $menu $rofi_cmd -show drun -show-icons
 
 ### Output configuration
@@ -60,18 +54,6 @@ output * scale 1.3
 output * adaptive_sync on
 
 ### Input configuration
-#
-# Example configuration:
-#
-#   input "2:14:SynPS/2_Synaptics_TouchPad" {
-#       dwt enabled
-#       tap enabled
-#       natural_scroll enabled
-#       middle_emulation enabled
-#   }
-#
-# You can get the names of your inputs by running: swaymsg -t get_inputs
-# Read `man 5 sway-input` for more information about this section.
 seat seat0 xcursor_theme Adwaita 24
 
 input type:keyboard {
@@ -134,30 +116,33 @@ input type:keyboard {
 # Workspaces:
 #
   # Switch to workspace
-  bindsym $mod+1 workspace number 1
-  bindsym $mod+2 workspace number 2
-  bindsym $mod+3 workspace number 3
-  bindsym $mod+4 workspace number 4
-  bindsym $mod+5 workspace number 5
-  bindsym $mod+6 workspace number 6
-  bindsym $mod+7 workspace number 7
-  bindsym $mod+8 workspace number 8
-  bindsym $mod+9 workspace number 9
-  bindsym $mod+0 workspace number 10
+  bindsym --to-code $mod+1 workspace number 1
+  bindsym --to-code $mod+2 workspace number 2
+  bindsym --to-code $mod+3 workspace number 3
+  bindsym --to-code $mod+4 workspace number 4
+  bindsym --to-code $mod+5 workspace number 5
+  bindsym --to-code $mod+6 workspace number 6
+  bindsym --to-code $mod+7 workspace number 7
+  bindsym --to-code $mod+8 workspace number 8
+  bindsym --to-code $mod+9 workspace number 9
+  bindsym --to-code $mod+0 workspace number 10
   # Move focused container to workspace
-  bindsym $mod+Shift+1 move container to workspace number 1
-  bindsym $mod+Shift+2 move container to workspace number 2
-  bindsym $mod+Shift+3 move container to workspace number 3
-  bindsym $mod+Shift+4 move container to workspace number 4
-  bindsym $mod+Shift+5 move container to workspace number 5
-  bindsym $mod+Shift+6 move container to workspace number 6
-  bindsym $mod+Shift+7 move container to workspace number 7
-  bindsym $mod+Shift+8 move container to workspace number 8
-  bindsym $mod+Shift+9 move container to workspace number 9
-  bindsym $mod+Shift+0 move container to workspace number 10
+  bindsym --to-code $mod+Shift+1 move container to workspace number 1
+  bindsym --to-code $mod+Shift+2 move container to workspace number 2
+  bindsym --to-code $mod+Shift+3 move container to workspace number 3
+  bindsym --to-code $mod+Shift+4 move container to workspace number 4
+  bindsym --to-code $mod+Shift+5 move container to workspace number 5
+  bindsym --to-code $mod+Shift+6 move container to workspace number 6
+  bindsym --to-code $mod+Shift+7 move container to workspace number 7
+  bindsym --to-code $mod+Shift+8 move container to workspace number 8
+  bindsym --to-code $mod+Shift+9 move container to workspace number 9
+  bindsym --to-code $mod+Shift+0 move container to workspace number 10
 
  # Switch between current and last workspace
  bindsym $mod+Tab exec ~/scripts/sway_switch_to_last_workspace.sh
+ # Switch between sibling
+bindsym Mod1+Tab focus next sibling
+bindsym Mod1+Shift+Tab focus prev sibling
 
 #
 # Layout stuff:
@@ -212,16 +197,19 @@ mode "resize" {
 bindsym $mod+r mode "resizer
 
 
+bindsym $mod+l exec swaylock
+
 # Show current Spotify track in a notification
 bindsym $mod+slash exec ~/scripts/current_player_metadata.sh
+
 
 # Applications
 bindsym $mod+i exec ~/scripts/launch_webapp.sh https://chatgpt.com
 bindsym $mod+Shift+i exec ~/scripts/launch_webapp.sh https://gemini.google.com/app
 bindsym $mod+escape exec ~/scripts/menu_shutdown.sh
 
-# Lock
-bindsym $mod+l exec swaylock
+
+assign [class="vivaldi"] workspace 1
 
 for_window [app_id="satty"] border pixel 2
 
