@@ -18,9 +18,8 @@
         "custom/audio-status",
         "network",
         "power-profiles-daemon",
-        "cpu",
-        "memory",
-        "temperature",
+        "custom/cpu-info",
+        "custom/memory-info",
         "backlight",
         "sway/language",
         "battery",
@@ -190,6 +189,16 @@
         "interval": 2,
         "on-click": "pavucontrol",
         "tooltip": "Audio: volume, mic, headset battery"
+    },
+    "custom/cpu-info": {
+        "exec": "~/scripts/waybar/cpu-info.sh",
+        "interval": 2,
+        "tooltip": "CPU usage and temperature"
+    },
+    "custom/memory-info": {
+        "exec": "~/scripts/waybar/memory-info.sh",
+        "interval": 5,
+        "tooltip": "Memory usage"
     },
     "custom/media": {
         "format": "{icon} {text}",
