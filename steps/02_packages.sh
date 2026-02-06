@@ -39,6 +39,7 @@ PACKAGES=(
   ocrmypdf
   tesseract-langpack-ces
   earlyoom
+  ddcutil
 )
 
 for pkg in "${PACKAGES[@]}"; do

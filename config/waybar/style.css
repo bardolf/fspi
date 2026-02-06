@@ -305,6 +305,34 @@ label:focus {
 	background-color: transparent;
 }
 
+/* Custom modules */
+#custom-backlight,
+#custom-headset,
+#custom-vpn {
+    padding: 0 10px;
+    color: #ffffff;
+}
+
+#custom-vpn.connected {
+    color: #2ecc71;
+}
+
+#custom-vpn.disconnected {
+    color: #888888;
+}
+
+#custom-headset.low-battery {
+    color: #f53c3c;
+}
+
+#custom-headset.muted {
+    color: #888888;
+}
+
+#custom-headset.connected {
+    color: #ffffff;
+}
+
 #privacy {
     padding: 0;
 }

@@ -63,9 +63,11 @@ config_step_copy_collection() {
 # Call the step for specific configs
 # -------------------------
 
-log_info "Installing Foot and Sway configuration files"
+log_info "Installing configuration files (foot, sway, waybar, etc.)"
 
 config_step_copy_collection \
+  "$SCRIPT_DIR/config/waybar/config.jsonc" "$HOME/.config/waybar/config.jsonc" \
+  "$SCRIPT_DIR/config/waybar/style.css" "$HOME/.config/waybar/style.css" \
   "$SCRIPT_DIR/config/foot/foot.ini" "$HOME/.config/foot/foot.ini" \
   "$SCRIPT_DIR/config/git/gitconfig" "$HOME/.gitconfig" \
   "$SCRIPT_DIR/config/mise/config.toml" "$HOME/.config/mise/config.toml" \
