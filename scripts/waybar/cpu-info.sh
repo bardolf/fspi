@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Waybar module: CPU info (usage + temperature)
-# Output: "🖥 45% 38°C"
+# Output: " 45% 38°C"
 #
-# Uses emoji for larger icon
+# Uses Nerd Font icons
 
 # Temperature sensor (k10temp for AMD CPUs)
 TEMP_FILE="/sys/class/hwmon/hwmon1/temp1_input"
@@ -50,5 +50,5 @@ get_cpu_temp() {
 cpu_usage=$(get_cpu_usage)
 cpu_temp=$(get_cpu_temp)
 
-# Icon: 💻 or 🖥 (emoji - renders larger)
-echo "🖥 ${cpu_usage}% ${cpu_temp}°C"
+# Icon:  (nf-md-cpu_64_bit)
+echo " ${cpu_usage}% ${cpu_temp}°C"

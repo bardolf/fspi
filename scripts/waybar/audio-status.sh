@@ -60,8 +60,8 @@ out_vol=$(get_output_volume)
 in_vol=$(get_input_volume)
 battery=$(get_headset_battery)
 
-# Volume icons (Nerd Font)
-# 󰕾 = volume high, 󰖀 = volume medium, 󰕿 = volume low, 󰝟 = muted
+# Volume icons - Nerd Font
+# 󰕾 = volume high, 󰖀 = volume low, 󰝟 = muted
 if [[ "$out_vol" == "muted" ]]; then
     out_text="󰝟"
 else
@@ -72,18 +72,18 @@ else
     else
         out_icon="󰕾"
     fi
-    out_text="${out_vol}% ${out_icon}"
+    out_text="${out_icon} ${out_vol}%"
 fi
 
-# Mic icons (Nerd Font)
+# Mic icons - Nerd Font
 # 󰍬 = mic, 󰍭 = mic muted
 if [[ "$in_vol" == "muted" ]]; then
     in_text="󰍭"
 else
-    in_text="${in_vol}% 󰍬"
+    in_text="󰍬 ${in_vol}%"
 fi
 
-# Battery icons (Nerd Font) - only if headset connected
+# Battery icons (Nerd Font) - these render well already
 # 󰁺󰁻󰁼󰁽󰁾󰁿󰂀󰂁󰂂󰁹 = battery levels 10-100%
 if [[ -n "$battery" ]]; then
     if [[ "$battery" -lt 10 ]]; then
@@ -112,5 +112,5 @@ else
     bat_text=""
 fi
 
-# Combine: "58% 󰖀 81% 󰍬 󰂀 70%"
+# Combine output
 echo "${out_text} ${in_text} ${bat_text}"

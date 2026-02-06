@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Waybar module: Memory info
-# Output: "🧠 65%"
+# Output: " 65%"
 #
-# Uses emoji for larger icon
+# Uses Nerd Font icons
 
 # ============================================
 # Get memory usage percentage
@@ -31,5 +31,5 @@ get_memory_usage() {
 
 mem_usage=$(get_memory_usage)
 
-# Icon: 🧠 (brain emoji - memory)
-echo "🧠 ${mem_usage}%"
+# Icon:  (nf-md-memory)
+echo " ${mem_usage}%"
