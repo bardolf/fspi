@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Waybar module: CPU info (usage + temperature)
-# Output: " 45% 38°C"
+# Output: "󰍛 45% 38°C"
 #
 # Uses Nerd Font icons
 
@@ -50,5 +50,5 @@ get_cpu_temp() {
 cpu_usage=$(get_cpu_usage)
 cpu_temp=$(get_cpu_temp)
 
-# Icon:  (nf-md-cpu_64_bit)
-echo " ${cpu_usage}% ${cpu_temp}°C"
+# Icon: 󰍛 (nf-md-chip)
+echo "󰍛 ${cpu_usage}% ${cpu_temp}°C"

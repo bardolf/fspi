@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Waybar module: Memory info
-# Output: " 65%"
+# Output: "󰘚 65%"
 #
 # Uses Nerd Font icons
 
@@ -31,5 +31,5 @@ get_memory_usage() {
 
 mem_usage=$(get_memory_usage)
 
-# Icon:  (nf-md-memory)
-echo " ${mem_usage}%"
+# Icon: 󰘚 (nf-md-memory)
+echo "󰘚 ${mem_usage}%"
