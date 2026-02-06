@@ -1,5 +1,5 @@
 * {
-    font-family: 'Noto Sans Mono', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
+    font-family: 'MesloLGS Nerd Font Mono', 'Noto Sans Mono', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
     font-size: 13px;
 }
 
@@ -87,6 +87,7 @@ button:hover {
 #pulseaudio,
 #wireplumber,
 #custom-media,
+#custom-audio-status,
 #tray,
 #mode,
 #idle_inhibitor,
@@ -95,6 +96,10 @@ button:hover {
 #mpd {
     padding: 0 10px;
     color: #ffffff;
+}
+
+#custom-audio-status {
+    font-size: 15px;
 }
 
 #window,
@@ -303,34 +308,6 @@ label:focus {
 
 #scratchpad.empty {
 	background-color: transparent;
-}
-
-/* Custom modules */
-#custom-backlight,
-#custom-headset,
-#custom-vpn {
-    padding: 0 10px;
-    color: #ffffff;
-}
-
-#custom-vpn.connected {
-    color: #2ecc71;
-}
-
-#custom-vpn.disconnected {
-    color: #888888;
-}
-
-#custom-headset.low-battery {
-    color: #f53c3c;
-}
-
-#custom-headset.muted {
-    color: #888888;
-}
-
-#custom-headset.connected {
-    color: #ffffff;
 }
 
 #privacy {
