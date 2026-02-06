@@ -38,6 +38,7 @@ PACKAGES=(
   postgresql
   ocrmypdf
   tesseract-langpack-ces
+  earlyoom
 )
 
 for pkg in "${PACKAGES[@]}"; do
