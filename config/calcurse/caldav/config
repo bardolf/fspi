@@ -1,0 +1,53 @@
+# ============================================
+# calcurse-caldav: Google Calendar sync config
+# ============================================
+#
+# This is a TEMPLATE. Follow the steps below to enable sync.
+#
+# STEP 1: Create a Google Cloud project
+#   - Go to https://console.cloud.google.com/
+#   - Create a new project (e.g. "calcurse-sync")
+#
+# STEP 2: Enable the Google Calendar API
+#   - In your project, go to APIs & Services > Library
+#   - Search for "Google Calendar API" and enable it
+#
+# STEP 3: Create OAuth2 Desktop credentials
+#   - Go to APIs & Services > Credentials
+#   - Click "Create Credentials" > "OAuth client ID"
+#   - Application type: "Desktop app"
+#   - Copy the Client ID and Client Secret below
+#
+# STEP 4: Configure the OAuth consent screen
+#   - Go to APIs & Services > OAuth consent screen
+#   - User type: External (or Internal if using Workspace)
+#   - Add your Google account email as a test user
+#
+# STEP 5: Fill in your details below
+#   - Replace YOUR_EMAIL@gmail.com with your actual email
+#   - Replace YOUR_CLIENT_ID and YOUR_CLIENT_SECRET with
+#     the credentials from Step 3
+#   - Set DryRun = No when you're ready for real sync
+#
+# STEP 6: Run initial sync (opens browser for Google login)
+#   calcurse-caldav --init=keep-remote
+#   Follow the browser prompt, authorize, paste the auth code.
+#
+# STEP 7: After that, syncing works automatically via the
+#   launch-calcurse.sh waybar script.
+#
+# NOTE: The calcurse project's built-in OAuth credentials are
+# revoked/expired. You MUST create your own (Steps 1-3).
+# ============================================
+
+[General]
+Hostname = apidata.googleusercontent.com
+Path = /caldav/v2/YOUR_EMAIL@gmail.com/events/
+AuthMethod = oauth2
+HTTPS = Yes
+DryRun = Yes
+
+[OAuth2]
+ClientID = YOUR_CLIENT_ID
+ClientSecret = YOUR_CLIENT_SECRET
+Scope = https://www.googleapis.com/auth/calendar

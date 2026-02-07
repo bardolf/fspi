@@ -12,7 +12,8 @@
         "sway/scratchpad"
     ],
     "modules-center": [
-        "clock"
+        "clock",
+        "clock#date"
     ],
     "modules-right": [
         "custom/audio-status",
@@ -103,9 +104,13 @@
         // }
     },
     "clock": {
-        // "timezone": "America/New_York",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%Y-%m-%d}"
+        "format": "{:%H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "clock#date": {
+        "format": "{:%a %d %b}",
+        "on-click": "$HOME/scripts/waybar/launch-calcurse.sh",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
     "cpu": {
         "format": "{usage}% ",
