@@ -12,6 +12,7 @@ PACKAGES=(
   vim
   mc
   htop
+  btop
   flatpak
   chromium
   qalc

@@ -18,6 +18,7 @@ return {
 
 	-- Terminal behavior
 	adjust_window_size_when_changing_font_size = false,
+	window_close_confirmation = "NeverPrompt",
 
 	color_scheme_dirs = { os.getenv("HOME") .. "/.local/share/iTerm2-color-schemes/wezterm" },
 	--color_scheme = "GitLab Dark Grey",

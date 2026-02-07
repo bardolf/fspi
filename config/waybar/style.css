@@ -64,6 +64,7 @@ button:hover {
 #custom-audio-status,
 #custom-cpu-info,
 #custom-memory-info,
+#language,
 #tray,
 #mode,
 #idle_inhibitor,
@@ -80,7 +81,7 @@ button:hover {
 /* Custom modules - larger font, fixed width to prevent jumping */
 #custom-audio-status {
     font-size: 15px;
-    min-width: 180px;
+    min-width: 220px;
 }
 
 #custom-cpu-info {
@@ -90,7 +91,7 @@ button:hover {
 
 #custom-memory-info {
     font-size: 15px;
-    min-width: 70px;
+    min-width: 130px;
 }
 
 #window,
@@ -118,7 +119,11 @@ button:hover {
     border-left: none;
 }
 
-/* Network - subtle indicator for disconnected */
+/* Network */
+#network {
+    font-size: 15px;
+}
+
 #network.disconnected {
     color: #f53c3c;
 }
@@ -188,6 +193,7 @@ button:hover {
     background: transparent;
     color: #ffffff;
     padding: 0 8px;
+    font-size: 15px;
 }
 
 /* Scratchpad */

@@ -188,16 +188,20 @@
         "exec": "~/scripts/waybar/audio-status.sh",
         "interval": 2,
         "on-click": "pavucontrol",
-        "tooltip": "Audio: volume, mic, headset battery"
+        "on-scroll-up": "~/scripts/waybar/audio-status.sh up",
+        "on-scroll-down": "~/scripts/waybar/audio-status.sh down",
+        "tooltip": "Audio: volume, mic, BT device, battery"
     },
     "custom/cpu-info": {
         "exec": "~/scripts/waybar/cpu-info.sh",
         "interval": 2,
+        "on-click": "~/scripts/waybar/launch-btop.sh",
         "tooltip": "CPU usage and temperature"
     },
     "custom/memory-info": {
         "exec": "~/scripts/waybar/memory-info.sh",
         "interval": 5,
+        "on-click": "~/scripts/waybar/launch-btop.sh",
         "tooltip": "Memory usage"
     },
     "custom/media": {
