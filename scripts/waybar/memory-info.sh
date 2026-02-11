@@ -34,5 +34,31 @@ get_memory_info() {
 
 mem_info=$(get_memory_info)
 
-# Icon: 󰘚 (nf-md-memory)
-echo "󰘚 ${mem_info}"
+# Parse memory values for tooltip
+used_gb=$(echo "$mem_info" | cut -d' ' -f1 | cut -d'/' -f1)
+total_gb=$(echo "$mem_info" | cut -d' ' -f1 | cut -d'/' -f2)
+usage_pct=$(echo "$mem_info" | cut -d' ' -f2)
+
+# Calculate available
+used_num=${used_gb%G}
+total_num=${total_gb%G}
+available_gb=$((total_num - used_num))
+
+# Build bar display
+bar_text="󰘚 ${mem_info}"
+
+# Build tooltip
+tooltip="Memory Usage: ${usage_pct}\nUsed: ${used_gb}\nAvailable: ${available_gb}G\nTotal: ${total_gb}"
+
+# Add swap info only if actively used
+swap_used=$(awk '/SwapTotal/ {total=$2} /SwapFree/ {free=$2} END {print total-free}' /proc/meminfo)
+if [[ $swap_used -gt 0 ]]; then
+  swap_used_gb=$(( (swap_used + 524288) / 1048576 ))
+  tooltip="${tooltip}\nSwap Used: ${swap_used_gb}G"
+fi
+
+# Output JSON
+jq -n \
+  --arg text "$bar_text" \
+  --arg tooltip "$tooltip" \
+  '{text: $text, tooltip: $tooltip}'

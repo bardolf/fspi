@@ -100,5 +100,17 @@ get_cpu_temp() {
 cpu_usage=$(get_cpu_usage)
 cpu_temp=$(get_cpu_temp)
 
-# Icon: 󰍛 (nf-md-chip)
-echo "󰍛 ${cpu_usage}% 󰔏 ${cpu_temp}°C"
+# Get CPU model name
+cpu_model=$(grep "model name" /proc/cpuinfo | head -1 | cut -d: -f2 | xargs)
+
+# Build bar display
+bar_text="󰍛 ${cpu_usage}% 󰔏 ${cpu_temp}°C"
+
+# Build tooltip
+tooltip="CPU: ${cpu_model}\nUsage: ${cpu_usage}%\nTemperature: ${cpu_temp}°C"
+
+# Output JSON
+jq -n \
+  --arg text "$bar_text" \
+  --arg tooltip "$tooltip" \
+  '{text: $text, tooltip: $tooltip}'

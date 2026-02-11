@@ -79,7 +79,7 @@ get_input_volume() {
 
 # ============================================
 # Find connected BT audio device from known list
-# Returns: SHORT_NAME|BATTERY (battery empty if not available)
+# Returns: SHORT_NAME|FULL_NAME|BATTERY (battery empty if not available)
 # ============================================
 get_bt_device() {
     for entry in "${KNOWN_DEVICES[@]}"; do
@@ -92,9 +92,10 @@ get_bt_device() {
         info=$(bluetoothctl info "$mac" 2>/dev/null)
 
         if echo "$info" | grep -q "Connected: yes"; then
-            local battery
+            local battery full_name
             battery=$(echo "$info" | grep "Battery Percentage" | awk '{print $4}' | tr -d '()%')
-            echo "${short_name}|${battery}"
+            full_name=$(echo "$info" | grep "Name:" | cut -d: -f2- | xargs)
+            echo "${short_name}|${full_name}|${battery}"
             return
         fi
     done
@@ -110,10 +111,12 @@ in_vol=$(get_input_volume)
 bt_result=$(get_bt_device)
 
 bt_name=""
+bt_full_name=""
 battery=""
 if [[ -n "$bt_result" ]]; then
-    bt_name="${bt_result%%|*}"
-    battery="${bt_result##*|}"
+    bt_name=$(echo "$bt_result" | cut -d'|' -f1)
+    bt_full_name=$(echo "$bt_result" | cut -d'|' -f2)
+    battery=$(echo "$bt_result" | cut -d'|' -f3)
 fi
 
 # Volume icons - Nerd Font
@@ -181,5 +184,46 @@ fi
 if [[ -n "$bat_text" ]]; then
     parts+=("${bat_text}")
 fi
+bar_text="${parts[*]}"
 
-echo "${parts[*]}"
+# Build tooltip
+tooltip_parts=()
+
+# Output volume
+if [[ "$out_vol" == "muted" ]]; then
+  tooltip_parts+=("Output: Muted")
+else
+  tooltip_parts+=("Output Volume: ${out_vol}%")
+fi
+
+# Input volume
+if [[ -z "$in_vol" ]]; then
+  tooltip_parts+=("Input: No microphone")
+elif [[ "$in_vol" == "muted" ]]; then
+  tooltip_parts+=("Input: Muted")
+else
+  tooltip_parts+=("Input Volume (Mic): ${in_vol}%")
+fi
+
+# Bluetooth device (use full name)
+if [[ -n "$bt_name" ]]; then
+  if [[ -n "$bt_full_name" ]]; then
+    tooltip_parts+=("Bluetooth: ${bt_full_name}")
+  else
+    tooltip_parts+=("Bluetooth: ${bt_name}")
+  fi
+fi
+
+# Battery
+if [[ -n "$battery" ]]; then
+  tooltip_parts+=("Battery: ${battery}%")
+fi
+
+# Join tooltip parts with newlines
+tooltip=$(printf "%s\n" "${tooltip_parts[@]}")
+
+# Output JSON
+jq -n \
+  --arg text "$bar_text" \
+  --arg tooltip "$tooltip" \
+  '{text: $text, tooltip: $tooltip}'

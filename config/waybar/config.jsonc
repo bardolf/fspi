@@ -191,23 +191,23 @@
     },
     "custom/audio-status": {
         "exec": "~/scripts/waybar/audio-status.sh",
+        "return-type": "json",
         "interval": 2,
         "on-click": "pavucontrol",
         "on-scroll-up": "~/scripts/waybar/audio-status.sh up",
-        "on-scroll-down": "~/scripts/waybar/audio-status.sh down",
-        "tooltip": "Audio: volume, mic, BT device, battery"
+        "on-scroll-down": "~/scripts/waybar/audio-status.sh down"
     },
     "custom/cpu-info": {
         "exec": "~/scripts/waybar/cpu-info.sh",
+        "return-type": "json",
         "interval": 2,
-        "on-click": "~/scripts/waybar/launch-btop.sh",
-        "tooltip": "CPU usage and temperature"
+        "on-click": "~/scripts/waybar/launch-btop.sh"
     },
     "custom/memory-info": {
         "exec": "~/scripts/waybar/memory-info.sh",
+        "return-type": "json",
         "interval": 5,
-        "on-click": "~/scripts/waybar/launch-btop.sh",
-        "tooltip": "Memory usage"
+        "on-click": "~/scripts/waybar/launch-btop.sh"
     },
     "custom/media": {
         "format": "{icon} {text}",
