@@ -106,11 +106,11 @@ cpu_model=$(grep "model name" /proc/cpuinfo | head -1 | cut -d: -f2 | xargs)
 # Build bar display
 bar_text="󰍛 ${cpu_usage}% 󰔏 ${cpu_temp}°C"
 
-# Build tooltip
-tooltip="CPU: ${cpu_model}\nUsage: ${cpu_usage}%\nTemperature: ${cpu_temp}°C"
+# Build tooltip (use printf to get actual newlines)
+tooltip=$(printf "CPU: %s\nUsage: %s%%\nTemperature: %s°C" "$cpu_model" "$cpu_usage" "$cpu_temp")
 
-# Output JSON
-jq -n \
+# Output JSON (compact single-line with -c)
+jq -nc \
   --arg text "$bar_text" \
   --arg tooltip "$tooltip" \
   '{text: $text, tooltip: $tooltip}'

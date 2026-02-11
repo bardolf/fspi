@@ -47,18 +47,18 @@ available_gb=$((total_num - used_num))
 # Build bar display
 bar_text="󰘚 ${mem_info}"
 
-# Build tooltip
-tooltip="Memory Usage: ${usage_pct}\nUsed: ${used_gb}\nAvailable: ${available_gb}G\nTotal: ${total_gb}"
+# Build tooltip (use printf to get actual newlines)
+tooltip=$(printf "Memory Usage: %s\nUsed: %s\nAvailable: %sG\nTotal: %s" "$usage_pct" "$used_gb" "$available_gb" "$total_gb")
 
 # Add swap info only if actively used
 swap_used=$(awk '/SwapTotal/ {total=$2} /SwapFree/ {free=$2} END {print total-free}' /proc/meminfo)
 if [[ $swap_used -gt 0 ]]; then
   swap_used_gb=$(( (swap_used + 524288) / 1048576 ))
-  tooltip="${tooltip}\nSwap Used: ${swap_used_gb}G"
+  tooltip=$(printf "%s\nSwap Used: %sG" "$tooltip" "$swap_used_gb")
 fi
 
-# Output JSON
-jq -n \
+# Output JSON (compact single-line with -c)
+jq -nc \
   --arg text "$bar_text" \
   --arg tooltip "$tooltip" \
   '{text: $text, tooltip: $tooltip}'

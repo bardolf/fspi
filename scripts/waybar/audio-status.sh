@@ -222,8 +222,8 @@ fi
 # Join tooltip parts with newlines
 tooltip=$(printf "%s\n" "${tooltip_parts[@]}")
 
-# Output JSON
-jq -n \
+# Output JSON (compact single-line with -c)
+jq -nc \
   --arg text "$bar_text" \
   --arg tooltip "$tooltip" \
   '{text: $text, tooltip: $tooltip}'
