@@ -3,9 +3,7 @@
 # Output: "󰍛 45% 38°C"
 #
 # Uses Nerd Font icons
-
-# Temperature sensor (k10temp for AMD CPUs)
-TEMP_FILE="/sys/class/hwmon/hwmon1/temp1_input"
+# Supports Intel (coretemp), AMD (k10temp), and thermal zones
 
 # ============================================
 # Get CPU usage percentage
@@ -32,14 +30,66 @@ get_cpu_usage() {
 }
 
 # ============================================
+# Find CPU temperature source
+# ============================================
+find_cpu_temp_source() {
+  # Check cache first (valid for 60 seconds)
+  local cache_file="/tmp/waybar-cpu-temp-source-$USER"
+  if [[ -f "$cache_file" ]]; then
+    local cache_age=$(($(date +%s) - $(stat -c %Y "$cache_file" 2>/dev/null || echo 0)))
+    if [[ $cache_age -lt 60 ]]; then
+      cat "$cache_file"
+      return 0
+    fi
+  fi
+
+  # Priority 1: Intel coretemp
+  for hwmon in /sys/class/hwmon/hwmon*/; do
+    if [[ -f "${hwmon}name" ]] && [[ "$(cat "${hwmon}name" 2>/dev/null)" == "coretemp" ]]; then
+      if [[ -f "${hwmon}temp1_input" ]]; then
+        echo "${hwmon}temp1_input" | tee "$cache_file" >/dev/null
+        cat "$cache_file"
+        return 0
+      fi
+    fi
+  done
+
+  # Priority 2: AMD k10temp
+  for hwmon in /sys/class/hwmon/hwmon*/; do
+    if [[ -f "${hwmon}name" ]] && [[ "$(cat "${hwmon}name" 2>/dev/null)" == "k10temp" ]]; then
+      if [[ -f "${hwmon}temp1_input" ]]; then
+        echo "${hwmon}temp1_input" | tee "$cache_file" >/dev/null
+        cat "$cache_file"
+        return 0
+      fi
+    fi
+  done
+
+  # Priority 3: Fallback to thermal_zone0
+  if [[ -f "/sys/class/thermal/thermal_zone0/temp" ]]; then
+    echo "/sys/class/thermal/thermal_zone0/temp" | tee "$cache_file" >/dev/null
+    cat "$cache_file"
+    return 0
+  fi
+
+  # No temperature source found
+  echo "N/A" | tee "$cache_file" >/dev/null
+  echo "N/A"
+  return 1
+}
+
+# ============================================
 # Get CPU temperature
 # ============================================
 get_cpu_temp() {
-  if [[ -f "$TEMP_FILE" ]]; then
-    temp=$(cat "$TEMP_FILE")
-    echo $((temp / 1000))
-  else
+  local temp_source
+  temp_source=$(find_cpu_temp_source)
+  
+  if [[ "$temp_source" == "N/A" ]] || [[ ! -f "$temp_source" ]]; then
     echo "N/A"
+  else
+    local temp=$(cat "$temp_source" 2>/dev/null || echo "0")
+    echo $((temp / 1000))
   fi
 }
 

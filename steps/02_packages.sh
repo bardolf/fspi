@@ -43,6 +43,7 @@ PACKAGES=(
   tesseract-langpack-ces
   earlyoom
   ddcutil
+  lm_sensors
 )
 
 for pkg in "${PACKAGES[@]}"; do
