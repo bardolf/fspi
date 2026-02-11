@@ -18,7 +18,7 @@
     "modules-right": [
         "custom/audio-status",
         "network",
-        "power-profiles-daemon",
+        "custom/power-profile",
         "custom/cpu-info",
         "custom/memory-info",
         "backlight",
@@ -150,16 +150,11 @@
     "battery#bat2": {
         "bat": "BAT2"
     },
-    "power-profiles-daemon": {
-      "format": "{icon}",
-      "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-      "tooltip": true,
-      "format-icons": {
-        "default": "",
-        "performance": "",
-        "balanced": "",
-        "power-saver": ""
-      }
+    "custom/power-profile": {
+        "exec": "~/scripts/waybar/power-profile.sh",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "~/scripts/waybar/power-profile.sh toggle"
     },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface

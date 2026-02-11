@@ -74,6 +74,7 @@ button:hover {
 #custom-audio-status,
 #custom-cpu-info,
 #custom-memory-info,
+#custom-power-profile,
 #language,
 #tray,
 #mode,
@@ -176,19 +177,20 @@ button:hover {
 }
 
 /* Power profiles - subtle color hints */
-#power-profiles-daemon {
-    padding-right: 12px;
+#custom-power-profile {
+    font-size: 1rem;
+    min-width: 7rem;
 }
 
-#power-profiles-daemon.performance {
+#custom-power-profile.performance {
     color: #f53c3c;
 }
 
-#power-profiles-daemon.balanced {
+#custom-power-profile.balanced {
     color: #ffffff;
 }
 
-#power-profiles-daemon.power-saver {
+#custom-power-profile.power-saver {
     color: #2ecc71;
 }
 
