@@ -91,17 +91,17 @@ button:hover {
 /* Custom modules - fixed width to prevent jumping */
 #custom-audio-status {
     font-size: 1rem;
-    min-width: 220px;
+    min-width: 15rem;
 }
 
 #custom-cpu-info {
     font-size: 1rem;
-    min-width: 130px;
+    min-width: 8rem;
 }
 
 #custom-memory-info {
     font-size: 1rem;
-    min-width: 130px;
+    min-width: 10rem;
 }
 
 #window,
@@ -139,7 +139,7 @@ button:hover {
 /* Network */
 #network {
     font-size: 1rem;
-    min-width: 150px;
+    min-width: 12rem;
 }
 
 #network.disconnected {
@@ -212,6 +212,7 @@ button:hover {
     color: #ffffff;
     padding: 0 8px;
     font-size: 1rem;
+    min-width: 2rem;
 }
 
 /* Scratchpad */
