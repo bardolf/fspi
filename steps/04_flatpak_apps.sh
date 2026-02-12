@@ -29,6 +29,7 @@ APPS=(
   "net.cozic.joplin_desktop"
   "com.jetbrains.IntelliJ-IDEA-Ultimate"
   "com.jgraph.drawio.desktop"
+  "org.fedoraproject.MediaWriter"
 )
 
 for app in "${APPS[@]}"; do

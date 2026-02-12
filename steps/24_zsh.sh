@@ -69,6 +69,7 @@ log_info "Writing new .zshrc"
 
 cat >"$ZSHRC" <<'EOF'
 export ZSH="$HOME/.oh-my-zsh"
+export EDITOR=nvim
 ZSH_THEME="robbyrussell"
 
 plugins=(
@@ -95,6 +96,7 @@ SAVEHIST=500000
 # Custom aliases
 alias k=kubectl
 alias open='xdg-open'
+eval "$(/home/milan/.local/bin/mise activate bash)"
 EOF
 
 # -------------------------
