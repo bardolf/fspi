@@ -80,7 +80,8 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/sway/config" "$HOME/.config/sway/config" \
   "$SCRIPT_DIR/config/sway/config.d/10-displays.conf" "$HOME/.config/sway/config.d/10-displays.conf" \
   "$SCRIPT_DIR/config/sway/config.d/50-rules-browser.conf" "$HOME/.config/sway/config.d/50-rules-browser.conf" \
-  "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf"
+  "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf" \
+  "$SCRIPT_DIR/config/opencode/plugins/notification.js" "$HOME/.config/opencode/plugins/notification.js"
 
 # Calcurse caldav config contains user credentials after setup — only deploy the
 # template if the user doesn't have one yet, to never overwrite their secrets.
