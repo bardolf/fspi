@@ -71,10 +71,10 @@ button:hover {
 #pulseaudio,
 #wireplumber,
 #custom-media,
+#custom-gitlab-mrs,
 #custom-audio-status,
 #custom-cpu-info,
 #custom-memory-info,
-#custom-power-profile,
 #language,
 #tray,
 #mode,
@@ -177,20 +177,19 @@ button:hover {
 }
 
 /* Power profiles - subtle color hints */
-#custom-power-profile {
-    font-size: 1rem;
-    min-width: 7rem;
+#power-profiles-daemon {
+    padding-right: 12px;
 }
 
-#custom-power-profile.performance {
+#power-profiles-daemon.performance {
     color: #f53c3c;
 }
 
-#custom-power-profile.balanced {
+#power-profiles-daemon.balanced {
     color: #ffffff;
 }
 
-#custom-power-profile.power-saver {
+#power-profiles-daemon.power-saver {
     color: #2ecc71;
 }
 
@@ -226,8 +225,26 @@ button:hover {
     background-color: transparent;
 }
 
+/* GitLab MR status */
+#custom-gitlab-mrs {
+    font-size: 1rem;
+}
+
+#custom-gitlab-mrs.has-mrs {
+    color: #f9e2af;
+}
+
+#custom-gitlab-mrs.no-mrs {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+#custom-gitlab-mrs.error {
+    color: rgba(255, 255, 255, 0.4);
+}
+
 /* Hover effect for interactive modules */
 #custom-audio-status:hover,
+#custom-gitlab-mrs:hover,
 #network:hover,
 #battery:hover {
     background: rgba(255, 255, 255, 0.1);
