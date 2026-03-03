@@ -78,23 +78,35 @@ get_input_volume() {
 }
 
 # ============================================
+# D-Bus helper: get a single property from org.bluez
+# Usage: dbus_bt_get <dbus_object_path> <interface> <property>
+# ============================================
+dbus_bt_get() {
+    local path="$1" iface="$2" prop="$3"
+    dbus-send --system --dest=org.bluez --print-reply "$path" \
+        org.freedesktop.DBus.Properties.Get \
+        string:"$iface" string:"$prop" 2>/dev/null
+}
+
+# ============================================
 # Find connected BT audio device from known list
 # Returns: SHORT_NAME|FULL_NAME|BATTERY (battery empty if not available)
 # ============================================
 get_bt_device() {
     for entry in "${KNOWN_DEVICES[@]}"; do
-        local mac short_name info
-        mac="${entry%:*}"
+        local mac short_name dev_path
         # MAC has 5 colons (6 parts), short_name is after the 6th colon
         mac=$(echo "$entry" | cut -d: -f1-6)
         short_name=$(echo "$entry" | cut -d: -f7)
+        dev_path="/org/bluez/hci0/dev_${mac//:/_}"
 
-        info=$(bluetoothctl info "$mac" 2>/dev/null)
-
-        if echo "$info" | grep -q "Connected: yes"; then
+        # Check connection via D-Bus
+        if dbus_bt_get "$dev_path" "org.bluez.Device1" "Connected" | grep -q "boolean true"; then
             local battery full_name
-            battery=$(echo "$info" | grep "Battery Percentage" | awk '{print $4}' | tr -d '()%')
-            full_name=$(echo "$info" | grep "Name:" | cut -d: -f2- | xargs)
+            full_name=$(dbus_bt_get "$dev_path" "org.bluez.Device1" "Name" \
+                | grep 'variant' | sed 's/.*string "\(.*\)"/\1/')
+            battery=$(dbus_bt_get "$dev_path" "org.bluez.Battery1" "Percentage" \
+                | grep 'variant' | awk '{print $NF}')
             echo "${short_name}|${full_name}|${battery}"
             return
         fi
