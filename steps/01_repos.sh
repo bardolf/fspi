@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$SCRIPT_DIR/lib/logging.sh"
 
-log_info "Adding essential repositories (RPM Fusion, Flathub, Vivaldi)"
+log_info "Adding essential repositories (RPM Fusion, Flathub, Vivaldi, git-secret)"
 
 # --- RPM Fusion ---
 FREE_URL="https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
@@ -47,6 +47,17 @@ EOF
   sudo dnf makecache -y || sudo dnf5 makecache -y
 else
   log_debug "Vivaldi repository already present"
+fi
+
+# --- git-secret ---
+GIT_SECRET_REPO="/etc/yum.repos.d/git-secret-rpm.repo"
+if [[ ! -f "$GIT_SECRET_REPO" ]]; then
+  log_info "Adding git-secret repository"
+  sudo wget https://raw.githubusercontent.com/sobolevn/git-secret/master/utils/rpm/git-secret.repo \
+    -O "$GIT_SECRET_REPO"
+  sudo dnf makecache -y || sudo dnf5 makecache -y
+else
+  log_debug "git-secret repository already present"
 fi
 
 log_info "Repository setup complete."

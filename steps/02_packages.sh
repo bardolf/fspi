@@ -31,6 +31,7 @@ PACKAGES=(
   slurp
   flameshot
   jq
+  yq
   wl-clipboard
   libnotify
   azure-cli
@@ -44,6 +45,7 @@ PACKAGES=(
   earlyoom
   ddcutil
   lm_sensors
+  git-secret
 )
 
 for pkg in "${PACKAGES[@]}"; do
