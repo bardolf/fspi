@@ -204,6 +204,8 @@ bindsym $mod+l exec swaylock
 # Show current Spotify track in a notification
 bindsym $mod+slash exec ~/scripts/current_player_metadata.sh
 
+# Dismiss the latest notification
+bindsym $mod+comma exec dunstctl close
 
 # Applications
 bindsym $mod+i exec ~/scripts/launch_webapp.sh https://chatgpt.com
