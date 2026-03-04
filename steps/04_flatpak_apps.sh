@@ -30,6 +30,7 @@ APPS=(
   "com.jetbrains.IntelliJ-IDEA-Ultimate"
   "com.jgraph.drawio.desktop"
   "org.fedoraproject.MediaWriter"
+  "dev.zed.Zed"
 )
 
 for app in "${APPS[@]}"; do
