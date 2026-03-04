@@ -73,6 +73,7 @@ button:hover {
 #custom-media,
 #custom-gitlab-mrs,
 #custom-audio-status,
+#custom-power-profile,
 #custom-cpu-info,
 #custom-memory-info,
 #language,
@@ -92,7 +93,7 @@ button:hover {
 /* Custom modules - fixed width to prevent jumping */
 #custom-audio-status {
     font-size: 1rem;
-    min-width: 15rem;
+    min-width: 11rem;
 }
 
 #custom-cpu-info {
@@ -127,13 +128,13 @@ button:hover {
 #clock {
     font-size: 1.23rem;
     font-weight: bold;
-    border-left: none;
+    border-left: none; /* no separator between date and time */
 }
 
 #clock.date {
     font-size: 0.92rem;
     font-weight: normal;
-    border-left: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
     color: rgba(255, 255, 255, 0.7);
 }
 
@@ -176,7 +177,7 @@ button:hover {
     animation-direction: alternate;
 }
 
-/* Power profiles - subtle color hints */
+/* Power profiles - built-in module (unused, kept for reference) */
 #power-profiles-daemon {
     padding-right: 12px;
 }
@@ -190,6 +191,19 @@ button:hover {
 }
 
 #power-profiles-daemon.power-saver {
+    color: #2ecc71;
+}
+
+/* Power profiles - custom module */
+#custom-power-profile.performance {
+    color: #f53c3c;
+}
+
+#custom-power-profile.balanced {
+    color: #ffffff;
+}
+
+#custom-power-profile.power-saver {
     color: #2ecc71;
 }
 

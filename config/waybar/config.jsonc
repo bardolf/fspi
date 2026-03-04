@@ -12,8 +12,6 @@
         "sway/scratchpad"
     ],
     "modules-center": [
-        "clock",
-        "clock#date"
     ],
     "modules-right": [
         "custom/gitlab-mrs",
@@ -25,7 +23,9 @@
         "backlight",
         "sway/language",
         "battery",
-        "tray"
+        "tray",
+        "clock#date",
+        "clock"
     ],
     // Modules configuration
     // "sway/workspaces": {
