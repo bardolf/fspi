@@ -46,6 +46,7 @@ PACKAGES=(
   ddcutil
   lm_sensors
   git-secret
+  meld
 )
 
 for pkg in "${PACKAGES[@]}"; do
