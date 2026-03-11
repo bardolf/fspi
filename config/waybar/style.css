@@ -182,6 +182,14 @@ button:hover {
     font-size: 1.5rem;
 }
 
+#idle_inhibitor.activated {
+    color: #f9e2af;
+}
+
+#idle_inhibitor.deactivated {
+    color: rgba(255, 255, 255, 0.4);
+}
+
 /* Power profiles - built-in module (unused, kept for reference) */
 #power-profiles-daemon {
     padding-right: 12px;
