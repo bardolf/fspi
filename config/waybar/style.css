@@ -79,7 +79,7 @@ button:hover {
 #language,
 #tray,
 #mode,
-#idle_inhibitor,
+#custom-inhibitor,
 #scratchpad,
 #power-profiles-daemon,
 #mpd {
@@ -177,16 +177,16 @@ button:hover {
     animation-direction: alternate;
 }
 
-/* Idle inhibitor */
-#idle_inhibitor {
+/* Inhibitor (lid-switch + sleep) */
+#custom-inhibitor {
     font-size: 1.5rem;
 }
 
-#idle_inhibitor.activated {
+#custom-inhibitor.activated {
     color: #f9e2af;
 }
 
-#idle_inhibitor.deactivated {
+#custom-inhibitor.deactivated {
     color: rgba(255, 255, 255, 0.4);
 }
 
