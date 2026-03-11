@@ -93,7 +93,7 @@ button:hover {
 /* Custom modules - fixed width to prevent jumping */
 #custom-audio-status {
     font-size: 1rem;
-    min-width: 11rem;
+    min-width: 6rem;
 }
 
 #custom-cpu-info {
@@ -141,7 +141,7 @@ button:hover {
 /* Network */
 #network {
     font-size: 1rem;
-    min-width: 12rem;
+    min-width: 6rem;
 }
 
 #network.disconnected {
@@ -175,6 +175,11 @@ button:hover {
     animation-timing-function: steps(12);
     animation-iteration-count: infinite;
     animation-direction: alternate;
+}
+
+/* Idle inhibitor */
+#idle_inhibitor {
+    font-size: 1.5rem;
 }
 
 /* Power profiles - built-in module (unused, kept for reference) */
