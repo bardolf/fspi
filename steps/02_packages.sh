@@ -33,6 +33,9 @@ PACKAGES=(
   jq
   yq
   wl-clipboard
+  wtype
+  clipman
+  qalculate-qt
   libnotify
   azure-cli
   k9s

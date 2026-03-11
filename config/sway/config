@@ -28,6 +28,7 @@ exec_always {
 
 # Run once
 exec ~/scripts/sway_last_workspace.sh
+exec wl-paste -t text --watch clipman store
 
 # Your preferred terminal emulator
 set $term 'flatpak run org.wezfurlong.wezterm start --always-new-process'
@@ -154,7 +155,14 @@ bindsym Mod1+Shift+Tab focus prev sibling
 #
   # Split
   bindsym $mod+h splith
-  bindsym $mod+v splitv
+  bindsym $mod+b splitv
+
+  # Clipboard shortcuts (simulate Ctrl+Insert / Shift+Insert via wtype)
+  bindsym $mod+c exec wtype -M ctrl -k Insert
+  bindsym $mod+v exec wtype -M shift -k Insert
+
+  # Clipboard history (clipman + rofi)
+  bindsym Ctrl+$mod+v exec clipman pick -t rofi
 
   # Switch the current container between different layout styles
   bindsym $mod+s layout stacking
