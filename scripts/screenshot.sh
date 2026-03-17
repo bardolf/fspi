@@ -60,6 +60,7 @@ esac
 grim -g "$SELECTION" "$TMPFILE"
 
 if command -v satty >/dev/null; then
+  swaymsg fullscreen disable 2>/dev/null || true
   satty \
     --filename "$TMPFILE" \
     --output-filename "$OUTPUT_DIR/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png" \
