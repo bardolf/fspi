@@ -50,6 +50,7 @@ PACKAGES=(
   lm_sensors
   git-secret
   meld
+  glab
 )
 
 for pkg in "${PACKAGES[@]}"; do
