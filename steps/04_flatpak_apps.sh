@@ -27,7 +27,6 @@ APPS=(
   "com.rtosta.zapzap"
   "com.bitwarden.desktop"
   "net.cozic.joplin_desktop"
-  "com.jetbrains.IntelliJ-IDEA-Ultimate"
   "com.jgraph.drawio.desktop"
   "org.fedoraproject.MediaWriter"
   "dev.zed.Zed"
