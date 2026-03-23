@@ -2,10 +2,11 @@
 # Waybar module: GitLab MR status for ni_group
 # Output: JSON with text, tooltip, class for waybar return-type=json
 #
-# Shows 3 metrics:
+# Shows 4 metrics:
 #   1.  MRs waiting for my review (I'm reviewer, haven't approved yet)
 #   2.  My authored MRs that are fully approved but not merged
 #   3.  My authored MRs that are not approved and have unresolved review threads
+#   4.  My authored MRs that are not yet approved (waiting for review)
 #
 # Uses Nerd Font icons
 
@@ -178,9 +179,12 @@ for m in author_mrs:
 
 # --- Metric 3: My MRs not approved, with unresolved threads ---
 my_unresolved = []
+# --- Metric 4: My MRs not yet approved (waiting for review) ---
+my_pending_approval = []
 for m in author_mrs:
     approval = load_approval(m["pid"], m["iid"])
     if not approval.get("approved", False):
+        my_pending_approval.append(m)
         unresolved = count_unresolved(m["pid"], m["iid"])
         if unresolved > 0:
             my_unresolved.append({**m, "unresolved": unresolved})
@@ -189,8 +193,9 @@ for m in author_mrs:
 n1 = len(waiting_review)
 n2 = len(my_approved)
 n3 = len(my_unresolved)
+n4 = len(my_pending_approval)
 
-text = f"\ue725 {n1} | \uf00c {n2} | \uf075 {n3}"
+text = f"\ue725 {n1} | \uf00c {n2} | \uf075 {n3} | \uf417 {n4}"
 
 tooltip_parts = []
 
@@ -217,6 +222,14 @@ if my_unresolved:
     tooltip_parts.append("\n".join(lines))
 else:
     tooltip_parts.append("\uf075 My MRs with unresolved threads: none")
+
+if my_pending_approval:
+    lines = [f"\uf417 My MRs pending approval ({n4}):"]
+    for m in my_pending_approval:
+        lines.append(f"  {m['ref']} - {m['title']}")
+    tooltip_parts.append("\n".join(lines))
+else:
+    tooltip_parts.append("\uf417 My MRs pending approval: none")
 
 tooltip = "\n\n".join(tooltip_parts)
 
