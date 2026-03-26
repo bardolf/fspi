@@ -51,6 +51,7 @@ PACKAGES=(
   git-secret
   meld
   glab
+  lazygit
 )
 
 for pkg in "${PACKAGES[@]}"; do

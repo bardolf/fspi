@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$SCRIPT_DIR/lib/logging.sh"
 
-log_info "Adding essential repositories (RPM Fusion, Flathub, Vivaldi, git-secret)"
+log_info "Adding essential repositories (RPM Fusion, Flathub, Vivaldi, git-secret, Terra)"
 
 # --- RPM Fusion ---
 FREE_URL="https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
@@ -58,6 +58,14 @@ if [[ ! -f "$GIT_SECRET_REPO" ]]; then
   sudo dnf makecache -y || sudo dnf5 makecache -y
 else
   log_debug "git-secret repository already present"
+fi
+
+# --- Terra ---
+if ! dnf repolist --enabled | grep -q terra; then
+  log_info "Adding Terra repository"
+  sudo dnf install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+else
+  log_debug "Terra repository already enabled"
 fi
 
 log_info "Repository setup complete."
