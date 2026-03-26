@@ -1,6 +1,12 @@
 local wezterm = require("wezterm")
 
+local act = wezterm.action
+
 return {
+	-- Paste on Shift+Insert (sent by Sway Meta+V via wtype)
+	keys = {
+		{ key = "Insert", mods = "SHIFT", action = act.PasteFrom("Clipboard") },
+	},
 	-- Font settings
 	font = wezterm.font("CaskaydiaMono Nerd Font Mono", { weight = "DemiLight", stretch = "Normal", style = "Normal" }),
 	font_size = 12,
