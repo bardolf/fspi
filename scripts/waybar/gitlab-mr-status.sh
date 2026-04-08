@@ -2,11 +2,11 @@
 # Waybar module: GitLab MR status for ni_group
 # Output: JSON with text, tooltip, class for waybar return-type=json
 #
-# Shows 4 metrics:
-#   1.  MRs waiting for my review (I'm reviewer, haven't approved yet)
+# Shows 4 metrics (assignee = ball in my court):
+#   1.  MRs waiting for my review (I'm reviewer + assigned to me, haven't approved)
 #   2.  My authored MRs that are fully approved but not merged
-#   3.  My authored MRs that are not approved and have unresolved review threads
-#   4.  My authored MRs that are not yet approved (waiting for review)
+#   3.  My authored MRs with unresolved threads (assigned back to me)
+#   4.  My authored MRs pending approval (not assigned to me = ball in reviewer's court)
 #
 # Uses Nerd Font icons
 
@@ -63,7 +63,8 @@ def parse_mrs(path):
     data = json.load(open(path))
     return [{'pid': m['project_id'], 'iid': m['iid'],
              'ref': m['references']['full'].replace('it/ni_group/', ''),
-             'title': m['title'][:70]}
+             'title': m['title'][:70],
+             'assignees': [a['username'] for a in m.get('assignees', [])]}
             for m in data if not m.get('draft', False)]
 
 reviewer = parse_mrs('$WORK_DIR/reviewer_mrs.json')
@@ -99,9 +100,12 @@ done
 python3 -c "
 import json, os
 
+GITLAB_USER = '$GITLAB_USER'
 author = json.load(open('$WORK_DIR/author_parsed.json'))
 for m in author:
     pid, iid = m['pid'], m['iid']
+    if GITLAB_USER not in m.get('assignees', []):
+        continue
     path = '$WORK_DIR/approval_' + str(pid) + '_' + str(iid) + '.json'
     if os.path.exists(path):
         try:
@@ -162,9 +166,11 @@ def count_unresolved(pid, iid):
                 break  # count per discussion thread, not per note
     return count
 
-# --- Metric 1: MRs waiting for my review (I haven't approved yet) ---
+# --- Metric 1: MRs waiting for my review (I haven't approved yet, and I'm assigned) ---
 waiting_review = []
 for m in reviewer_mrs:
+    if GITLAB_USER not in m.get("assignees", []):
+        continue
     approval = load_approval(m["pid"], m["iid"])
     approved_by = [u["user"]["username"] for u in approval.get("approved_by", [])]
     if GITLAB_USER not in approved_by:
@@ -177,17 +183,20 @@ for m in author_mrs:
     if approval.get("approved", False):
         my_approved.append(m)
 
-# --- Metric 3: My MRs not approved, with unresolved threads ---
+# --- Metric 3: My MRs not approved, with unresolved threads (assigned to me) ---
 my_unresolved = []
-# --- Metric 4: My MRs not yet approved (waiting for review) ---
+# --- Metric 4: My MRs not yet approved (waiting for review, not assigned to me) ---
 my_pending_approval = []
 for m in author_mrs:
     approval = load_approval(m["pid"], m["iid"])
     if not approval.get("approved", False):
-        my_pending_approval.append(m)
-        unresolved = count_unresolved(m["pid"], m["iid"])
-        if unresolved > 0:
-            my_unresolved.append({**m, "unresolved": unresolved})
+        is_assignee = GITLAB_USER in m.get("assignees", [])
+        if is_assignee:
+            unresolved = count_unresolved(m["pid"], m["iid"])
+            if unresolved > 0:
+                my_unresolved.append({**m, "unresolved": unresolved})
+        else:
+            my_pending_approval.append(m)
 
 # --- Build output ---
 n1 = len(waiting_review)
