@@ -219,7 +219,7 @@
     "custom/gitlab-mrs": {
         "exec": "~/scripts/waybar/gitlab-mr-status.sh",
         "return-type": "json",
-        "interval": 300,
+        "interval": 20,
         "on-click": "xdg-open 'https://devops.cetin/groups/it/ni_group/-/merge_requests'",
         "tooltip": true
     },
