@@ -76,7 +76,7 @@ button:hover {
 #custom-power-profile,
 #custom-cpu-info,
 #custom-memory-info,
-#language,
+#custom-keyboard,
 #tray,
 #mode,
 #custom-inhibitor,
@@ -234,8 +234,8 @@ button:hover {
     color: #eb4d4b;
 }
 
-/* Language */
-#language {
+/* Keyboard layout */
+#custom-keyboard {
     background: transparent;
     color: #ffffff;
     padding: 0 8px;

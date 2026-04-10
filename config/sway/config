@@ -207,7 +207,7 @@ mode "resize" {
   bindsym Return mode "default"
   bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resizer
+bindsym $mod+r mode "resize"
 
 
 bindsym $mod+l exec swaylock

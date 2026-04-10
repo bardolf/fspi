@@ -22,7 +22,7 @@
         "custom/memory-info",
         "backlight",
         "custom/inhibitor",
-        "sway/language",
+        "custom/keyboard",
         "battery",
         "tray",
         "clock#date",
@@ -195,6 +195,10 @@
             "default": ["", "", ""]
         },
         "on-click": "pavucontrol"
+    },
+    "custom/keyboard": {
+        "exec": "~/scripts/waybar/keyboard_layout.sh",
+        "return-type": "json"
     },
     "custom/audio-status": {
         "exec": "~/scripts/waybar/audio-status.sh",
