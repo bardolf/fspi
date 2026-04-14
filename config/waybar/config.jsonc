@@ -224,7 +224,7 @@
         "exec": "~/scripts/waybar/gitlab-mr-status.sh",
         "return-type": "json",
         "interval": 20,
-        "on-click": "xdg-open 'https://devops.cetin/groups/it/ni_group/-/merge_requests'",
+        "on-click": "xdg-open \"$(cat ${XDG_RUNTIME_DIR:-/tmp}/waybar-gitlab-mrs/click_url)\"",
         "tooltip": true
     },
     "custom/media": {

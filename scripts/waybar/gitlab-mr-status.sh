@@ -64,6 +64,7 @@ def parse_mrs(path):
     return [{'pid': m['project_id'], 'iid': m['iid'],
              'ref': m['references']['full'].replace('it/ni_group/', ''),
              'title': m['title'][:70],
+             'url': m['web_url'],
              'assignees': [a['username'] for a in m.get('assignees', [])]}
             for m in data if not m.get('draft', False)]
 
@@ -243,6 +244,31 @@ else:
 tooltip = "\n\n".join(tooltip_parts)
 
 css_class = "has-mrs" if (n1 + n2 + n3) > 0 else "no-mrs"
+
+# --- Resolve click URL (priority: review > unresolved > approved > pending) ---
+GITLAB_BASE = "https://devops.cetin"
+GROUP_MRS = f"{GITLAB_BASE}/groups/it/ni_group/-/merge_requests"
+FALLBACK_URL = f"{GROUP_MRS}?state=opened"
+
+def pick_url(mrs, list_filter):
+    if len(mrs) == 1:
+        return mrs[0]["url"]
+    return f"{GROUP_MRS}?state=opened&{list_filter}"
+
+if n1 > 0:
+    click_url = pick_url(waiting_review, f"reviewer_username={GITLAB_USER}")
+elif n3 > 0:
+    click_url = pick_url(my_unresolved, f"author_username={GITLAB_USER}&assignee_username={GITLAB_USER}")
+elif n2 > 0:
+    click_url = pick_url(my_approved, f"author_username={GITLAB_USER}")
+elif n4 > 0:
+    click_url = pick_url(my_pending_approval, f"author_username={GITLAB_USER}")
+else:
+    click_url = FALLBACK_URL
+
+TMPDIR_BASE = os.environ.get("XDG_RUNTIME_DIR", "/tmp") + "/waybar-gitlab-mrs"
+with open(f"{TMPDIR_BASE}/click_url", "w") as f:
+    f.write(click_url)
 
 output = json.dumps({"text": text, "tooltip": tooltip, "class": css_class}, ensure_ascii=False)
 print(output)
