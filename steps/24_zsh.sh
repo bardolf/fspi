@@ -96,6 +96,17 @@ SAVEHIST=500000
 # Custom aliases
 alias k=kubectl
 alias open='xdg-open'
+
+# Yazi: `y` wrapper that cd's the shell into Yazi's last CWD on exit
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
 eval "$(/home/milan/.local/bin/mise activate bash)"
 EOF
 
