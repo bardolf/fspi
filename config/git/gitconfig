@@ -41,6 +41,32 @@
   autoupdate = true        # Apply stored conflict resolutions automatically
 [core]
   editor = nvim
+
+[diff]
+	tool = nvimdiff
+[difftool]
+	prompt = false
+[difftool "nvimdiff"]
+	cmd = nvim -d "$LOCAL" "$REMOTE"
+[difftool "meld"]
+	cmd = meld "$LOCAL" "$REMOTE"
+[difftool "idea"]
+	cmd = /home/milan/opt/idea/idea/bin/idea.sh diff "$LOCAL" "$REMOTE"
+
+[merge]
+	tool = nvimdiff
+	conflictStyle = diff3    # 3-way conflict markers (include base)
+[mergetool]
+	prompt = false
+	keepBackup = false
+[mergetool "nvimdiff"]
+	cmd = nvim -d -c '4wincmd w | wincmd J' "$LOCAL" "$BASE" "$REMOTE" "$MERGED"
+[mergetool "meld"]
+	cmd = meld --auto-merge "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
+[mergetool "idea"]
+	cmd = /home/milan/opt/idea/idea/bin/idea.sh merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+	trustExitCode = true
+
 [include]
     path = ~/.gitconfig.d/custom  # add user details here
 

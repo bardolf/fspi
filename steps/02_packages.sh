@@ -52,6 +52,7 @@ PACKAGES=(
   meld
   glab
   lazygit
+  krita
 )
 
 for pkg in "${PACKAGES[@]}"; do
