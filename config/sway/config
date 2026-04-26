@@ -24,7 +24,7 @@ set $mod Mod4
 # Default applications
 exec_always {
     xdg-settings set default-web-browser vivaldi-stable.desktop
-    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
 }
 
 # Run once

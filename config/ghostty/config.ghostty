@@ -19,6 +19,7 @@ theme = TokyoNight Moon
 # Window
 background-opacity = 1.0
 confirm-close-surface = false
+window-theme = dark
 
 # Paste on Shift+Insert (sent by Sway Meta+V via wtype)
 keybind = shift+insert=paste_from_clipboard
