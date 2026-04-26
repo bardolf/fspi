@@ -46,69 +46,25 @@ install_plugin zsh-autosuggestions https://github.com/zsh-users/zsh-autosuggesti
 # -------------------------
 # Install other useful tools
 # -------------------------
-ensure_package autojump
 ensure_package fzf
 ensure_package kubectl
 ensure_package azure-cli
 
 # -------------------------
-# Backup existing .zshrc
+# Deploy .zshrc from repo
 # -------------------------
 ZSHRC="$HOME/.zshrc"
-if [[ -f "$ZSHRC" ]]; then
+ZSHRC_SRC="$SCRIPT_DIR/config/zsh/zshrc"
+
+if [[ -f "$ZSHRC" ]] && ! cmp -s "$ZSHRC_SRC" "$ZSHRC"; then
   timestamp=$(date +%Y%m%d%H%M%S)
   backup="$ZSHRC.$timestamp.bak"
   log_info "Backing up existing $ZSHRC → $backup"
   cp "$ZSHRC" "$backup"
 fi
 
-# -------------------------
-# Create new .zshrc
-# -------------------------
-log_info "Writing new .zshrc"
-
-cat >"$ZSHRC" <<'EOF'
-export ZSH="$HOME/.oh-my-zsh"
-export EDITOR=nvim
-ZSH_THEME="robbyrussell"
-
-plugins=(
-  git
-  zsh-syntax-highlighting
-  zsh-autosuggestions
-  z
-  azure
-  dnf
-  kubectl
-  fzf
-  autojump
-)
-
-source $ZSH/oh-my-zsh.sh
-
-# Optional: make suggestions visible
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
-
-# History
-HISTSIZE=500000
-SAVEHIST=500000
-
-# Custom aliases
-alias k=kubectl
-alias open='xdg-open'
-
-# Yazi: `y` wrapper that cd's the shell into Yazi's last CWD on exit
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
-}
-
-eval "$(/home/milan/.local/bin/mise activate bash)"
-EOF
+log_info "Writing new .zshrc from $ZSHRC_SRC"
+cp "$ZSHRC_SRC" "$ZSHRC"
 
 # -------------------------
 # Set Zsh as default shell

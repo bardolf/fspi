@@ -53,6 +53,9 @@ PACKAGES=(
   glab
   lazygit
   krita
+  kitty-kitten
+  zoxide
+  resvg
 )
 
 for pkg in "${PACKAGES[@]}"; do

@@ -11,20 +11,23 @@ source "$SCRIPT_DIR/lib/logging.sh"
 DETAIL=false
 for arg in "$@"; do
   case "$arg" in
-    -d|--detail) DETAIL=true ;;
-    -h|--help)
-      echo "Usage: $(basename "$0") [-d|--detail] [-h|--help]"
-      echo ""
-      echo "Compare repo files against deployed system files."
-      echo ""
-      echo "Options:"
-      echo "  -d, --detail  Show unified diffs for changed files"
-      echo "  -h, --help    Show this help message"
-      echo ""
-      echo "Set DEBUG=1 to also show files that are identical."
-      exit 0
-      ;;
-    *) log_error "Unknown option: $arg"; exit 1 ;;
+  -d | --detail) DETAIL=true ;;
+  -h | --help)
+    echo "Usage: $(basename "$0") [-d|--detail] [-h|--help]"
+    echo ""
+    echo "Compare repo files against deployed system files."
+    echo ""
+    echo "Options:"
+    echo "  -d, --detail  Show unified diffs for changed files"
+    echo "  -h, --help    Show this help message"
+    echo ""
+    echo "Set DEBUG=1 to also show files that are identical."
+    exit 0
+    ;;
+  *)
+    log_error "Unknown option: $arg"
+    exit 1
+    ;;
   esac
 done
 
@@ -95,23 +98,24 @@ check_file() {
 print_section "Configs"
 
 CONFIG_PAIRS=(
-  "config/waybar/config.jsonc"                       "$HOME/.config/waybar/config.jsonc"
-  "config/waybar/style.css"                          "$HOME/.config/waybar/style.css"
-  "config/foot/foot.ini"                             "$HOME/.config/foot/foot.ini"
-  "config/git/gitconfig"                             "$HOME/.gitconfig"
-  "config/mise/config.toml"                          "$HOME/.config/mise/config.toml"
-  "config/wezterm/wezterm.lua"                       "$HOME/.config/wezterm/wezterm.lua"
-  "config/dunst/dunstrc"                             "$HOME/.config/dunst/dunstrc"
-  "config/nvim/lua/config/options.lua"               "$HOME/.config/nvim/lua/config/options.lua"
-  "config/nvim/lua/plugins/disabled.lua"             "$HOME/.config/nvim/lua/plugins/disabled.lua"
-  "config/nvim/lua/plugins/blink.lua"                "$HOME/.config/nvim/lua/plugins/blink.lua"
-  "config/satty/config.toml"                         "$HOME/.config/satty/config.toml"
-  "config/sway/config"                               "$HOME/.config/sway/config"
-  "config/sway/config.d/10-displays.conf"            "$HOME/.config/sway/config.d/10-displays.conf"
-  "config/sway/config.d/50-rules-browser.conf"       "$HOME/.config/sway/config.d/50-rules-browser.conf"
+  "config/waybar/config.jsonc" "$HOME/.config/waybar/config.jsonc"
+  "config/waybar/style.css" "$HOME/.config/waybar/style.css"
+  "config/foot/foot.ini" "$HOME/.config/foot/foot.ini"
+  "config/git/gitconfig" "$HOME/.gitconfig"
+  "config/mise/config.toml" "$HOME/.config/mise/config.toml"
+  "config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua"
+  "config/dunst/dunstrc" "$HOME/.config/dunst/dunstrc"
+  "config/nvim/lua/config/options.lua" "$HOME/.config/nvim/lua/config/options.lua"
+  "config/nvim/lua/plugins/disabled.lua" "$HOME/.config/nvim/lua/plugins/disabled.lua"
+  "config/nvim/lua/plugins/blink.lua" "$HOME/.config/nvim/lua/plugins/blink.lua"
+  "config/satty/config.toml" "$HOME/.config/satty/config.toml"
+  "config/sway/config" "$HOME/.config/sway/config"
+  "config/sway/config.d/10-displays.conf" "$HOME/.config/sway/config.d/10-displays.conf"
+  "config/sway/config.d/50-rules-browser.conf" "$HOME/.config/sway/config.d/50-rules-browser.conf"
   "config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf"
-  "config/opencode/plugins/notification.js"          "$HOME/.config/opencode/plugins/notification.js"
-  "config/calcurse/caldav/config"                    "$HOME/.config/calcurse/caldav/config"
+  "config/calcurse/caldav/config" "$HOME/.config/calcurse/caldav/config"
+  "config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
+  "config/zsh/zshrc" "$HOME/.zshrc"
 )
 
 for ((i = 0; i < ${#CONFIG_PAIRS[@]}; i += 2)); do
@@ -174,7 +178,7 @@ echo "════════════════════════�
 printf "  Summary: %d checked, %d differ, %d missing\n" "$total" "$diff_count" "$missing_count"
 echo "═══════════════════════════════════════════"
 
-if (( diff_count + missing_count > 0 )); then
+if ((diff_count + missing_count > 0)); then
   exit 1
 else
   log_info "All deployed files match the repo."

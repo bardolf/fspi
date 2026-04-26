@@ -1,0 +1,13 @@
+[Default Applications]
+text/html=vivaldi-stable.desktop
+x-scheme-handler/http=vivaldi-stable.desktop
+x-scheme-handler/https=vivaldi-stable.desktop
+x-scheme-handler/about=vivaldi-stable.desktop
+x-scheme-handler/unknown=vivaldi-stable.desktop
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
+text/plain=code.desktop
+image/svg+xml=org.inkscape.Inkscape.desktop
+
+[Added Associations]
+application/pdf=okularApplication_pdf.desktop;
+image/svg+xml=org.inkscape.Inkscape.desktop;

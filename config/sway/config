@@ -24,6 +24,7 @@ set $mod Mod4
 # Default applications
 exec_always {
     xdg-settings set default-web-browser vivaldi-stable.desktop
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 }
 
 # Run once
@@ -31,7 +32,7 @@ exec ~/scripts/sway_last_workspace.sh
 exec wl-paste -t text --watch clipman store
 
 # Your preferred terminal emulator
-set $term 'flatpak run org.wezfurlong.wezterm start --always-new-process'
+set $term ghostty 
 
 # Application launcher
 set $rofi_cmd rofi -terminal '$term'

@@ -20,3 +20,16 @@ else
 fi
 
 log_info "Color schemes are ready at $COLOR_SCHEMES_DIR"
+
+# --- Install Ghostty themes ---
+GHOSTTY_THEMES_DIR="$HOME/.config/ghostty/themes"
+GHOSTTY_SOURCE_DIR="$COLOR_SCHEMES_DIR/ghostty"
+
+if [[ -d "$GHOSTTY_SOURCE_DIR" ]]; then
+  log_info "Copying Ghostty themes to $GHOSTTY_THEMES_DIR"
+  mkdir -p "$GHOSTTY_THEMES_DIR"
+  cp -f "$GHOSTTY_SOURCE_DIR"/* "$GHOSTTY_THEMES_DIR/"
+  log_info "Ghostty themes installed"
+else
+  log_warn "Ghostty themes directory not found at $GHOSTTY_SOURCE_DIR"
+fi
