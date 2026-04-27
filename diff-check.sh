@@ -118,6 +118,7 @@ CONFIG_PAIRS=(
   "config/yazi/yazi.toml" "$HOME/.config/yazi/yazi.toml"
   "config/yazi/keymap.toml" "$HOME/.config/yazi/keymap.toml"
   "config/yazi/theme.toml" "$HOME/.config/yazi/theme.toml"
+  "config/yazi/plugins/smart-enter.yazi/main.lua" "$HOME/.config/yazi/plugins/smart-enter.yazi/main.lua"
   "config/mimeapps.list" "$HOME/.config/mimeapps.list"
   "config/zsh/zshrc" "$HOME/.zshrc"
 )
