@@ -113,6 +113,7 @@ CONFIG_PAIRS=(
   "config/sway/config.d/10-displays.conf" "$HOME/.config/sway/config.d/10-displays.conf"
   "config/sway/config.d/50-rules-browser.conf" "$HOME/.config/sway/config.d/50-rules-browser.conf"
   "config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf"
+  "config/sway/config.d/60-bindings-mouse.conf" "$HOME/.config/sway/config.d/60-bindings-mouse.conf"
   "config/calcurse/caldav/config" "$HOME/.config/calcurse/caldav/config"
   "config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
   "config/yazi/yazi.toml" "$HOME/.config/yazi/yazi.toml"
