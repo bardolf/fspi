@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Claude
+Comment=Open Claude AI in browser
+Exec=/home/milan/scripts/launch_webapp.sh https://claude.ai
+Icon=/home/milan/.local/share/icons/claude.svg
+Terminal=false
+Categories=Network;WebBrowser;
+StartupNotify=true
