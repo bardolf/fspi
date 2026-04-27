@@ -115,6 +115,10 @@ CONFIG_PAIRS=(
   "config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf"
   "config/calcurse/caldav/config" "$HOME/.config/calcurse/caldav/config"
   "config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
+  "config/yazi/yazi.toml" "$HOME/.config/yazi/yazi.toml"
+  "config/yazi/keymap.toml" "$HOME/.config/yazi/keymap.toml"
+  "config/yazi/theme.toml" "$HOME/.config/yazi/theme.toml"
+  "config/mimeapps.list" "$HOME/.config/mimeapps.list"
   "config/zsh/zshrc" "$HOME/.zshrc"
 )
 
