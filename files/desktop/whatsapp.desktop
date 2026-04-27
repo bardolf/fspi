@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=WhatsApp
+Comment=Open WhatsApp Web in browser
+Exec=/home/milan/scripts/launch_webapp.sh https://web.whatsapp.com
+Icon=/home/milan/.local/share/icons/whatsapp.svg
+Terminal=false
+Categories=Network;InstantMessaging;
+StartupNotify=true
