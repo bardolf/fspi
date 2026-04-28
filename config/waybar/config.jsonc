@@ -110,7 +110,8 @@
     },
     "clock#date": {
         "format": "{:%a %d %b}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "~/scripts/waybar/launch-ikhal.sh"
     },
     "cpu": {
         "format": "{usage}% ",

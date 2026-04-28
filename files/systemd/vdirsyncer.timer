@@ -1,0 +1,12 @@
+[Unit]
+Description=Run vdirsyncer every 15 minutes
+Documentation=https://vdirsyncer.pimutils.org/
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=15min
+Persistent=true
+RandomizedDelaySec=30s
+
+[Install]
+WantedBy=timers.target

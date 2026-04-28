@@ -54,6 +54,9 @@ PACKAGES=(
   kitty-kitten
   zoxide
   resvg
+  vdirsyncer
+  python3-aiohttp-oauthlib
+  khal
 )
 
 for pkg in "${PACKAGES[@]}"; do

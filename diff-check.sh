@@ -175,6 +175,24 @@ for file in "$ICONS_SRC"/*.png "$ICONS_SRC"/*.svg "$ICONS_SRC"/*.xpm; do
 done
 
 # =========================================================
+# Section 4: Calendar sync (mirrors steps/25_calendar_sync.sh)
+# =========================================================
+
+print_section "Calendar sync (vdirsyncer + khal + systemd)"
+
+CALENDAR_PAIRS=(
+  # vdirsyncer config intentionally excluded: local copy holds OAuth secrets
+  # that the repo template does not, so a DIFF here is expected.
+  "config/khal/config" "$HOME/.config/khal/config"
+  "files/systemd/vdirsyncer.service" "$HOME/.config/systemd/user/vdirsyncer.service"
+  "files/systemd/vdirsyncer.timer" "$HOME/.config/systemd/user/vdirsyncer.timer"
+)
+
+for ((i = 0; i < ${#CALENDAR_PAIRS[@]}; i += 2)); do
+  check_file "$SCRIPT_DIR/${CALENDAR_PAIRS[i]}" "${CALENDAR_PAIRS[i + 1]}"
+done
+
+# =========================================================
 # Summary
 # =========================================================
 

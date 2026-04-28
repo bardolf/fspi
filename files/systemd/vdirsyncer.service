@@ -1,0 +1,10 @@
+[Unit]
+Description=Synchronize calendars with vdirsyncer
+Documentation=https://vdirsyncer.pimutils.org/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/vdirsyncer sync
+Nice=10
