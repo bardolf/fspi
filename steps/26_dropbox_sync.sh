@@ -5,7 +5,7 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$SCRIPT_DIR/lib/logging.sh"
 source "$SCRIPT_DIR/lib/utils.sh"
 
-log_info "Step 26: Configure rclone bisync for Dropbox"
+log_info "Step 26: Configure rclone sync (read-only) for Dropbox"
 
 ensure_command rclone
 
@@ -39,12 +39,8 @@ if ! rclone listremotes 2>/dev/null | grep -q '^dropbox:$'; then
   log_warn "  rclone config"
   log_warn "    n)ew -> name: dropbox -> storage: Dropbox -> blank client_id/secret"
   log_warn "    -> y)es auto-config (browser OAuth) -> n) no advanced/team"
-elif [[ ! -d "$HOME/.cache/rclone/bisync" ]] || [[ -z "$(ls -A "$HOME/.cache/rclone/bisync" 2>/dev/null)" ]]; then
-  log_warn "Bisync state not initialized. Run this once before the timer can succeed:"
-  log_warn "  rclone bisync dropbox: $DROPBOX_DIR --resync --verbose"
-  log_warn "(this seeds bisync's state; subsequent runs are incremental)"
 else
-  log_debug "rclone dropbox remote and bisync state present, no action needed"
+  log_debug "rclone dropbox remote configured, no action needed"
 fi
 
 log_info "Step 26 complete"
