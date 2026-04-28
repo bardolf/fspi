@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-source "$SCRIPT_DIR/lib/logging.sh"
-source "$SCRIPT_DIR/lib/utils.sh"
+STEP_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+PROJECT_ROOT=$(cd "$STEP_DIR/../.." && pwd)
+source "$PROJECT_ROOT/lib/logging.sh"
+source "$PROJECT_ROOT/lib/utils.sh"
 
-log_info "Step 26: Configure rclone sync (read-only) for Dropbox"
+log_info "Optional: Configure rclone sync (read-only) for Dropbox"
 
 ensure_command rclone
 
@@ -21,8 +22,8 @@ fi
 # --- Deploy systemd user units ---
 SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
 mkdir -p "$SYSTEMD_USER_DIR"
-ensure_file_copy "$SCRIPT_DIR/files/systemd/rclone-dropbox.service" "$SYSTEMD_USER_DIR/rclone-dropbox.service"
-ensure_file_copy "$SCRIPT_DIR/files/systemd/rclone-dropbox.timer"   "$SYSTEMD_USER_DIR/rclone-dropbox.timer"
+ensure_file_copy "$STEP_DIR/files/systemd/rclone-dropbox.service" "$SYSTEMD_USER_DIR/rclone-dropbox.service"
+ensure_file_copy "$STEP_DIR/files/systemd/rclone-dropbox.timer"   "$SYSTEMD_USER_DIR/rclone-dropbox.timer"
 
 systemctl --user daemon-reload
 
@@ -43,4 +44,4 @@ else
   log_debug "rclone dropbox remote configured, no action needed"
 fi
 
-log_info "Step 26 complete"
+log_info "Optional Dropbox sync setup complete"
