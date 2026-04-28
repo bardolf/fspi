@@ -7,16 +7,28 @@ source "$SCRIPT_DIR/lib/utils.sh"
 
 log_info "Step 25: Configure vdirsyncer + khal for Google Calendar sync"
 
-# --- Deploy vdirsyncer config (only if missing — preserves user's secrets on re-run) ---
+# --- Deploy vdirsyncer config (no secrets inside; safe to overwrite) ---
 VDIRSYNCER_CONFIG="$HOME/.config/vdirsyncer/config"
-if [[ -f "$VDIRSYNCER_CONFIG" ]]; then
-  log_debug "vdirsyncer config already exists, leaving untouched (would overwrite user's OAuth secrets)"
-else
-  log_info "Installing vdirsyncer config template at $VDIRSYNCER_CONFIG"
-  mkdir -p "$(dirname "$VDIRSYNCER_CONFIG")"
-  cp "$SCRIPT_DIR/config/vdirsyncer/config" "$VDIRSYNCER_CONFIG"
-fi
+ensure_file_copy "$SCRIPT_DIR/config/vdirsyncer/config" "$VDIRSYNCER_CONFIG"
 chmod 600 "$VDIRSYNCER_CONFIG"
+
+# --- Seed OAuth secret files (left untouched if they already exist) ---
+CLIENT_ID_FILE="$HOME/.config/vdirsyncer/.client_id"
+CLIENT_SECRET_FILE="$HOME/.config/vdirsyncer/.client_secret"
+
+seed_secret_file() {
+  local path="$1" placeholder="$2"
+  if [[ -f "$path" ]]; then
+    log_debug "Secret file already exists: $path"
+  else
+    log_info "Seeding placeholder secret file: $path"
+    printf '%s\n' "$placeholder" > "$path"
+    chmod 600 "$path"
+  fi
+}
+
+seed_secret_file "$CLIENT_ID_FILE"     "PASTE_GOOGLE_OAUTH_CLIENT_ID_HERE"
+seed_secret_file "$CLIENT_SECRET_FILE" "PASTE_GOOGLE_OAUTH_CLIENT_SECRET_HERE"
 
 # --- Deploy khal config ---
 ensure_file_copy "$SCRIPT_DIR/config/khal/config" "$HOME/.config/khal/config"
@@ -38,11 +50,10 @@ fi
 
 # --- First-run setup hints ---
 TOKEN_FILE="$HOME/.config/vdirsyncer/google_calendar_token"
-if grep -q "PASTE_GOOGLE_OAUTH" "$VDIRSYNCER_CONFIG" 2>/dev/null; then
-  log_warn "vdirsyncer config still has placeholder OAuth credentials"
-  log_warn "Edit $VDIRSYNCER_CONFIG and replace:"
-  log_warn "  PASTE_GOOGLE_OAUTH_CLIENT_ID_HERE     -> your Google OAuth Client ID"
-  log_warn "  PASTE_GOOGLE_OAUTH_CLIENT_SECRET_HERE -> your Google OAuth Client Secret"
+if grep -q "PASTE_GOOGLE_OAUTH" "$CLIENT_ID_FILE" "$CLIENT_SECRET_FILE" 2>/dev/null; then
+  log_warn "OAuth credentials not yet populated. Replace placeholders with your Google OAuth values:"
+  log_warn "  echo 'YOUR_CLIENT_ID'     > $CLIENT_ID_FILE"
+  log_warn "  echo 'YOUR_CLIENT_SECRET' > $CLIENT_SECRET_FILE"
   log_warn "(create them at https://console.cloud.google.com -> OAuth client ID -> Desktop app)"
 elif [[ ! -f "$TOKEN_FILE" ]]; then
   log_warn "No OAuth token found at $TOKEN_FILE"

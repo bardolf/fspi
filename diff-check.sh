@@ -181,8 +181,7 @@ done
 print_section "Calendar sync (vdirsyncer + khal + systemd)"
 
 CALENDAR_PAIRS=(
-  # vdirsyncer config intentionally excluded: local copy holds OAuth secrets
-  # that the repo template does not, so a DIFF here is expected.
+  "config/vdirsyncer/config" "$HOME/.config/vdirsyncer/config"
   "config/khal/config" "$HOME/.config/khal/config"
   "files/systemd/vdirsyncer.service" "$HOME/.config/systemd/user/vdirsyncer.service"
   "files/systemd/vdirsyncer.timer" "$HOME/.config/systemd/user/vdirsyncer.timer"
