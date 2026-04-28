@@ -88,12 +88,3 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/yazi/theme.toml" "$HOME/.config/yazi/theme.toml" \
   "$SCRIPT_DIR/config/yazi/plugins/smart-enter.yazi/main.lua" "$HOME/.config/yazi/plugins/smart-enter.yazi/main.lua" \
   "$SCRIPT_DIR/config/mimeapps.list" "$HOME/.config/mimeapps.list"
-
-# Calcurse caldav config contains user credentials after setup — only deploy the
-# template if the user doesn't have one yet, to never overwrite their secrets.
-CALDAV_CONFIG="$HOME/.config/calcurse/caldav/config"
-if [[ ! -f "$CALDAV_CONFIG" ]]; then
-  config_step_copy "$SCRIPT_DIR/config/calcurse/caldav/config" "$CALDAV_CONFIG"
-else
-  log_info "Calcurse caldav config already exists, skipping (won't overwrite credentials)."
-fi

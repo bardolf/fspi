@@ -13,8 +13,6 @@ PACKAGES=(
   mc
   htop
   btop
-  calcurse
-  python3-oauth2client
   flatpak
   chromium
   qalc
