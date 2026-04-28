@@ -57,6 +57,7 @@ PACKAGES=(
   vdirsyncer
   python3-aiohttp-oauthlib
   khal
+  rclone
 )
 
 for pkg in "${PACKAGES[@]}"; do

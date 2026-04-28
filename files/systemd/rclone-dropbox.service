@@ -1,0 +1,10 @@
+[Unit]
+Description=Bidirectionally sync Dropbox to %h/Dropbox via rclone bisync
+Documentation=https://rclone.org/bisync/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rclone bisync dropbox: %h/Dropbox --resilient --recover --max-delete 5
+Nice=10
