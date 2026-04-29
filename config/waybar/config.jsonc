@@ -17,7 +17,7 @@
         "custom/gitlab-mrs",
         "custom/audio-status",
         "network",
-        "custom/power-profile",
+        "power-profiles-daemon",
         "custom/cpu-info",
         "custom/memory-info",
         "backlight",

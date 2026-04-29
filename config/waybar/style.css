@@ -190,9 +190,10 @@ button:hover {
     color: rgba(255, 255, 255, 0.4);
 }
 
-/* Power profiles - built-in module (unused, kept for reference) */
+/* Power profiles - built-in module */
 #power-profiles-daemon {
     padding-right: 12px;
+    font-size: 1.5rem;
 }
 
 #power-profiles-daemon.performance {

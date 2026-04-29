@@ -59,7 +59,7 @@ PACKAGES=(
   khal
   rclone
   ghostty
-  power-profiles-daemon
+  tuned-ppd
 )
 
 for pkg in "${PACKAGES[@]}"; do
