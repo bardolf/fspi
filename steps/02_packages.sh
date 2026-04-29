@@ -58,6 +58,8 @@ PACKAGES=(
   python3-aiohttp-oauthlib
   khal
   rclone
+  ghostty
+  power-profiles-daemon
 )
 
 for pkg in "${PACKAGES[@]}"; do

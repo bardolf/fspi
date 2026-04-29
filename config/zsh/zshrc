@@ -35,7 +35,7 @@ function y() {
        fi
        rm -f -- "$tmp"
 }
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(/usr/bin/mise activate zsh)"
 
