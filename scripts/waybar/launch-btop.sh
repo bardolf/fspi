@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-flatpak run org.wezfurlong.wezterm start --always-new-process -- btop
+TERMINAL="${TERMINAL:-$(command -v ghostty || command -v foot || command -v xterm)}"
+exec "$TERMINAL" -e btop
