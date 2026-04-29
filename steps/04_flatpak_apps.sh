@@ -21,7 +21,6 @@ fi
 # --- List of Flatpak apps ---
 APPS=(
   "com.github.IsmaelMartinez.teams_for_linux"
-  "org.wezfurlong.wezterm"
   "com.spotify.Client"
   "org.signal.Signal"
   "com.rtosta.zapzap"
