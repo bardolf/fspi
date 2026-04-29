@@ -134,7 +134,7 @@ fi
 # Volume icons - Nerd Font
 # 󰕾 = volume high, 󰖀 = volume low, 󰝟 = muted
 if [[ "$out_vol" == "muted" ]]; then
-    out_text="󰝟"
+    out_text="<span size=\"x-large\">󰝟</span>"
 else
     if [[ "$out_vol" -lt 30 ]]; then
         out_icon="󰕿"
@@ -149,7 +149,7 @@ fi
 # Mic icons - Nerd Font
 # 󰍬 = mic, 󰍭 = mic muted
 if [[ "$in_vol" == "muted" ]]; then
-    in_text="󰍭"
+    in_text="<span size=\"x-large\">󰍭</span>"
 else
     in_text="󰍬 ${in_vol}%"
 fi
