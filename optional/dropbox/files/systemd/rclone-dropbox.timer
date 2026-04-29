@@ -1,6 +1,6 @@
 [Unit]
-Description=Run rclone bisync for Dropbox every 15 minutes
-Documentation=https://rclone.org/bisync/
+Description=Run rclone sync (Dropbox -> local) every 15 minutes
+Documentation=https://rclone.org/commands/rclone_sync/
 
 [Timer]
 OnBootSec=3min
