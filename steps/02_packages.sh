@@ -60,6 +60,7 @@ PACKAGES=(
   rclone
   ghostty
   tuned-ppd
+  mise
 )
 
 for pkg in "${PACKAGES[@]}"; do
