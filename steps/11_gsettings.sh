@@ -9,6 +9,7 @@ log_info "Applying GSettings tweaks"
 # schema  key  value   (space-separated triples)
 SETTINGS=(
   "org.gnome.desktop.interface gtk-enable-primary-paste true"
+  "org.gnome.desktop.interface color-scheme 'prefer-light'"
 )
 
 if ! command -v gsettings &>/dev/null; then
