@@ -10,7 +10,7 @@ options="  Lock
 choice=$(echo "$options" | rofi -dmenu -i -p "System…")
 
 case "$choice" in
-*Lock*) swaylock ;;
+*Lock*) "$HOME/.local/bin/swaylock-effects" -C "$HOME/.config/swaylock/effects.conf" ;;
 *Screensaver*) gnome-screensaver-command -a ;;
 *Suspend*) systemctl suspend ;;
 *Restart*) systemctl reboot ;;

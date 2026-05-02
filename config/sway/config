@@ -211,7 +211,7 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 
-bindsym $mod+l exec swaylock
+bindsym $mod+l exec ~/.local/bin/swaylock-effects -C ~/.config/swaylock/effects.conf
 
 # Show current Spotify track in a notification
 bindsym $mod+slash exec ~/scripts/current_player_metadata.sh

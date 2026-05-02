@@ -78,10 +78,12 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/nvim/lua/plugins/blink.lua" "$HOME/.config/nvim/lua/plugins/blink.lua" \
   "$SCRIPT_DIR/config/satty/config.toml" "$HOME/.config/satty/config.toml" \
   "$SCRIPT_DIR/config/sway/config" "$HOME/.config/sway/config" \
+  "$SCRIPT_DIR/config/swaylock/effects.conf" "$HOME/.config/swaylock/effects.conf" \
   "$SCRIPT_DIR/config/sway/config.d/10-displays.conf" "$HOME/.config/sway/config.d/10-displays.conf" \
   "$SCRIPT_DIR/config/sway/config.d/50-rules-browser.conf" "$HOME/.config/sway/config.d/50-rules-browser.conf" \
   "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf" \
   "$SCRIPT_DIR/config/sway/config.d/60-bindings-mouse.conf" "$HOME/.config/sway/config.d/60-bindings-mouse.conf" \
+  "$SCRIPT_DIR/config/sway/config.d/90-swayidle.conf" "$HOME/.config/sway/config.d/90-swayidle.conf" \
   "$SCRIPT_DIR/config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty" \
   "$SCRIPT_DIR/config/yazi/yazi.toml" "$HOME/.config/yazi/yazi.toml" \
   "$SCRIPT_DIR/config/yazi/keymap.toml" "$HOME/.config/yazi/keymap.toml" \
