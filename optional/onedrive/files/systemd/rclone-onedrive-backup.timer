@@ -1,0 +1,12 @@
+[Unit]
+Description=Run rclone backup (~/Dropbox -> OneDrive) hourly
+Documentation=https://rclone.org/commands/rclone_sync/
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+Persistent=true
+RandomizedDelaySec=2min
+
+[Install]
+WantedBy=timers.target

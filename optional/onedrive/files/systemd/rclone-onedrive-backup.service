@@ -1,0 +1,11 @@
+[Unit]
+Description=Back up selected ~/Dropbox subfolders to OneDrive via rclone sync (one-way, with backup-dir)
+Documentation=https://rclone.org/commands/rclone_sync/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c '/usr/bin/rclone sync "$HOME/Dropbox/Docs"  onedrive:Dropbox-backup/Docs  --backup-dir "onedrive:Dropbox-backup-trash/$(date +%%F)/Docs"  --max-delete 50'
+ExecStart=/bin/sh -c '/usr/bin/rclone sync "$HOME/Dropbox/Chess" onedrive:Dropbox-backup/Chess --backup-dir "onedrive:Dropbox-backup-trash/$(date +%%F)/Chess" --max-delete 50'
+Nice=10

@@ -21,7 +21,7 @@
 [init]
 	defaultBranch = master
 [pull]
-	rebase = true 			 # Rebase (instead of merge) on pull
+	rebase = true
 [push]
 	autoSetupRemote = true   # Automatically set upstream branch on push
 [diff]
@@ -72,3 +72,5 @@
 
 [includeIf "gitdir:~/work/"]
     path = ~/work/.gitconfig
+[rebase]
+	autoStash = true
