@@ -1,0 +1,9 @@
+[Unit]
+Description=Clear Huawei-injected description from recent Strava activities
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/projects/fspi/optional/strava/strava-cleanup.py 4
+Nice=10
