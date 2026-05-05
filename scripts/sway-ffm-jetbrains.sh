@@ -3,26 +3,33 @@ set -euo pipefail
 
 # Toggle focus_follows_mouse based on the focused window's app_id.
 # JetBrains IDEs need it off (modal popups close on hover-away); everything
-# else gets the natural "focus follows the mouse" behavior. Sway has no
-# per-criteria FFM, so we drive it from focus events on the IPC socket.
+# else gets natural hover-to-focus. Sway has no per-criteria FFM, so we drive
+# it from focus events on the IPC socket.
 
-# Single-instance lock. `exec_always` re-runs us on `swaymsg reload`, but sway
-# doesn't kill the previous child — the new copy just exits and leaves the
-# already-running one in charge.
-exec 200>"${XDG_RUNTIME_DIR:-/tmp}/sway-ffm-jetbrains.lock"
-flock -n 200 || exit 0
+# Replace any prior instance. `exec_always` re-runs us on `swaymsg reload`,
+# and we want the fresh copy in charge so it re-primes against live state
+# (a stale `last`-state cache caused terminals to stop following the mouse
+# after a reload).
+PID_FILE="${XDG_RUNTIME_DIR:-/tmp}/sway-ffm-jetbrains.pid"
+if [[ -f "$PID_FILE" ]]; then
+  prior=$(cat "$PID_FILE" 2>/dev/null || true)
+  if [[ -n "$prior" && "$prior" != "$$" ]]; then
+    # Kill the prior's pipeline children (swaymsg/jq/while-subshell) before
+    # the prior itself, otherwise they're reparented to init and keep firing
+    # FFM toggles in parallel with the new watcher.
+    pkill -P "$prior" 2>/dev/null || true
+    kill "$prior" 2>/dev/null || true
+  fi
+fi
+echo "$$" > "$PID_FILE"
 
-last=""
 apply() {
   local desired="yes"
   [[ "${1:-}" == jetbrains-* ]] && desired="no"
-  if [[ "$desired" != "$last" ]]; then
-    swaymsg "focus_follows_mouse $desired" >/dev/null
-    last="$desired"
-  fi
+  swaymsg "focus_follows_mouse $desired" >/dev/null
 }
 
-# Prime from the currently focused window — subscribe only fires on *changes*.
+# Prime from the currently focused window — subscribe only fires on changes.
 initial=$(swaymsg -t get_tree \
   | jq -r 'recurse(.nodes[]?, .floating_nodes[]?) | select(.focused == true and .app_id != null) | .app_id' \
   | head -n1)
