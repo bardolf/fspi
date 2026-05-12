@@ -29,6 +29,7 @@ APPS=(
   "com.jgraph.drawio.desktop"
   "org.fedoraproject.MediaWriter"
   "dev.zed.Zed"
+  "org.freecad.FreeCAD"
 )
 
 for app in "${APPS[@]}"; do
