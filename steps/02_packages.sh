@@ -50,6 +50,7 @@ PACKAGES=(
   meld
   glab
   lazygit
+  ShellCheck
   krita
   kitty-kitten
   zoxide
