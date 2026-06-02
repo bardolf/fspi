@@ -132,6 +132,7 @@ CONFIG_PAIRS=(
   "config/yazi/plugins/smart-enter.yazi/main.lua" "$HOME/.config/yazi/plugins/smart-enter.yazi/main.lua"
   "config/mimeapps.list" "$HOME/.config/mimeapps.list"
   "config/zsh/zshrc" "$HOME/.zshrc"
+  "config/zsh/zshenv" "$HOME/.zshenv"
 )
 
 for ((i = 0; i < ${#CONFIG_PAIRS[@]}; i += 2)); do

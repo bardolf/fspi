@@ -1,0 +1,13 @@
+# ~/.zshenv — sourced by EVERY zsh invocation, including non-interactive
+# `zsh -c` (Claude Code's Bash tool, scripts, cron). Unlike .zshrc, which is
+# only read by interactive shells. Keep this file minimal and fast.
+
+# Silence zoxide's "detected a possible configuration issue" doctor warning in
+# non-interactive shells only. Tools run `zsh -c 'source <snapshot>'`, and the
+# snapshot replays zoxide's function definitions but not its chpwd-hook
+# registration. zoxide's doctor then sees __zoxide_hook missing from
+# $chpwd_functions and prints the nag on the first `cd` (every command, since
+# `zoxide init --cmd cd` makes `cd` the zoxide function). It's a false positive
+# there; interactive shells register the hook normally, so leave the doctor
+# active for them.
+[[ -o interactive ]] || export _ZO_DOCTOR=0

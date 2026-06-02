@@ -67,6 +67,15 @@ log_info "Writing new .zshrc from $ZSHRC_SRC"
 cp "$ZSHRC_SRC" "$ZSHRC"
 
 # -------------------------
+# Deploy .zshenv from repo
+# -------------------------
+# .zshenv is sourced by every zsh invocation (including non-interactive
+# `zsh -c`), unlike .zshrc which only interactive shells read. We use it to
+# silence zoxide's doctor false-positive in tool/snapshot shells — see the
+# file header for the why.
+ensure_file_copy "$SCRIPT_DIR/config/zsh/zshenv" "$HOME/.zshenv"
+
+# -------------------------
 # Set Zsh as default shell
 # -------------------------
 CURRENT_SHELL=$(basename "$SHELL")
