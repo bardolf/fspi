@@ -64,6 +64,12 @@ fi
 if ! dnf repolist --enabled | grep -q terra; then
   log_info "Adding Terra repository"
   sudo dnf install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+  # terra-release ships the GPG keys but --nogpgcheck skips importing them into
+  # dnf's keyring, so the next dnf run fails repo_gpgcheck with "repomd.xml GPG
+  # signature verification error: Signing key not found" and prompts to import.
+  # A -y makecache confirms the import up front so dnf stays non-interactive.
+  log_info "Importing Terra repo signing key"
+  sudo dnf -y makecache --repo=terra
 else
   log_debug "Terra repository already enabled"
 fi
