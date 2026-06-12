@@ -71,6 +71,11 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
 
 ## Notes
 
+- **NVIDIA (Maxwell GTX 950)**: see `nvidia-setup.md` for the full by-hand
+  setup — the legacy `580xx` driver branch (595+ dropped Maxwell support),
+  the `nomodeset`/`nvidia-drm.modeset=1` kernel-cmdline fix, and enabling
+  Sway's `--unsupported-gpu` via `/etc/sway/environment`. Not run by
+  `install.sh` (machine-specific hardware).
 - **Fingerprint unlock for swaylock**: see `fingerprint-swaylock-setup.md`
   for the standalone `/etc/pam.d/swaylock` setup (password first, fingerprint
   on empty Enter — does not require `authselect with-fingerprint`).
