@@ -54,7 +54,6 @@ PACKAGES=(
   krita
   kitty-kitten
   zoxide
-  resvg
   vdirsyncer
   python3-aiohttp-oauthlib
   khal
