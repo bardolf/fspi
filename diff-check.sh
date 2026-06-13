@@ -204,7 +204,21 @@ for ((i = 0; i < ${#CALENDAR_PAIRS[@]}; i += 2)); do
 done
 
 # =========================================================
-# Section 5: Optional - Dropbox sync (mirrors optional/dropbox/setup.sh)
+# Section 5: CETIN CA certs (mirrors steps/00d_cetin_certs.sh)
+# =========================================================
+
+print_section "CETIN CA certificates"
+
+CERTS_SRC="$SCRIPT_DIR/files/certs"
+ANCHOR_TARGET="/etc/pki/ca-trust/source/anchors"
+
+for cert in "$CERTS_SRC"/*.crt; do
+  [[ -f "$cert" ]] || continue
+  check_file "$cert" "$ANCHOR_TARGET/$(basename "$cert")"
+done
+
+# =========================================================
+# Section 6: Optional - Dropbox sync (mirrors optional/dropbox/setup.sh)
 # Skipped silently if the optional component was never installed.
 # =========================================================
 
