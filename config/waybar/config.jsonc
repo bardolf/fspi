@@ -134,6 +134,12 @@
         "format-icons": ["🌑", "🌘", "🌗", "🌖", "🌕"]
     },
     "battery": {
+        // Pin to the laptop's real battery. On the desktop (no BAT0) the
+        // module shows nothing and, crucially, does NOT watch the wireless
+        // mouse's hidpp_battery — which used to crash waybar and (likely)
+        // trigger the KVM USB re-enumerations. Adjust to BAT1 if a machine
+        // names it so (check: ls /sys/class/power_supply/).
+        "bat": "BAT0",
         "states": {
             // "good": 95,
             "warning": 30,
