@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=IntelliJ IDEA
+GenericName=Java IDE
+Comment=Capable and Ergonomic IDE for JVM
+Exec=/home/milan/opt/idea/bin/idea %f
+Icon=/home/milan/.local/share/icons/idea.svg
+Terminal=false
+Categories=Development;IDE;
+StartupNotify=true
+StartupWMClass=jetbrains-idea
+Keywords=IDE;Java;Kotlin;
