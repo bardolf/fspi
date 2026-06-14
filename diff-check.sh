@@ -236,6 +236,39 @@ for ((i = 0; i < ${#DROPBOX_PAIRS[@]}; i += 2)); do
 done
 
 # =========================================================
+# Section 7: Optional - Samba/CIFS mounts (mirrors optional/samba/setup.sh)
+# The fstab block lives between markers inside /etc/fstab, so we extract that
+# block and compare it to the repo file. Credentials files are intentionally
+# not checked: they hold secrets and the repo only ships empty templates.
+# Skipped silently if the optional component was never installed.
+# =========================================================
+
+print_section "Optional: Samba/CIFS mounts (/etc/fstab block)"
+
+SAMBA_BLOCK="$SCRIPT_DIR/optional/samba/files/fstab-cifs.block"
+SAMBA_BEGIN="# >>> fspi samba cifs mounts >>>"
+SAMBA_END="# <<< fspi samba cifs mounts <<<"
+
+if [[ -f "$SAMBA_BLOCK" ]] && grep -qF "$SAMBA_BEGIN" /etc/fstab 2>/dev/null; then
+  extracted=$(awk -v b="$SAMBA_BEGIN" -v e="$SAMBA_END" '
+    $0==e {skip=1} !skip && started {print} $0==b {started=1}
+  ' /etc/fstab)
+  ((total++)) || true
+  if [[ "$extracted" == "$(cat "$SAMBA_BLOCK")" ]]; then
+    log_debug "[OK]      /etc/fstab (managed CIFS block)"
+  else
+    ((diff_count++)) || true
+    echo -e "  ${COLOR_WARN}[DIFF]${COLOR_RESET}    /etc/fstab (managed CIFS block)"
+    if $DETAIL; then
+      diff -u --color=auto <(printf '%s\n' "$extracted") "$SAMBA_BLOCK" || true
+      echo ""
+    fi
+  fi
+else
+  log_debug "[SKIP]    /etc/fstab CIFS block (optional, not installed)"
+fi
+
+# =========================================================
 # Summary
 # =========================================================
 

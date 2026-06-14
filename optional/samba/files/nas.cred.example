@@ -1,0 +1,10 @@
+# CIFS credentials for the 'sadmin' user on //192.168.1.11 (share, disk1-3).
+#
+# setup.sh deploys this to /etc/cifs-credentials/nas.cred (root-only, 0600)
+# only if that file does not exist yet — it never clobbers a filled-in password.
+# The username is pre-filled; just paste the password.
+# Password is NOT stored in this repo — it is in Bitwarden
+# (search "NAS 192.168.1.11", user "sadmin").
+username=sadmin
+password=
+# domain=WORKGROUP   # uncomment + set only if the NAS requires a domain/workgroup
