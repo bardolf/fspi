@@ -14,6 +14,9 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+# Prepend hostname to the prompt so terminals on different machines are easy to tell apart
+PROMPT='%{$fg_bold[yellow]%}[%m]%{$reset_color%} '$PROMPT
+
 # Optional: make suggestions visible
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
