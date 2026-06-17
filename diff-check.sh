@@ -133,6 +133,7 @@ CONFIG_PAIRS=(
   "config/mimeapps.list" "$HOME/.config/mimeapps.list"
   "config/zsh/zshrc" "$HOME/.zshrc"
   "config/zsh/zshenv" "$HOME/.zshenv"
+  "config/ssh/config" "$HOME/.ssh/config"
 )
 
 for ((i = 0; i < ${#CONFIG_PAIRS[@]}; i += 2)); do

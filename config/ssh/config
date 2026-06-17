@@ -1,0 +1,38 @@
+IdentityFile ~/.ssh/id_ed25519
+
+# desktop: auto-routes — direct when on the home LAN (192.168.1.0/24),
+# via `server` (skybit.cz) when away. The Match exec returns 0 (→ apply
+# ProxyJump) only when this machine has NO 192.168.1.x/24 address.
+Host desktop
+	HostName 192.168.1.10
+	User milan
+Match originalhost desktop exec "! ip -4 -o addr show | grep -qE 'inet 192.168.1.[0-9]+/24'"
+	ProxyJump server
+
+# Explicit overrides, in case auto-detection ever guesses wrong:
+Host desktop-direct
+	HostName 192.168.1.10
+	User milan
+Host desktop-jump
+	HostName 192.168.1.10
+	User milan
+	ProxyJump server
+
+Host server
+	HostName skybit.cz
+	User milan
+Host root@mig
+        HostName celrtsd401.server.cetin
+        User root
+Host mig
+        HostName celrtsd401.server.cetin
+        User makaluapp
+Host jump
+        HostName celnijumpp401.server.cetin
+        User mi077548
+Host runner01
+        Hostname celcrisprund401.server.cetin
+        User root
+Host runner02
+        Hostname celcrisprund402.server.cetin
+        User root
