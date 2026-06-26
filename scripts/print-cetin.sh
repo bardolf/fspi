@@ -67,11 +67,40 @@ if ! lpstat -p "$PRINTER" >/dev/null 2>&1; then
   echo "Warning: queue '$PRINTER' not found — set it up with optional/printer-cetin." >&2
 fi
 
+# Page selection. CUPS applies page-ranges AFTER number-up imposition, so with
+# -n>1 a CUPS-side range selects imposed sheets, not source pages (e.g.
+# `-p 1-4 -n 2` would print original pages 1-8). Extract the range from the PDF
+# ourselves so -p always means original document pages.
+REQ_PAGES="$PAGES"
+ORIG_FILE="$FILE"
+CLEANUP=""
+trap '[[ -n "$CLEANUP" ]] && rm -f "$CLEANUP"' EXIT
+
+is_pdf() {
+  [[ "${1,,}" == *.pdf ]] && return 0
+  [[ "$(file -b --mime-type "$1" 2>/dev/null)" == application/pdf ]]
+}
+
+if [[ -n "$PAGES" ]]; then
+  if command -v mutool >/dev/null 2>&1 && is_pdf "$FILE"; then
+    CLEANUP="$(mktemp --suffix=.pdf)"
+    if ! mutool merge -o "$CLEANUP" "$FILE" "$PAGES" 2>/dev/null; then
+      echo "Error: could not extract pages '$PAGES' from $FILE" >&2
+      exit 1
+    fi
+    FILE="$CLEANUP"
+    PAGES=""   # already applied; must NOT also hand it to CUPS
+  else
+    echo "Warning: passing page range to CUPS as-is (not a PDF, or mutool missing);" >&2
+    echo "         with -n>1 it may count imposed sheets, not source pages." >&2
+  fi
+fi
+
 opts=(-d "$PRINTER" -n "$COPIES"
       -o "media=$MEDIA"
       -o "sides=$SIDES"
       -o "number-up=$NUP")
 [[ -n "$PAGES" ]] && opts+=(-o "page-ranges=$PAGES")
 
-echo "Printing '$FILE' -> $PRINTER (pages=${PAGES:-all}, duplex=$DUPLEX, ${NUP}-up, copies=$COPIES, $MEDIA)"
+echo "Printing '$ORIG_FILE' -> $PRINTER (pages=${REQ_PAGES:-all}, duplex=$DUPLEX, ${NUP}-up, copies=$COPIES, $MEDIA)"
 lp "${opts[@]}" "$FILE"

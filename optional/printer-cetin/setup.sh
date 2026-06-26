@@ -22,6 +22,7 @@ DEFAULT_USER='mi077548@cetin.cz'   # verified working UPN (sAMAccountName works 
 # --- Packages: CUPS scheduler + the SMB backend (shipped by samba-client) ---
 ensure_package cups
 ensure_package samba-client        # provides /usr/lib/cups/backend/smb
+ensure_package mupdf               # provides mutool, used by scripts/print-cetin.sh -p
 
 if systemctl is-active --quiet cups; then
   log_debug "cups already running"
