@@ -78,13 +78,17 @@ else
 fi
 
 # --- Create / refresh the queue (idempotent: lpadmin -p just resets attrs) ---
+# Option1=True marks the duplex unit as installed. The generic PS PPD ships it
+# as *False with a UIConstraint that disables Duplex, so without this apps grey
+# out 2-sided printing. We always (re)assert it so a refresh can't lose it.
 if lpstat -p "$QUEUE" >/dev/null 2>&1; then
   log_debug "Refreshing existing queue '$QUEUE' (auth=$AUTH)"
-  run_sudo lpadmin -p "$QUEUE" -v "$URI" -o auth-info-required="$AUTH"
+  run_sudo lpadmin -p "$QUEUE" -v "$URI" -o auth-info-required="$AUTH" -o Option1=True
 else
   log_info "Creating queue '$QUEUE' (auth=$AUTH)"
   run_sudo lpadmin -p "$QUEUE" -v "$URI" -m "$PPD" \
-    -o auth-info-required="$AUTH" -o printer-is-shared=false -E
+    -o auth-info-required="$AUTH" -o printer-is-shared=false -E \
+    -o Option1=True -o Duplex=DuplexNoTumble
 fi
 
 # With baked creds, drop any jobs left held by a previous per-job-auth config.
