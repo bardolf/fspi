@@ -38,6 +38,21 @@ function y() {
        fi
        rm -f -- "$tmp"
 }
+
+# Print to the CETIN office printer the way I always want it: 2-sided short
+# edge, 2 pages per sheet. Optional page range as the 2nd argument.
+#   tiskni report.pdf          # whole document
+#   tiskni report.pdf 1-46     # only pages 1-46
+function tiskni() {
+  local file="$1" range="${2:-}"
+  if [[ -z "$file" ]]; then
+    echo "usage: tiskni <file> [page-range, e.g. 1-46]" >&2
+    return 1
+  fi
+  local opts=(-d cetin -o sides=two-sided-short-edge -o number-up=2)
+  [[ -n "$range" ]] && opts+=(-o "page-ranges=$range")
+  lp "${opts[@]}" "$file"
+}
 export PATH="$HOME/.local/bin:$PATH"
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(mise activate zsh)"
