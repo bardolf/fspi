@@ -96,6 +96,15 @@ if [[ "$AUTH" == none ]]; then
   cancel -a "$QUEUE" 2>/dev/null || true
 fi
 
+# --- Convenience: expose scripts/print-cetin.sh on PATH as `print-cetin` ---
+# (range / duplex / N-up wrapper around lp; deployed to ~/scripts by step 30.)
+HELPER="$HOME/scripts/print-cetin.sh"
+if [[ -f "$HELPER" ]]; then
+  ensure_symlink "$HELPER" "$HOME/.local/bin/print-cetin"
+else
+  log_warn "Print helper not at $HELPER yet — run ./install.sh (step 30) to deploy scripts/."
+fi
+
 # --- Sanity hint: is the print server even reachable right now? ---
 if getent hosts "$SERVER" >/dev/null 2>&1; then
   log_debug "$SERVER resolves"
@@ -105,7 +114,7 @@ fi
 
 log_info "CETIN printer setup complete (queue: $QUEUE)"
 if [[ "$AUTH" == none ]]; then
-  log_info "  Print:   lp -d $QUEUE file.pdf      (no auth prompt; needs the CETIN VPN up)"
+  log_info "  Print:   print-cetin report.pdf       (or: print-cetin -p 1-46 -d long -n 4 f.pdf)"
 else
   log_info "  Finish:  sudoedit $CRED   (paste AD password from Bitwarden), then re-run"
 fi
