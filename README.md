@@ -95,5 +95,7 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   carries its own `setup.sh` to opt in. `optional/samba/` adds CIFS mounts for
   the `192.168.1.11` NAS to `/etc/fstab` (only run it on machines that need
   them); passwords are not in the repo — they go in `/etc/cifs-credentials/*.cred`
-  and live in Bitwarden (search "NAS 192.168.1.11").
+  and live in Bitwarden (search "NAS 192.168.1.11"). `optional/printer-cetin/`
+  adds the CETIN office printer as a CUPS SMB queue (`cetin`); needs the CETIN
+  VPN up, and the AD password goes in `/etc/cetin-printer.cred` (not in the repo).
 - No tests, no CI — validation is "run it on a Fedora Sway box."

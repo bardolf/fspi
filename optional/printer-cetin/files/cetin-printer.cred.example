@@ -1,0 +1,12 @@
+# CETIN office printer SMB credentials.
+#
+# setup.sh deploys this template to /etc/cetin-printer.cred (0600, root-only)
+# and bakes the password into the CUPS device URI so print jobs are not held
+# for an interactive "authenticate" prompt.
+#
+# Fill the password from Bitwarden (your CETIN AD password), keep the file
+# 0600 root-only, then re-run optional/printer-cetin/setup.sh.
+#
+# username: verified working form is the UPN below; "AD\mi077548" also works.
+username=mi077548@cetin.cz
+password=
