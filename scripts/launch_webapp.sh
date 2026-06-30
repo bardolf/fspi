@@ -10,5 +10,9 @@ if [ -z "$BROWSER" ]; then
   exit 1
 fi
 
+# Host-specific flagy (NVIDIA Wayland: vypnout GPU kompozici kvůli artefaktům)
+DIR=$(dirname "$(readlink -f "$0")")
+read -ra EXTRA <<< "$("$DIR/chromium_host_flags.sh")"
+
 # Spustíme webapp jako samostatné okno
-exec "$BROWSER" --new-window --app="$URL" "$@"
+exec "$BROWSER" "${EXTRA[@]}" --new-window --app="$URL" "$@"
