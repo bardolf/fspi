@@ -34,6 +34,7 @@ openconnect --protocol=anyconnect $VPN_SERVER \
     -d crnipaksgwc.azurecr.io \
     -d privatelink.blob.core.windows.net \
     -d stninppubgwc.blob.core.windows.net \
+    -d stnippubgwc.blob.core.windows.net \
     172.16.0.0/12 \
     172.25.41.0/24" &
 
@@ -56,7 +57,8 @@ resolvectl domain tun0 cetin ad.cetin \
   crninpaksgwc.azurecr.io \
   crnipaksgwc.azurecr.io \
   privatelink.blob.core.windows.net \
-  stninppubgwc.blob.core.windows.net
+  stninppubgwc.blob.core.windows.net \
+  stnippubgwc.blob.core.windows.net
 
 echo "VPN připojena a DNS nastavena."
 

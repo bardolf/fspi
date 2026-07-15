@@ -16,6 +16,7 @@ for arg in "$@"; do
     echo "Usage: $(basename "$0") [-d|--detail] [-h|--help]"
     echo ""
     echo "Compare repo files against deployed system files."
+    echo "Under each drifting file, prints the cp command that syncs it (repo → system)."
     echo ""
     echo "Options:"
     echo "  -d, --detail  Show unified diffs for changed files"
@@ -61,6 +62,21 @@ print_section() {
   echo -e "${COLOR_HEADER}--- $title ---${COLOR_RESET}"
 }
 
+# Print the ready-to-paste command that syncs system_file from repo_file, right
+# under the drift line. Pure cp, mirroring how the install steps deploy it
+# (sudo install for the CA anchors, sudo cp for anything else outside $HOME).
+print_fix() {
+  local repo_file="$1" system_file="$2"
+
+  if [[ "$system_file" == /etc/pki/ca-trust/source/anchors/* ]]; then
+    echo "            sudo install -m 0644 \"$repo_file\" \"$system_file\" && sudo update-ca-trust"
+  elif [[ "$system_file" == "$HOME"/* ]]; then
+    echo "            cp -f \"$repo_file\" \"$system_file\""
+  else
+    echo "            sudo cp -f \"$repo_file\" \"$system_file\""
+  fi
+}
+
 check_file() {
   local repo_file="$1"
   local system_file="$2"
@@ -78,6 +94,7 @@ check_file() {
     ((total++)) || true
     ((missing_count++)) || true
     echo -e "  ${COLOR_ERROR}[MISSING]${COLOR_RESET} $system_file"
+    print_fix "$repo_file" "$system_file"
     return
   fi
 
@@ -90,6 +107,7 @@ check_file() {
 
   ((diff_count++)) || true
   echo -e "  ${COLOR_WARN}[DIFF]${COLOR_RESET}    $system_file"
+  print_fix "$repo_file" "$system_file"
 
   if $DETAIL; then
     diff -u --color=auto "$system_file" "$repo_file" || true
@@ -260,6 +278,8 @@ if [[ -f "$SAMBA_BLOCK" ]] && grep -qF "$SAMBA_BEGIN" /etc/fstab 2>/dev/null; th
   else
     ((diff_count++)) || true
     echo -e "  ${COLOR_WARN}[DIFF]${COLOR_RESET}    /etc/fstab (managed CIFS block)"
+    # Managed block, not a plain file: no cp can reproduce it. Point at the setup step.
+    echo "            # managed block — re-run: bash \"$SCRIPT_DIR/optional/samba/setup.sh\""
     if $DETAIL; then
       diff -u --color=auto <(printf '%s\n' "$extracted") "$SAMBA_BLOCK" || true
       echo ""
