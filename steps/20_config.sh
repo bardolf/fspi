@@ -85,6 +85,7 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/sway/config.d/50-rules-jetbrains.conf" "$HOME/.config/sway/config.d/50-rules-jetbrains.conf" \
   "$SCRIPT_DIR/config/sway/config.d/55-ffm-jetbrains.conf" "$HOME/.config/sway/config.d/55-ffm-jetbrains.conf" \
   "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf" \
+  "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenrecord.conf" "$HOME/.config/sway/config.d/60-bindings-screenrecord.conf" \
   "$SCRIPT_DIR/config/sway/config.d/60-bindings-mouse.conf" "$HOME/.config/sway/config.d/60-bindings-mouse.conf" \
   "$SCRIPT_DIR/config/sway/config.d/90-swayidle.conf" "$HOME/.config/sway/config.d/90-swayidle.conf" \
   "$SCRIPT_DIR/config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty" \

@@ -141,6 +141,7 @@ CONFIG_PAIRS=(
   "config/sway/config.d/50-rules-jetbrains.conf" "$HOME/.config/sway/config.d/50-rules-jetbrains.conf"
   "config/sway/config.d/55-ffm-jetbrains.conf" "$HOME/.config/sway/config.d/55-ffm-jetbrains.conf"
   "config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf"
+  "config/sway/config.d/60-bindings-screenrecord.conf" "$HOME/.config/sway/config.d/60-bindings-screenrecord.conf"
   "config/sway/config.d/60-bindings-mouse.conf" "$HOME/.config/sway/config.d/60-bindings-mouse.conf"
   "config/sway/config.d/90-swayidle.conf" "$HOME/.config/sway/config.d/90-swayidle.conf"
   "config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
