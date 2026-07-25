@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Gemini
+Comment=Open Google Gemini in browser
+Exec=/home/milan/scripts/launch_webapp.sh https://gemini.google.com/app
+Icon=/home/milan/.local/share/icons/gemini.svg
+Terminal=false
+Categories=Network;WebBrowser;
+StartupNotify=true

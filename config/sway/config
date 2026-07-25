@@ -220,8 +220,7 @@ bindsym $mod+slash exec ~/scripts/current_player_metadata.sh
 bindsym $mod+comma exec dunstctl close
 
 # Applications
-bindsym $mod+i exec ~/scripts/launch_webapp.sh https://chatgpt.com
-bindsym $mod+Shift+i exec ~/scripts/launch_webapp.sh https://gemini.google.com/app
+# Webapps (ChatGPT, Gemini, …) se spouštějí přes .desktop entries, ne přes zkratky
 bindsym $mod+escape exec ~/scripts/menu_shutdown.sh
 
 
