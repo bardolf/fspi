@@ -61,6 +61,7 @@ PACKAGES=(
   ghostty
   tuned-ppd
   mise
+  musescore
 )
 
 for pkg in "${PACKAGES[@]}"; do

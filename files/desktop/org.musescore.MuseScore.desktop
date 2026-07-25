@@ -1,0 +1,36 @@
+[Desktop Entry]
+# Overrides /usr/share/applications/org.musescore.MuseScore.desktop.
+#
+# MuseScore 4 na Linuxu vynucuje QT_QPA_PLATFORM=xcb, takže běží pod XWaylandem.
+# Na 4K výstupu s fractional scale 1.3 to znamená render v 1x a rozmazané
+# doskálování kompozitorem. MU_QT_QPA_PLATFORM=wayland zapne nativní Qt6
+# Wayland backend (ostré UI, správné škálování).
+#
+# Samotný nativní Wayland ale u MuseScore rozbíjí souřadnice notové plochy —
+# noty se umístí mimo kurzor a mažou se linky. Jsou to otevřené upstream bugy
+# musescore/MuseScore#31024 (P0, reprodukováno na 4.7.4) a #29507 (nahlášeno
+# přímo na sway). Spouštěčem je neceločíselné devicePixelRatio: sway dá přes
+# wp_fractional_scale okna DPR 1.3. Vypnutím toho protokolu spadne Qt na
+# celočíselný buffer scale (DPR 2.0, sway pak downscaluje 2 -> 1.3), takže je
+# obraz pořád ostrý, ale MuseScore dostane integer DPR. Odzkoušeno na
+# 4.7.4 / Qt 6.11 / sway @ scale 1.3 — vkládání not i překreslování linek OK.
+#
+# Cena: KDDockWidgets neumí na Waylandu drag&drop panelů a palet
+# ("Dropping not implement for QtQuick on Wayland yet!", viz #29085)
+# a MuseScore si nepamatuje pozici okna mezi spuštěními. Pokud to vadí,
+# smaž tento soubor z files/desktop/ a z ~/.local/share/applications/ —
+# tím se vrátí systémový entry s XWaylandem.
+Type=Application
+Version=1.0
+Name=MuseScore Studio
+GenericName=Music notation
+GenericName[cs]=Notový zápis
+Comment=Create, play and print beautiful sheet music
+Icon=mscore
+Exec=env MU_QT_QPA_PLATFORM=wayland QT_WAYLAND_DISABLED_INTERFACES=wp_fractional_scale_manager_v1 mscore %U
+Terminal=false
+MimeType=application/x-musescore;application/x-musescore+xml;x-scheme-handler/musescore;application/vnd.recordare.musicxml;application/vnd.recordare.musicxml+xml;application/x-mei+xml;audio/midi;application/x-bww;application/x-biab;application/x-capella;audio/x-gtp;application/x-musedata;application/x-overture;audio/x-ptb;application/x-tef;application/x-sf2;application/x-sf3;
+Categories=AudioVideo;Audio;Graphics;2DGraphics;VectorGraphics;RasterGraphics;Publishing;Midi;Mixer;Sequencer;Music;Qt;
+Keywords=music;notation;composition;composing;arranging;making;sheet music;score;scorewriter;MIDI;musicxml;playback;instrument;
+StartupNotify=true
+StartupWMClass=org.musescore.MuseScore
