@@ -149,6 +149,7 @@ CONFIG_PAIRS=(
   "config/sway/config.d/60-bindings-power.conf" "$HOME/.config/sway/config.d/60-bindings-power.conf"
   "config/sway/config.d/90-swayidle.conf" "$HOME/.config/sway/config.d/90-swayidle.conf"
   "config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
+  "config/herdr/config.toml" "$HOME/.config/herdr/config.toml"
   "config/yazi/yazi.toml" "$HOME/.config/yazi/yazi.toml"
   "config/yazi/keymap.toml" "$HOME/.config/yazi/keymap.toml"
   "config/yazi/theme.toml" "$HOME/.config/yazi/theme.toml"

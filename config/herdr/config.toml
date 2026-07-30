@@ -1,0 +1,14 @@
+# herdr configuration
+# Plná referenční šablona: herdr --default-config
+
+[keys]
+# Vypnuté worktree akce – v ne-gitových workspacech jen hlásily
+# "Herdr worktree actions require a workspace inside a Git work tree".
+# Chceš je zpět? Smaž tyto tři řádky (default je prefix+shift+g).
+new_worktree = ""
+open_worktree = ""
+remove_worktree = ""
+
+[experimental]
+# Vykreslování obrázků (Kitty graphics protocol) v panelech – kvůli yazi.
+kitty_graphics = true

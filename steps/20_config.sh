@@ -93,6 +93,7 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/sway/config.d/60-bindings-power.conf" "$HOME/.config/sway/config.d/60-bindings-power.conf" \
   "$SCRIPT_DIR/config/sway/config.d/90-swayidle.conf" "$HOME/.config/sway/config.d/90-swayidle.conf" \
   "$SCRIPT_DIR/config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty" \
+  "$SCRIPT_DIR/config/herdr/config.toml" "$HOME/.config/herdr/config.toml" \
   "$SCRIPT_DIR/config/yazi/yazi.toml" "$HOME/.config/yazi/yazi.toml" \
   "$SCRIPT_DIR/config/yazi/keymap.toml" "$HOME/.config/yazi/keymap.toml" \
   "$SCRIPT_DIR/config/yazi/theme.toml" "$HOME/.config/yazi/theme.toml" \
