@@ -1,13 +1,75 @@
 #!/usr/bin/env bash
 # Claude Code status line – globální konfigurace
-# Zobrazuje: context bar | model | cwd | git změny | čas session
+# Zobrazuje: account | model | context bar | cwd | git změny
 
 input=$(cat)
 
+# Diagnostika: CLAUDE_STATUSLINE_DUMP=1 uloží přijatý payload, ať se dá ověřit,
+# co Claude Code na stdin skutečně posílá – schéma se mezi verzemi mění.
+if [ -n "$CLAUDE_STATUSLINE_DUMP" ]; then
+  printf '%s' "$input" > "${TMPDIR:-/tmp}/claude-statusline-payload.json" 2>/dev/null
+fi
+
 # ---------------------------------------------------------------------------
-# 1. CONTEXT / RATE LIMIT PROGRESS BAR
+# 1. ACCOUNT (který účet je přihlášený – kvůli přepínání mezi nimi)
 # ---------------------------------------------------------------------------
-BAR_WIDTH=10
+# Payload na stdin identitu účtu NENESE. Ověřeno ve v2.1.228: statusline objekt
+# má cwd, session_name, model, workspace, version, output_style, cost,
+# context_window, exceeds_200k_tokens, fast_mode, effort, thinking, rate_limits,
+# vim, agent, remote, pr, worktree – nic o účtu. Zdrojem je proto ~/.claude.json
+# → .oauthAccount, což je to, co přepíše /login.
+#
+# Pozor na jeden důsledek: čte se stav souboru, ne token té konkrétní session.
+# Když přepneš účet v jiném okně, tahle už běžící session ukáže nový účet, i když
+# sama dál jede na tom původním. Po /login ve vlastním okně je to správně.
+account_part=""
+
+acct_cfg="$HOME/.claude.json"
+[ -n "$CLAUDE_CONFIG_DIR" ] && [ -f "$CLAUDE_CONFIG_DIR/.claude.json" ] \
+  && acct_cfg="$CLAUDE_CONFIG_DIR/.claude.json"
+
+if [ -n "$ANTHROPIC_API_KEY" ] || [ -n "$ANTHROPIC_AUTH_TOKEN" ]; then
+  # API key/token přebíjí OAuth, takže .oauthAccount by tady lhal.
+  account_part=$(printf "\033[1;97;41m API-KEY \033[0m")
+elif [ -f "$acct_cfg" ] && command -v jq >/dev/null 2>&1; then
+  # Jedno jq volání pro obě hodnoty – status line se překresluje po každé zprávě.
+  # Každá hodnota na vlastní řádek, ne @tsv do `read a b`: tabulátor je pro read
+  # whitespace IFS znak, takže chybějící e-mail zahodí prázdné pole a org se
+  # posune na jeho místo – pak se organizace vypíše, jako by to byl e-mail.
+  { IFS= read -r acct_email; IFS= read -r acct_org; } < <(
+    jq -r '.oauthAccount | (.emailAddress // ""), (.organizationName // "")' \
+      "$acct_cfg" 2>/dev/null
+  )
+
+  if [ -n "$acct_email" ]; then
+    # Známé účty – jméno a barva pozadí. Přidej si sem další, jak budeš přepínat.
+    # Kódy barev: 44 modrá, 42 zelená, 45 magenta, 46 cyan, 43 žlutá, 100 šedá.
+    # Červená (41) je vyhrazená pro API-KEY, ať se to nedá zaměnit.
+    acct_bg=""
+    case "$acct_email" in
+      milan.nemec@cetin.cz) acct_label="CETIN"; acct_bg=44 ;;
+      *)                    acct_label="${acct_email%%@*}" ;;
+    esac
+
+    # Neznámý účet dostane barvu odvozenou z e-mailu – pořád stabilní, takže i
+    # nepojmenovaný účet má vždy tu svou a přepnutí si všimneš bez čtení textu.
+    if [ -z "$acct_bg" ]; then
+      acct_palette=(42 45 46 43 100)
+      acct_hash=$(printf '%s' "$acct_email" | cksum 2>/dev/null | awk '{print $1}')
+      [ -z "$acct_hash" ] && acct_hash=0
+      acct_bg=${acct_palette[$((acct_hash % ${#acct_palette[@]}))]}
+    fi
+
+    account_part=$(printf "\033[1;97;%sm %s \033[0m" "$acct_bg" "$acct_label")
+  elif [ -n "$acct_org" ]; then
+    account_part=$(printf "\033[1;97;100m %s \033[0m" "$acct_org")
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 2. CONTEXT / RATE LIMIT PROGRESS BAR
+# ---------------------------------------------------------------------------
+BAR_WIDTH=5
 
 make_bar() {
   local pct="$1"
@@ -43,7 +105,7 @@ if [ -n "$ctx_used" ]; then
     color="\033[2;32m" # tlumená zelená
   fi
   reset="\033[0m"
-  usage_part=$(printf "${color}Context: [%s] %d%%${reset}" "$bar" "$ctx_int")
+  usage_part=$(printf "${color}Ctx [%s] %d%%${reset}" "$bar" "$ctx_int")
 fi
 
 # Přidej rate limit info pokud je k dispozici
@@ -67,9 +129,9 @@ if [ -n "$five_pct" ]; then
     five_label="5h" # fallback pokud data ještě nejsou k dispozici
   fi
   if [ -n "$usage_part" ]; then
-    usage_part=$(printf "%s  ${limit_color}Limit: %s [%s] %d%%\033[0m" "$usage_part" "$five_label" "$bar5" "$five_int")
+    usage_part=$(printf "%s  ${limit_color}Limit %s [%s] %d%%\033[0m" "$usage_part" "$five_label" "$bar5" "$five_int")
   else
-    usage_part=$(printf "${limit_color}Limit: %s [%s] %d%%\033[0m" "$five_label" "$bar5" "$five_int")
+    usage_part=$(printf "${limit_color}Limit %s [%s] %d%%\033[0m" "$five_label" "$bar5" "$five_int")
   fi
 fi
 
@@ -95,20 +157,48 @@ if [ -n "$week_pct" ]; then
     week_label="7d" # fallback pokud data ještě nejsou k dispozici
   fi
   if [ -n "$usage_part" ]; then
-    usage_part=$(printf "%s  ${week_color}Weekly: %s [%s] %d%%\033[0m" "$usage_part" "$week_label" "$barw" "$week_int")
+    usage_part=$(printf "%s  ${week_color}Weekly %s [%s] %d%%\033[0m" "$usage_part" "$week_label" "$barw" "$week_int")
   else
-    usage_part=$(printf "${week_color}Weekly: %s [%s] %d%%\033[0m" "$week_label" "$barw" "$week_int")
+    usage_part=$(printf "${week_color}Weekly %s [%s] %d%%\033[0m" "$week_label" "$barw" "$week_int")
   fi
 fi
 
 # ---------------------------------------------------------------------------
-# 2. MODEL
+# 3. MODEL + EFFORT + FAST MODE
 # ---------------------------------------------------------------------------
 model_name=$(echo "$input" | jq -r '.model.display_name // .model.id // "unknown"')
 model_short=$(echo "$model_name" | sed 's/Claude //i' | sed 's/ (.*)//')
 
+# Effort level. V payloadu je jen u modelů, které ho podporují, takže při jeho
+# absenci se nic nevypisuje. Hodnota je PO případném tichém downgradu – max na
+# modelu bez podpory spadne na high – takže tady je vidět skutečně použitý
+# effort, ne jen to, co je nastavené. Možnosti: low, medium, high, xhigh, max.
+effort_part=""
+effort_level=$(echo "$input" | jq -r '.effort.level // empty')
+if [ -n "$effort_level" ]; then
+  # Barva roste s cenou, ať si drahé nastavení nechtěně nenechám zapnuté.
+  case "$effort_level" in
+    low)    effort_label="low";   effort_color="\033[2;37m" ;;
+    medium) effort_label="med";   effort_color="\033[2;37m" ;;
+    high)   effort_label="high";  effort_color="\033[37m" ;;
+    xhigh)  effort_label="xhigh"; effort_color="\033[33m" ;;
+    max)    effort_label="max";   effort_color="\033[1;31m" ;;
+    *)      effort_label="$effort_level"; effort_color="\033[2;37m" ;;
+  esac
+  effort_part=$(printf "${effort_color}%s\033[0m" "$effort_label")
+fi
+
+# Fast mode (/fast) – stejný model Opus, jen rychlejší výstup. Utrácí kredit
+# rychleji a má vlastní rate limit, oddělený od těch dvou výše, takže se hodí
+# vědět, že je zapnutý. Po startu session je vypnutý a přepnutí modelu ho vypne,
+# takže se vypisuje jen když je aktivní – prázdno je normální stav.
+fast_part=""
+if [ "$(echo "$input" | jq -r '.fast_mode // false')" = "true" ]; then
+  fast_part=$(printf "\033[1;33m⚡\033[0m")
+fi
+
 # ---------------------------------------------------------------------------
-# 3. PRACOVNÍ ADRESÁŘ (zkrácený – max 4 segmenty od konce)
+# 4. PRACOVNÍ ADRESÁŘ (zkrácený – max 4 segmenty od konce)
 # ---------------------------------------------------------------------------
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 if [ -z "$cwd" ]; then cwd=$(pwd); fi
@@ -129,7 +219,7 @@ short_cwd=$(echo "$cwd" | awk -F'/' '{
 }')
 
 # ---------------------------------------------------------------------------
-# 4. GIT ZMĚNY V SESSION (počet změněných souborů)
+# 5. GIT ZMĚNY V SESSION (počet změněných souborů)
 # ---------------------------------------------------------------------------
 git_part=""
 project_dir=$(echo "$input" | jq -r '.workspace.project_dir // empty')
@@ -167,7 +257,17 @@ append() {
   fi
 }
 
-append "$(printf "\033[34m%s\033[0m" "$model_short")"
+append "$account_part"
+# Model, fast mode a effort jsou jedna buňka – obojí je vlastnost modelu, ne
+# samostatný údaj. Blesk vede, ať je vidět na první pohled, když je zapnutý.
+model_cell=$(printf "\033[34m%s\033[0m" "$model_short")
+if [ -n "$effort_part" ]; then
+  model_cell=$(printf "%s\033[90m·\033[0m%s" "$model_cell" "$effort_part")
+fi
+if [ -n "$fast_part" ]; then
+  model_cell="${fast_part}${model_cell}"
+fi
+append "$model_cell"
 append "$usage_part"
 append "$(printf "\033[2;33m%s\033[0m" "$short_cwd")"
 [ -n "$git_part" ] && append "$git_part"
