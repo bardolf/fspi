@@ -17,6 +17,7 @@ PACKAGES=(
   chromium
   qalc
   mpv
+  yt-dlp
   xournalpp
   okular
   feh
