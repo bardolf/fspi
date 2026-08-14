@@ -22,6 +22,7 @@ set -euo pipefail
 
 SELF=$(readlink -f "$0")
 LUA="$(dirname "$SELF")/pip_resume.lua"
+GEOMETRY="$(dirname "$SELF")/pip_geometry.py"
 
 # Živé HLS formáty jsou muxované — jedna varianta, ne video+audio zvlášť.
 LIVE_FORMAT="best[height<=?720]/best"
@@ -58,14 +59,33 @@ fi
 MPV_OPTS=(
   --title=pip
   --autofit=640
+  # Bez tohohle mpv při navázání na novější snímek použije autofit znovu
+  # a shodí velikost, kterou si uživatel nastavil.
+  --auto-window-resize=no
   --force-seekable=yes
   --demuxer-max-back-bytes=400MiB
 )
 
+# Spustí mpv a k němu hlídače geometrie okna; vrátí se, až mpv skončí.
+play() {
+  local mpv_pid watcher waited=0
+  mpv "$@" &
+  mpv_pid=$!
+  "$GEOMETRY" "$mpv_pid" &
+  watcher=$!
+  wait "$mpv_pid" || true
+  # Hlídač ukládá geometrii z události "close", která přijde až po konci mpv —
+  # dej mu chvilku (max 4 s), než ho sklidíme.
+  while kill -0 "$watcher" 2>/dev/null && (( waited < 20 )); do
+    sleep 0.2
+    waited=$((waited + 1))
+  done
+  kill "$watcher" 2>/dev/null || true
+}
+
 play_direct() {
-  # exec nahradí shell, takže EXIT trap už neproběhne — uklidit musíme tady.
-  rm -f "${snapshot:-}"
-  exec mpv "${MPV_OPTS[@]}" --ytdl-format="$FORMAT" "$URL"
+  play "${MPV_OPTS[@]}" --ytdl-format="$FORMAT" "$URL"
+  exit
 }
 
 info=$(yt-dlp --no-warnings --print live_status --print title "$URL" 2>/dev/null) || info=""
@@ -84,8 +104,8 @@ write_snapshot "$URL" "$snapshot" || play_direct
 # souborů; allowed_extensions kvůli segmentům bez přípony, protocol_whitelist
 # protože u lokálního playlistu ffmpeg http(s) sám nepovolí.
 # --idle + --force-window drží okno naživu i mezi snímky.
-PIP_URL="$URL" PIP_HELPER="$SELF" PIP_SNAPSHOT="$snapshot" \
-  mpv "${MPV_OPTS[@]}" \
+export PIP_URL="$URL" PIP_HELPER="$SELF" PIP_SNAPSHOT="$snapshot"
+play "${MPV_OPTS[@]}" \
   --force-media-title="${media_title:-pip}" \
   --demuxer=lavf --demuxer-lavf-format=hls \
   --demuxer-lavf-o-append=allowed_extensions=ALL \
