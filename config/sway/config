@@ -162,8 +162,8 @@ bindsym Mod1+Shift+Tab focus prev sibling
   bindsym $mod+c exec wtype -M ctrl -k Insert
   bindsym $mod+v exec wtype -M shift -k Insert
 
-  # Clipboard history (clipman + rofi)
-  bindsym Ctrl+$mod+v exec clipman pick -t rofi
+  # Clipboard history (rofi picker over clipman's history; Delete removes an entry)
+  bindsym Ctrl+$mod+v exec ~/scripts/clipboard_history.sh
 
   # Switch the current container between different layout styles
   bindsym $mod+s layout stacking
