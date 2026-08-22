@@ -51,7 +51,14 @@ run_sudo() {
 
 ensure_package() {
     local pkg="$1"
-    if ! rpm -q "$pkg" &>/dev/null; then
+    # `rpm -q` bere jen skutečná jména balíků, takže selže u jmen, která jsou
+    # jen Provides něčeho jinak pojmenovaného (vim -> vim-enhanced,
+    # qalc -> qalculate, lazygit -> golang-github-jesseduffield-lazygit,
+    # pkg-config -> pkgconf-pkg-config). Ty se pak reportovaly jako
+    # "Installing" a volal se pro ně dnf install při každém běhu.
+    # --whatprovides rozřeší i virtuální jména, takže se nainstalované
+    # balíky správně přeskočí.
+    if ! rpm -q --whatprovides "$pkg" &>/dev/null; then
         log_info "Installing package: $pkg"
         run_sudo dnf install -y "$pkg"
     else
