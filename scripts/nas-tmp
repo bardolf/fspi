@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# On-demand SSHFS mount of the NAS system disk (server:/home/milan/tmp).
+# Data lives on the NAS system disk (not exported over Samba). Mount it locally,
+# run compute-intensive work on THIS machine's CPU, then unmount.
+#
+#   nas-tmp mount    # připojit
+#   nas-tmp umount   # odpojit
+#   nas-tmp status   # stav
+#   nas-tmp          # bez argumentu: přepínač (toggle)
+
+set -euo pipefail
+
+REMOTE="server:/home/milan/tmp"
+MNT="/home/milan/nas-tmp"
+
+# reconnect        – přežije krátký výpadek sítě
+# ServerAlive*     – detekuje mrtvé spojení do ~45 s
+# compression=no   – data (mp3/audio) jsou už komprimovaná, komprese by jen žrala CPU
+# follow_symlinks  – symlinky na serveru se chovají transparentně
+# dir_cache/*      – kešuje metadata pro svižnější `ls`
+OPTS="reconnect,ServerAliveInterval=15,ServerAliveCountMax=3,compression=no,follow_symlinks,dir_cache=yes,dcache_timeout=60"
+
+is_mounted() { mountpoint -q "$MNT"; }
+
+cmd_mount() {
+  if is_mounted; then
+    echo "již připojeno: $MNT"
+    return 0
+  fi
+  mkdir -p "$MNT"
+  sshfs "$REMOTE" "$MNT" -o "$OPTS"
+  echo "připojeno: $REMOTE -> $MNT"
+}
+
+cmd_umount() {
+  if ! is_mounted; then
+    echo "není připojeno: $MNT"
+    return 0
+  fi
+  # -z (lazy) fallback, kdyby něco drželo handle
+  fusermount3 -u "$MNT" 2>/dev/null || fusermount3 -uz "$MNT"
+  echo "odpojeno: $MNT"
+}
+
+cmd_status() {
+  if is_mounted; then
+    echo "MOUNTED  $REMOTE -> $MNT"
+    df -h "$MNT" | tail -n +1
+  else
+    echo "not mounted ($MNT)"
+  fi
+}
+
+case "${1:-toggle}" in
+  mount|m)          cmd_mount ;;
+  umount|unmount|u) cmd_umount ;;
+  status|s)         cmd_status ;;
+  toggle)           if is_mounted; then cmd_umount; else cmd_mount; fi ;;
+  *) echo "usage: nas-tmp {mount|umount|status}" >&2; exit 2 ;;
+esac

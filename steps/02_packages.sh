@@ -63,6 +63,11 @@ PACKAGES=(
   tuned-ppd
   mise
   musescore
+  # Fedora ships jen java-*-openjdk-headless (JRE bez javac a bez AWT).
+  # Ghidra v ~/opt/ghidra vyžaduje plný JDK — jeho LaunchSupport hledá
+  # bin/javac, a bez non-headless balíku by Swing GUI vůbec nenaběhlo.
+  # -devel si non-headless java-25-openjdk přitáhne jako závislost.
+  java-25-openjdk-devel
 )
 
 for pkg in "${PACKAGES[@]}"; do

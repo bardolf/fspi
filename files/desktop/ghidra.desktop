@@ -1,0 +1,17 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Ghidra
+GenericName=Software Reverse Engineering Suite
+Comment=Disassembler and decompiler from the NSA
+Exec=/home/milan/opt/ghidra/ghidraRun %f
+Icon=/home/milan/.local/share/icons/ghidra.png
+Terminal=false
+Categories=Development;Debugger;
+StartupNotify=true
+# Java bere WM_CLASS z názvu main class (ghidra.Ghidra -> ghidra-Ghidra),
+# ne z ghidraRun. Ověřeno v sway: window_properties.class == ghidra-Ghidra.
+# Se špatnou hodnotou se okno nespáruje s launcherem (waybar ikona,
+# for_window pravidla) a startup notifikace visí do timeoutu.
+StartupWMClass=ghidra-Ghidra
+Keywords=reverse;engineering;disassembler;decompiler;binary;
