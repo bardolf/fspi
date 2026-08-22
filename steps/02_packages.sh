@@ -68,6 +68,8 @@ PACKAGES=(
   # bin/javac, a bez non-headless balíku by Swing GUI vůbec nenaběhlo.
   # -devel si non-headless java-25-openjdk přitáhne jako závislost.
   java-25-openjdk-devel
+  # scripts/nas-tmp montuje NAS přes sshfs (fusermount3 na odpojení).
+  fuse-sshfs
 )
 
 for pkg in "${PACKAGES[@]}"; do
