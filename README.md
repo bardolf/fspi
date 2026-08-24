@@ -34,6 +34,7 @@ fspi/
 ├── scripts/            User scripts deployed to ~/scripts/ by steps/30_scripts.sh
 ├── files/              Static files (desktop entries, icons, systemd units)
 ├── optional/           Opt-in components (e.g. Dropbox/rclone sync)
+├── docs/archive/       Superseded hardware notes (kept for reference)
 └── fingerprint-swaylock-setup.md   PAM setup for fingerprint unlock on swaylock
 ```
 
@@ -71,11 +72,9 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
 
 ## Notes
 
-- **NVIDIA (Maxwell GTX 950)**: see `nvidia-setup.md` for the full by-hand
-  setup — the legacy `580xx` driver branch (595+ dropped Maxwell support),
-  the `nomodeset`/`nvidia-drm.modeset=1` kernel-cmdline fix, and enabling
-  Sway's `--unsupported-gpu` via `/etc/sway/environment`. Not run by
-  `install.sh` (machine-specific hardware).
+- **Graphics**: AMD Radeon RX 6600 on the in-tree `amdgpu` driver — nothing to
+  install or configure. The machine's previous NVIDIA GTX 950 setup is archived
+  at `docs/archive/nvidia-setup.md` (historical only; no longer applied).
 - **Fingerprint unlock for swaylock**: see `fingerprint-swaylock-setup.md`
   for the standalone `/etc/pam.d/swaylock` setup (password first, fingerprint
   on empty Enter — does not require `authselect with-fingerprint`).

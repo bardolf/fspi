@@ -1,5 +1,14 @@
 # NVIDIA Setup (Maxwell GTX 950, Fedora Sway)
 
+> **Archived — historical.** This machine ran an NVIDIA GeForce GTX 950
+> (Maxwell) until August 2026 and now runs an AMD Radeon RX 6600 on the
+> in-tree `amdgpu` driver. Nothing described below is applied any more: the
+> `580xx` driver packages are uninstalled, `nvidia-drm.modeset=1` and the
+> nouveau blacklist are gone from the kernel command line, and Sway's
+> `--unsupported-gpu` flag is commented out again in `/etc/sway/environment`.
+> Kept only in case that card is ever put back into service.
+
+
 Proprietary NVIDIA driver setup for an older Maxwell card on Fedora Sway,
 including the bits that make Sway (wlroots) actually start on NVIDIA. Tested
 and working. Not automated by `install.sh` — this hardware is specific to one
