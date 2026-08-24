@@ -39,6 +39,8 @@ PACKAGES=(
   azure-cli
   k9s
   wayland-utils
+  # vainfo — diagnostika VA-API (hardwarové dekódování videa na amdgpu).
+  libva-utils
   vivaldi-stable
   libxkbcommon-devel
   postgresql
