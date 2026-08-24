@@ -1,0 +1,12 @@
+[Unit]
+Description=Lc0 UCI socket (chess relay z NASu)
+
+[Socket]
+ListenStream=3457
+Accept=yes
+# Každé spojení = vlastní instance lc0 a vlastní kopie sítě ve VRAM. Na 8GB
+# kartě se víc než dvě souběžné partie nevejdou.
+MaxConnections=2
+
+[Install]
+WantedBy=sockets.target

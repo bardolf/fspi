@@ -36,6 +36,7 @@ fspi/
 ├── optional/           Opt-in components (e.g. Dropbox/rclone sync)
 ├── docs/archive/       Superseded hardware notes (kept for reference)
 ├── lc0-amd-setup.md    Leela Chess Zero with ROCm on AMD (by hand)
+├── chess-relay-setup.md  Stockfish + Lc0 exposed over TCP for remote play
 └── fingerprint-swaylock-setup.md   PAM setup for fingerprint unlock on swaylock
 ```
 
@@ -82,6 +83,11 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   cannot run any modern network, and consumer RDNA2 cards need
   `HSA_OVERRIDE_GFX_VERSION=10.3.0` or the backend segfaults. Not run by
   `install.sh` (one-off, machine-specific).
+- **Vzdálené šachové enginy**: see `chess-relay-setup.md` — Stockfish (3456,
+  CPU) and Lc0 (3457, GPU) exposed over TCP via systemd socket activation, so a
+  weak laptop can drive them through the NAS. Firewalled to the NAS address
+  only. Deployed by `optional/chess-relay/setup.sh`; the NAS half lives in the
+  `fspi-server` repo.
 - **Fingerprint unlock for swaylock**: see `fingerprint-swaylock-setup.md`
   for the standalone `/etc/pam.d/swaylock` setup (password first, fingerprint
   on empty Enter — does not require `authselect with-fingerprint`).

@@ -1,0 +1,19 @@
+#!/bin/bash
+# Lc0 UCI relay pro socket-activated službu (viz lc0.socket / lc0@.service).
+#
+# Na rozdíl od Stockfishe umí lc0 všechny UCI volby nastavit přes příkazovou
+# řádku, takže se nic neinjektuje do vstupu — jen se filtruje, co smí poslat
+# klient.
+
+export HSA_OVERRIDE_GFX_VERSION=10.3.0   # gfx1032 se musí hlásit jako gfx1030
+
+LC0_BIN=/home/milan/opt/lc0/build/rocm/lc0
+NET=/home/milan/opt/lc0/networks/BT4-1024x15x32h-swa-6147500-policytune-332.pb.gz
+T="${LC0_THREADS:-2}"                    # u GPU backendu stačí málo vláken
+
+# Služba je dostupná po síti, takže klient nesmí přenastavit volby, které
+# berou cestu do souborového systému (WeightsFile, ConfigFile, LogFile,
+# SyzygyPath) ani přepnout backend. Threads si držíme serverově.
+grep --line-buffered -ivE \
+  '^[[:space:]]*setoption[[:space:]]+name[[:space:]]+(Threads|WeightsFile|Backend|BackendOptions|ConfigFile|LogFile|SyzygyPath)[[:space:]]' \
+  | "$LC0_BIN" --weights="$NET" --backend=onnx-rocm --threads="$T"

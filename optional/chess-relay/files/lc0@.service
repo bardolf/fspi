@@ -1,0 +1,12 @@
+[Unit]
+Description=Lc0 UCI instance
+
+[Service]
+ExecStart=/usr/local/bin/lc0-relay
+StandardInput=socket
+StandardOutput=socket
+StandardError=journal
+# Narozdíl od stockfish@.service neběží jako root — lc0 root nepotřebuje,
+# GPU zařízení (/dev/kfd, /dev/dri/renderD128) mají na Fedoře 44 práva 0666.
+User=milan
+Group=milan

@@ -1,0 +1,8 @@
+#!/bin/bash
+T="${SF_THREADS:-22}"     # z 24 vláken (fyzických jader je 12; uprav dle chuti)
+H="${SF_HASH:-8192}"      # MB hash (máš 46 GB RAM)
+{
+  printf 'setoption name Threads value %s\n' "$T"
+  printf 'setoption name Hash value %s\n'    "$H"
+  grep --line-buffered -ivE '^[[:space:]]*setoption[[:space:]]+name[[:space:]]+(Threads|Hash)[[:space:]]'
+} | /usr/bin/stockfish

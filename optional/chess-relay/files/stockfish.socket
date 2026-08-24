@@ -1,0 +1,9 @@
+[Unit]
+Description=Stockfish UCI socket (chess relay z NASu)
+
+[Socket]
+ListenStream=3456
+Accept=yes
+
+[Install]
+WantedBy=sockets.target

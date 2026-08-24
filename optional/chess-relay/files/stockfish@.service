@@ -1,0 +1,8 @@
+[Unit]
+Description=Stockfish UCI instance
+
+[Service]
+ExecStart=/usr/local/bin/stockfish-relay
+StandardInput=socket
+StandardOutput=socket
+StandardError=journal
