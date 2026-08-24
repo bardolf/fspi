@@ -35,6 +35,7 @@ fspi/
 ├── files/              Static files (desktop entries, icons, systemd units)
 ├── optional/           Opt-in components (e.g. Dropbox/rclone sync)
 ├── docs/archive/       Superseded hardware notes (kept for reference)
+├── lc0-amd-setup.md    Leela Chess Zero with ROCm on AMD (by hand)
 └── fingerprint-swaylock-setup.md   PAM setup for fingerprint unlock on swaylock
 ```
 
@@ -75,6 +76,12 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
 - **Graphics**: AMD Radeon RX 6600 on the in-tree `amdgpu` driver — nothing to
   install or configure. The machine's previous NVIDIA GTX 950 setup is archived
   at `docs/archive/nvidia-setup.md` (historical only; no longer applied).
+- **Lc0 na AMD GPU**: see `lc0-amd-setup.md` — the Leela Chess Zero engine
+  with ROCm acceleration (`onnx-rocm` backend over Fedora's
+  `onnxruntime-rocm`). Records the two non-obvious traps: lc0's OpenCL backend
+  cannot run any modern network, and consumer RDNA2 cards need
+  `HSA_OVERRIDE_GFX_VERSION=10.3.0` or the backend segfaults. Not run by
+  `install.sh` (one-off, machine-specific).
 - **Fingerprint unlock for swaylock**: see `fingerprint-swaylock-setup.md`
   for the standalone `/etc/pam.d/swaylock` setup (password first, fingerprint
   on empty Enter — does not require `authselect with-fingerprint`).
