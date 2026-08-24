@@ -41,6 +41,11 @@ PACKAGES=(
   wayland-utils
   # vainfo — diagnostika VA-API (hardwarové dekódování videa na amdgpu).
   libva-utils
+  # Fedora vyřezává z mesy H.264 a HEVC kvůli patentům, takže stock
+  # radeonsi_drv_video.so umí jen VP9/AV1/MPEG2. Freeworld verze z RPM
+  # Fusion je doplňuje (dekód i enkód). Není to swap — instaluje se do
+  # /usr/lib64/dri-freeworld/, kam se libva dívá dřív než do /usr/lib64/dri.
+  mesa-va-drivers-freeworld
   vivaldi-stable
   libxkbcommon-devel
   postgresql
