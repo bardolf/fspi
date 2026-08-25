@@ -120,14 +120,22 @@ fi
 # clocks and matter for a card under load. Edge sits in the tooltip.
 temps_txt=""
 if [[ -n "$temp_junction" && -n "$temp_mem" ]]; then
-  temps_txt="${temp_junction}/${temp_mem}°C"
+  temps_txt=$(printf '%2d/%2d°C' "$temp_junction" "$temp_mem")
 elif [[ -n "$temp_junction" ]]; then
-  temps_txt="${temp_junction}°C"
+  temps_txt=$(printf '%2d°C' "$temp_junction")
 elif [[ -n "$temp_edge" ]]; then
-  temps_txt="${temp_edge}°C"
+  temps_txt=$(printf '%2d°C' "$temp_edge")
 fi
 
-bar_text="󰢮 ${power_w}W"
+# Fixní šířky: spotřeba skáče mezi jedno- a trojcifernou hodnotou a bez
+# odsazení by při každé změně posunula všechny moduly nalevo od téhle.
+# Font je monospace, takže vycpávka mezerou drží konstantní šířku.
+if [[ "$power_w" == "N/A" ]]; then
+  power_txt="N/A"
+else
+  power_txt=$(printf '%3dW' "$power_w")
+fi
+bar_text="󰢮 ${power_txt}"
 [[ -n "$temps_txt" ]] && bar_text="${bar_text} 󰔏 ${temps_txt}"
 bar_text="${bar_text} 󰘚 ${vram_used_txt}/${vram_total_txt}"
 

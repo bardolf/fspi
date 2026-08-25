@@ -76,6 +76,7 @@ button:hover {
 #custom-power-profile,
 #custom-cpu-info,
 #custom-memory-info,
+#custom-gpu-info,
 #custom-keyboard,
 #tray,
 #mode,
@@ -104,6 +105,13 @@ button:hover {
 #custom-memory-info {
     font-size: 1rem;
     min-width: 10rem;
+}
+
+/* Šířku drží konstantní už samotný skript (printf odsazuje spotřebu a
+   teploty), takže min-width tu není potřeba — font-size ale ano, jinak by
+   modul zdědil globální 13px a lišil se od sousedů. */
+#custom-gpu-info {
+    font-size: 1rem;
 }
 
 #window,

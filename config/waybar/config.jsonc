@@ -232,7 +232,7 @@
     "custom/gpu-info": {
         "exec": "~/scripts/waybar/gpu-info.sh",
         "return-type": "json",
-        "interval": 3,
+        "interval": 5,
         "on-click": "~/scripts/waybar/launch-btop.sh",
     },
     "custom/gitlab-mrs": {
