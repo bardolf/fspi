@@ -64,9 +64,11 @@ Kdyby ROCm někdy práva zpřísnil, je potřeba přidat uživatele do skupiny
 `render`. (`stockfish@.service` root zdědil historicky; klidně by mohl taky
 běžet neprivilegovaně.)
 
-**`MaxConnections=2`.** Každá instance si nahraje vlastní kopii sítě do VRAM.
-Na 8GB kartě se víc než dvě souběžné partie nevejdou. Stockfish tenhle strop
-nemá, protože RAM je 46 GB.
+**`MaxConnections=6`.** Aktivně hledající instance si nahraje vlastní kopii
+sítě do VRAM, takže víc než ~2 souběžné *partie* se na 8GB kartu nevejdou —
+nečinná instance ale drží jen ~12 MB. Původní strop 2 se ukázal jako
+nebezpečný: stačily dva mrtvé spoje a socket přestal přijímat úplně (viz
+„Engine error" níže). Stockfish žádný strop nemá, protože RAM je 46 GB.
 
 **Pomalý první tah.** Než lc0 vrátí první `bestmove`, staví ONNX graf a
 kompiluje ROCm kernely — desítky sekund. `uci` a `isready` odpoví hned, takže
@@ -128,6 +130,94 @@ jinak engine skončí dřív, než něco spočítá:
 { printf 'uci\nisready\nposition startpos moves e2e4 c7c5\ngo nodes 300\n'; \
   sleep 180; printf 'quit\n'; } | nc 127.0.0.1 3457
 ```
+
+## „Engine error" v ChessBase — vyčerpané spojení
+
+**Toto je porucha, na kterou dojde znovu, když se něco pokazí.** Příznak:
+ChessBase při volbě Lc0 hlásí `engine error`, ruční test plinkem nic nevrátí,
+ale lokální `nc 127.0.0.1 3457` na desktopu funguje.
+
+Řetěz příčin:
+
+1. Synovi zmizí klient (spadlý ChessBase, zavřený plink, přerušená síť).
+2. **sshd na NASu má `ClientAliveInterval` ve výchozím stavu 0**, takže si toho
+   nikdy nevšimne. Session žije dál — i bez jediného TCP spojení na port 22.
+3. S ní žije forced command `nc`, takže TCP na desktop zůstává `ESTAB` a
+   instance enginu nikdy nedostane EOF. (Lc0 ani Stockfish za to nemůžou —
+   oba se na EOF korektně ukončí, jen ten EOF nepřijde.)
+4. Nasčítané mrtvé instance vyčerpají `MaxConnections` na `lc0.socket`. Socket
+   přestane přijímat, `nc` dostane odmítnuté spojení, stream se okamžitě zavře
+   → **ChessBase to ohlásí jako chybu enginu.**
+
+Stockfish tím netrpěl jen proto, že `stockfish.socket` žádný strop nemá —
+mrtvé instance mu žraly RAM (a s `Hash=8192` to není málo), ale provoz
+neblokovaly.
+
+### Opraveno
+
+- **NAS:** `config/ssh/sshd_config.d/20-chess-relay.conf` v repu `fspi-server`
+  posílá relay uživatelům keepalive a po ~2 minutách bez odpovědi session
+  ukončí (30 s × 4). Globální nastavení zůstává nedotčené — ověř přes
+  `sudo sshd -T -C user=jachym-lc0,host=x,addr=1.2.3.4 | grep clientalive`.
+- **Desktop:** `MaxConnections` zvednuto z 2 na 6, aby jeden mrtvý spoj
+  neznamenal výpadek. Není to náhrada za keepalive, jen rezerva.
+
+### Diagnostika, kdyby se to vrátilo
+
+```bash
+# Desktop — obsazené sloty a stav spojení
+systemctl list-units 'lc0@*' --all
+ss -tnp | grep 3457                    # ESTAB bez provozu = mrtvý spoj
+systemctl show lc0.socket -p MaxConnections
+
+# NAS — visící session a nc procesy
+ssh server 'ps -eo etime,user,args | grep "[n]c 192.168.1.10"'
+ssh server 'ss -tnp | grep sshd-session | grep ":22 "'   # prázdné = klient je pryč
+
+# Okamžitá náprava (uvolní sloty)
+ssh server 'sudo pkill -u jachym-lc0 -f sshd-session'
+```
+
+## Lc0 se při ručním testu nehlásí — a je to správně
+
+Při připojení plinkem se Stockfish ohlásí sám, Lc0 mlčí:
+
+```
+$ plink … jachym@skybit.cz
+Server refused to allocate pty
+Stockfish 18 by the Stockfish developers (see AUTHORS file)     ← banner přišel
+info string Using 22 threads
+
+$ plink … jachym-lc0@skybit.cz
+Server refused to allocate pty
+                                                                ← nic
+```
+
+Vypadá to, že Lc0 nenaběhl. Naběhl. **Stockfish píše banner na stdout, Lc0 na
+stderr** — a `lc0@.service` má `StandardError=journal`, takže logo skončí
+v journalu, ne v socketu. Na stdout Lc0 neřekne nic, dokud nedostane příkaz.
+
+Napiš `uci` a Enter → `id name Lc0 v0.33.0-dev … uciok`.
+
+Že instance skutečně běžela, se ověří na desktopu:
+
+```bash
+sudo journalctl -b | grep lc0-relay
+# Started lc0@2-8193-192.168.1.10:3457-192.168.1.11:33150.service
+# lc0-relay[14174]: |_ |_ |_| v0.33.0-dev+git.d8ce482        ← banner ze stderr
+```
+
+Zdrojová adresa v názvu instance (`192.168.1.11`) potvrzuje, že spojení přišlo
+z NASu, tedy celým řetězcem.
+
+**Pro ChessBase to nehraje roli** — `inbetween.exe` pošle `uci` hned po startu.
+Kdyby se ale ukázalo, že nějaká klientská vrstva čeká na výstup už při startu
+a bez něj se zasekne, řešení je přidat do `lc0-relay` echo jednoho řádku na
+stdout před spuštěním enginu. Zatím není potřeba a UCI stream je čistší bez
+toho.
+
+Ono „Server refused to allocate pty" je u obou enginů v pořádku — dělá to
+`no-pty` v `authorized_keys` záměrně.
 
 ## Když je desktop vypnutý
 

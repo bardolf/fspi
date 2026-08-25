@@ -4,9 +4,16 @@ Description=Lc0 UCI socket (chess relay z NASu)
 [Socket]
 ListenStream=3457
 Accept=yes
-# Každé spojení = vlastní instance lc0 a vlastní kopie sítě ve VRAM. Na 8GB
-# kartě se víc než dvě souběžné partie nevejdou.
-MaxConnections=2
+# Každé spojení = vlastní instance lc0. Aktivně hledající instance si nahraje
+# vlastní kopii sítě do VRAM, takže víc než ~2 souběžné PARTIE se na 8GB kartu
+# nevejdou — jenže nečinná instance drží jen ~12 MB a čeká na vstup.
+#
+# Strop proto není 2, ale 6: kdyby se instance neuklidily (mrtvý klient, kterého
+# si sshd na NASu nevšimne), při dvojce se socket kompletně zablokuje a klient
+# dostane odmítnuté spojení — v ChessBase to vypadá jako "engine error".
+# Skutečná ochrana proti leaku je ClientAliveInterval na NASu, tohle je jen
+# rezerva, aby jeden mrtvý spoj neznamenal výpadek.
+MaxConnections=6
 
 [Install]
 WantedBy=sockets.target
