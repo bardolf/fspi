@@ -1,4 +1,10 @@
+# Klíče se zkoušejí v tomhle pořadí a chybějící soubor se přeskočí, takže
+# stejný config funguje na stroji s ed25519 i na tom, kde je jen RSA.
+# POZOR: globální IdentityFile nahrazuje výchozí seznam OpenSSH — když tu byl
+# jen id_ed25519, na stroji bez něj přestala fungovat veškerá autentizace
+# klíčem (včetně gitu na GitHub), protože id_rsa se už nezkusil.
 IdentityFile ~/.ssh/id_ed25519
+IdentityFile ~/.ssh/id_rsa
 
 # desktop: auto-routes — direct when on the home LAN (192.168.1.0/24),
 # via `server` (skybit.cz) when away. The Match exec returns 0 (→ apply
