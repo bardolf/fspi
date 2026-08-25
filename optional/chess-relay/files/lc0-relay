@@ -3,7 +3,7 @@
 #
 # Na rozdíl od Stockfishe umí lc0 všechny UCI volby nastavit přes příkazovou
 # řádku, takže se nic neinjektuje do vstupu — jen se filtruje, co smí poslat
-# klient.
+# klient, a hlídá se nečinnost.
 
 export HSA_OVERRIDE_GFX_VERSION=10.3.0   # gfx1032 se musí hlásit jako gfx1030
 
@@ -11,9 +11,29 @@ LC0_BIN=/home/milan/opt/lc0/build/rocm/lc0
 NET=/home/milan/opt/lc0/networks/BT4-1024x15x32h-swa-6147500-policytune-332.pb.gz
 T="${LC0_THREADS:-2}"                    # u GPU backendu stačí málo vláken
 
+# Po téhle době bez jediného příkazu od klienta se engine ukončí.
+#
+# PROČ: ChessBase po vypnutí enginu nechá na notebooku běžet plink, takže SSH
+# session i `nc` na NASu žijí dál a spojení nikdy nedojde do EOF. Keepalive
+# (ClientAliveInterval) proti tomu nepomůže — klient existuje a odpovídá.
+# Instance, která už jednou počítala, přitom drží ROCm kontext a s ním GPU na
+# plném boost taktu: naměřeno 15,3 W místo 8,1 W při nulovém zatížení, tedy
+# ~7 W nepřetržitě navíc. Nečinná instance, která ještě nepočítala, kartu
+# nedrží (12 MB RSS, karta na 700 MHz).
+IDLE="${LC0_IDLE_TIMEOUT:-900}"          # 15 minut
+
 # Služba je dostupná po síti, takže klient nesmí přenastavit volby, které
 # berou cestu do souborového systému (WeightsFile, ConfigFile, LogFile,
 # SyzygyPath) ani přepnout backend. Threads si držíme serverově.
-grep --line-buffered -ivE \
-  '^[[:space:]]*setoption[[:space:]]+name[[:space:]]+(Threads|WeightsFile|Backend|BackendOptions|ConfigFile|LogFile|SyzygyPath)[[:space:]]' \
-  | "$LC0_BIN" --weights="$NET" --backend=onnx-rocm --threads="$T"
+BLOCKED='^[[:space:]]*setoption[[:space:]]+name[[:space:]]+(Threads|WeightsFile|Backend|BackendOptions|ConfigFile|LogFile|SyzygyPath)[[:space:]]'
+
+# Filtr a watchdog v jedné smyčce: `read -t` skončí nenulově po IDLE sekundách
+# ticha, smyčka se ukončí, roura se zavře a lc0 na EOF korektně skončí.
+# (Nahrazuje původní `grep --line-buffered`, který timeout neumí.)
+shopt -s nocasematch
+{
+  while IFS= read -r -t "$IDLE" line; do
+    [[ "$line" =~ $BLOCKED ]] && continue
+    printf '%s\n' "$line"
+  done
+} | "$LC0_BIN" --weights="$NET" --backend=onnx-rocm --threads="$T"
