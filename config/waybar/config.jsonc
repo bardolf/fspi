@@ -20,6 +20,7 @@
         "power-profiles-daemon",
         "custom/cpu-info",
         "custom/memory-info",
+        "custom/gpu-info",
         "backlight",
         "custom/inhibitor",
         "custom/keyboard",
@@ -224,6 +225,14 @@
         "exec": "~/scripts/waybar/memory-info.sh",
         "return-type": "json",
         "interval": 5,
+        "on-click": "~/scripts/waybar/launch-btop.sh",
+    },
+    // Skript nevypíše nic, když v systému není AMD GPU — Waybar modul pak
+    // skryje, takže stejný config funguje i na strojích bez Radeonu.
+    "custom/gpu-info": {
+        "exec": "~/scripts/waybar/gpu-info.sh",
+        "return-type": "json",
+        "interval": 3,
         "on-click": "~/scripts/waybar/launch-btop.sh",
     },
     "custom/gitlab-mrs": {
