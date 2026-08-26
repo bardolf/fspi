@@ -48,7 +48,7 @@ touches.
 
 - **00–09** — sudoers, system upgrade, env vars, repos (RPM Fusion, Flathub,
   Vivaldi, git-secret, Terra), package install, SELinux off, flatpaks,
-  aliases, sysrq, swap off, timezone, VS Code, fonts.
+  aliases, sysrq, swap off, earlyoom, timezone, VS Code, fonts.
 - **10–19** — LazyVim, gsettings, Docker, vpn-slice, wayfreeze, Satty, yazi,
   swaylock-effects (source build).
 - **20–29** — config files into `~/.config/`, nvim settings, color schemes,

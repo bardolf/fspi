@@ -50,7 +50,6 @@ PACKAGES=(
   postgresql
   ocrmypdf
   tesseract-langpack-ces
-  earlyoom
   ddcutil
   lm_sensors
   git-secret

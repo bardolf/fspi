@@ -52,7 +52,7 @@ Three layers stacked top-down:
 2. **`steps/`** — orchestration. The two-digit prefix is the architecture, not
    just sorting:
    - `00–09` base system (sudoers, upgrade, env, repos, packages, SELinux,
-     flatpaks, aliases, sysrq, swap, timezone, VS Code, fonts)
+     flatpaks, aliases, sysrq, swap, earlyoom, timezone, VS Code, fonts)
    - `10–19` tools fetched/built out of band (LazyVim, gsettings, Docker,
      vpn-slice, wayfreeze, Satty, yazi)
    - `20–29` config deployment, color schemes, desktop entries, zsh, calendar
