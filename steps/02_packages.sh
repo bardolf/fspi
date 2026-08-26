@@ -28,7 +28,6 @@ PACKAGES=(
   libreoffice
   grim
   slurp
-  flameshot
   jq
   yq
   wl-clipboard
