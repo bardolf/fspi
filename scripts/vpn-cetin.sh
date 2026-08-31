@@ -28,6 +28,7 @@ openconnect --protocol=anyconnect $VPN_SERVER \
     -d ad.cetin \
     -d privatelink.germanywestcentral.azmk8s.io \
     -d postgres.database.azure.com \
+    -d database.windows.net \
     -d privatelink.azurecr.io \
     -d acrniintdevgwc01.azurecr.io \
     -d crninpaksgwc.azurecr.io \
@@ -52,6 +53,7 @@ resolvectl dns tun0 172.29.128.11 172.29.128.10
 resolvectl domain tun0 cetin ad.cetin \
   privatelink.germanywestcentral.azmk8s.io \
   postgres.database.azure.com \
+  database.windows.net \
   privatelink.azurecr.io \
   acrniintdevgwc01.azurecr.io \
   crninpaksgwc.azurecr.io \
