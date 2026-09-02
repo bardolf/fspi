@@ -66,9 +66,19 @@ input type:keyboard {
     # Keyboard repeat rate
     repeat_rate 40
     repeat_delay 600
+}
 
-    # Overall pointer sensitivity
-    pointer_accel -0.6
+# Mouse. `accel_profile flat` turns off libinput's adaptive pointer
+# acceleration, so pointer movement maps 1:1 onto physical movement. Games
+# that rely on consistent aim need this; on the desktop it is unnoticeable.
+#
+# `pointer_accel -0.6` previously sat in the `type:keyboard` block above,
+# where sway silently ignored it — the mouse has been running on libinput's
+# adaptive defaults all along. Restated here as an explicit 0 (unscaled) so
+# the current feel is preserved; lower it toward -1 for a slower pointer.
+input type:pointer {
+    accel_profile flat
+    pointer_accel 0
 }
 
 input type:touchpad {

@@ -138,6 +138,7 @@ CONFIG_PAIRS=(
   "config/sway/config.d/10-displays.conf" "$HOME/.config/sway/config.d/10-displays.conf"
   "config/sway/config.d/50-rules-browser.conf" "$HOME/.config/sway/config.d/50-rules-browser.conf"
   "config/sway/config.d/50-rules-floating.conf" "$HOME/.config/sway/config.d/50-rules-floating.conf"
+  "config/sway/config.d/50-rules-gaming.conf" "$HOME/.config/sway/config.d/50-rules-gaming.conf"
   "config/sway/config.d/50-rules-jetbrains.conf" "$HOME/.config/sway/config.d/50-rules-jetbrains.conf"
   "config/sway/config.d/50-rules-pip.conf" "$HOME/.config/sway/config.d/50-rules-pip.conf"
   "config/sway/config.d/55-ffm-jetbrains.conf" "$HOME/.config/sway/config.d/55-ffm-jetbrains.conf"

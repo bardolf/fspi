@@ -82,6 +82,7 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/sway/config.d/10-displays.conf" "$HOME/.config/sway/config.d/10-displays.conf" \
   "$SCRIPT_DIR/config/sway/config.d/50-rules-browser.conf" "$HOME/.config/sway/config.d/50-rules-browser.conf" \
   "$SCRIPT_DIR/config/sway/config.d/50-rules-floating.conf" "$HOME/.config/sway/config.d/50-rules-floating.conf" \
+  "$SCRIPT_DIR/config/sway/config.d/50-rules-gaming.conf" "$HOME/.config/sway/config.d/50-rules-gaming.conf" \
   "$SCRIPT_DIR/config/sway/config.d/50-rules-jetbrains.conf" "$HOME/.config/sway/config.d/50-rules-jetbrains.conf" \
   "$SCRIPT_DIR/config/sway/config.d/50-rules-pip.conf" "$HOME/.config/sway/config.d/50-rules-pip.conf" \
   "$SCRIPT_DIR/config/sway/config.d/55-ffm-jetbrains.conf" "$HOME/.config/sway/config.d/55-ffm-jetbrains.conf" \
