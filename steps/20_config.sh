@@ -89,6 +89,7 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenshot.conf" "$HOME/.config/sway/config.d/60-bindings-screenshot.conf" \
   "$SCRIPT_DIR/config/sway/config.d/60-bindings-screenrecord.conf" "$HOME/.config/sway/config.d/60-bindings-screenrecord.conf" \
   "$SCRIPT_DIR/config/sway/config.d/60-bindings-mouse.conf" "$HOME/.config/sway/config.d/60-bindings-mouse.conf" \
+  "$SCRIPT_DIR/config/sway/config.d/60-bindings-gamescale.conf" "$HOME/.config/sway/config.d/60-bindings-gamescale.conf" \
   "$SCRIPT_DIR/config/sway/config.d/90-swayidle.conf" "$HOME/.config/sway/config.d/90-swayidle.conf" \
   "$SCRIPT_DIR/config/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty" \
   "$SCRIPT_DIR/config/yazi/yazi.toml" "$HOME/.config/yazi/yazi.toml" \

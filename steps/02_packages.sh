@@ -75,6 +75,18 @@ PACKAGES=(
   java-25-openjdk-devel
   # scripts/nas-tmp montuje NAS přes sshfs (fusermount3 na odpojení).
   fuse-sshfs
+  # --- Hraní ---
+  # Steam z RPM Fusion nonfree. Nativní balík (ne Flatpak), aby hry viděly
+  # gamemode a mangohud nainstalované v systému. Přitáhne si sadu i686
+  # závislostí včetně mesa-vulkan-drivers.i686 — samotný klient je 32bitový,
+  # hry (CS2) běží 64bitově na RADV.
+  steam
+  # gamemoderun v launch options přepne CPU governor na performance po dobu
+  # běhu hry; mangohud je overlay s FPS a frametime. Obojí přes `%command%`.
+  gamemode
+  mangohud
+  # vulkaninfo — ověření, že hra vidí RADV a ne llvmpipe.
+  vulkan-tools
 )
 
 for pkg in "${PACKAGES[@]}"; do

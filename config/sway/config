@@ -61,7 +61,7 @@ input type:keyboard {
     # Keyboard layouts: US + CZ
     xkb_layout us,cz
     xkb_variant ,qwerty
-    xkb_options "grp:ctrls_toggle,numlock:on"
+    xkb_options "grp:ctrls_toggle"
     xkb_numlock enable
     # Keyboard repeat rate
     repeat_rate 40
