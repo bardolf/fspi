@@ -42,3 +42,22 @@ export PATH="$HOME/.local/bin:$HOME/.bun/bin:$PATH"
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(mise activate zsh)"
 
+
+# Terminal input-mode rescue.
+#
+# A TUI app that dies without cleaning up (nvim, yazi, btop, claude, anything
+# SIGKILLed or disconnected) leaves the terminal in *its* input mode:
+#   * mouse reporting stays on, so every mouse move over the window types
+#     `35;85;51M`-style junk into the prompt,
+#   * the kitty keyboard protocol stays on, so Ctrl+C / Ctrl+D arrive as
+#     `\e[99;5u` escapes instead of signals — the shortcuts appear dead,
+#   * focus reporting stays on, so switching windows types `I`/`O`.
+# The prompt is the one moment we know no TUI owns the terminal, so clear all
+# of it here; a freshly started app re-enables whatever it needs anyway.
+_reset_terminal_input_modes() {
+  # X10/normal/hilite/button/any-event mouse, focus reporting, all mouse
+  # coordinate encodings, xterm modifyOtherKeys, kitty keyboard protocol.
+  printf '\e[?9l\e[?1000l\e[?1001l\e[?1002l\e[?1003l\e[?1004l\e[?1005l\e[?1006l\e[?1015l\e[?1016l\e[>4;0m\e[=0;1u'
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _reset_terminal_input_modes

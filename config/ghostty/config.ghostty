@@ -28,3 +28,9 @@ window-theme = dark
 keybind = shift+insert=paste_from_clipboard
 keybind = performable:up=navigate_search:next
 keybind = performable:down=navigate_search:previous
+
+# Hard escape hatch when a crashed TUI left the terminal in a broken input mode
+# (mouse reports flooding the prompt, Ctrl+C/Ctrl+D coming through as escape
+# codes) and the prompt is too noisy to even type in. Same key as kitty's.
+# The zsh precmd hook in ~/.zshrc normally clears this on the next prompt.
+keybind = ctrl+shift+delete=reset
