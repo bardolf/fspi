@@ -55,6 +55,7 @@ if [[ -z "$asset_name" || -z "$asset_url" ]]; then
   exit 1
 fi
 
+did_install=0
 if [[ "$installed_ver" == "$latest_ver" ]]; then
   log_debug "RustDesk $installed_ver already installed, skipping"
 else
@@ -66,19 +67,77 @@ else
 
   curl -fSL --progress-bar "$asset_url" -o "$tmp/$asset_name"
   run_sudo dnf install -y --nogpgcheck "$tmp/$asset_name"
+  did_install=1
 fi
 
 # --- Vypnutí démona pro příchozí spojení ---
 # Upstream %post rustdesk.service enabluje i startuje. Ta služba je unattended
-# access — drží stroj registrovaný na public rendezvous serveru a přijímá
-# příchozí spojení. Chceme jen odchozí klienta, takže ji vypínáme. Kdo by chtěl
-# vzdálený přístup na tenhle stroj, spustí:
-#   sudo systemctl enable --now rustdesk
-if systemctl is-enabled rustdesk.service &>/dev/null || systemctl is-active rustdesk.service &>/dev/null; then
-  log_info "Disabling rustdesk.service (incoming/unattended access not wanted)"
+# access: jako root drží injektážní kanál /dev/uinput a v přihlášeném sezení
+# udržuje proces `rustdesk --server`, a právě `--server` je to, co registruje
+# stroj na public rendezvous serveru. Chceme jen odchozí klienta, takže unit
+# vypínáme z bootu.
+#
+# Pozor, "vypnutá služba + klient na obou stranách" spojení nenaváže. RustDesk
+# vybírá wayland backendy podle toho, jestli existuje proces `--server`
+# (upstream is_server_running() v libs/scrap/src/wayland/pipewire.rs): se
+# službou jde obraz přes ScreenCast portal a vstup přes uinput, bez ní jde
+# obraz *i* vstup přes RemoteDesktop portal. Ten xdg-desktop-portal-wlr
+# neumí — inzeruje jen Screenshot a ScreenCast, viz
+# /usr/share/xdg-desktop-portal/portals/wlr.portal — takže příchozí sezení
+# umře ještě před prvním framem. Na sway je root služba jediná cesta.
+#
+# Když je vzdálený přístup na tenhle stroj potřeba, zapne se na jedno sezení:
+#   ~/scripts/rustdesk-inbound.sh on     # a `off`, až to dohraje
+# (deployuje 30_scripts.sh; řeší i flag stop-service, modul uinput a restart
+# GUI okna). Trvale by to bylo `sudo systemctl enable --now rustdesk`.
+if ((did_install)); then
+  log_info "Disabling rustdesk.service (inbound is opt-in, see rustdesk-inbound.sh)"
+  run_sudo systemctl disable --now rustdesk.service
+elif systemctl is-active rustdesk.service &>/dev/null; then
+  # Někdo si právě zapnul inbound na sezení — nebrat mu ho pod rukama, jen
+  # zajistit, že to nepřežije reboot.
+  log_info "rustdesk.service is running (on-demand inbound session), leaving it up"
+  if systemctl is-enabled rustdesk.service &>/dev/null; then
+    log_info "Removing rustdesk.service from boot"
+    run_sudo systemctl disable rustdesk.service
+  fi
+elif systemctl is-enabled rustdesk.service &>/dev/null; then
+  log_info "Disabling rustdesk.service (inbound is opt-in, see rustdesk-inbound.sh)"
   run_sudo systemctl disable --now rustdesk.service
 else
   log_debug "rustdesk.service already disabled, skipping"
 fi
 
-log_info "RustDesk installed: $(rpm -q --queryformat '%{VERSION}' rustdesk)"
+# --- Flag stop-service: samotné GUI stroj nikam nepřihlásí ---
+# Bez běžící služby si GUI spustí server ve vlastním procesu (core_main.rs →
+# start_server(false, …)) a zaregistruje ID na rendezvous serveru. Stroj je pak
+# vidět a adresovatelný, i když sdílení obrazovky by na sway stejně selhalo —
+# a file transfer nebo terminál žádný capture nepotřebují. Flag
+# `stop-service = 'Y'` v [options] souboru RustDesk2.toml tuhle registraci
+# vypíná (rendezvous_mediator.rs) a je to přesně ten přepínač, který nabízí
+# samotné GUI. Nastavujeme ho jen když tam žádná hodnota není: explicitní volbu
+# (třeba od rustdesk-inbound.sh) nepřepisovat.
+rustdesk_conf="${XDG_CONFIG_HOME:-$HOME/.config}/rustdesk/RustDesk2.toml"
+
+if systemctl is-active rustdesk.service &>/dev/null; then
+  log_debug "rustdesk.service is running, not touching stop-service"
+elif [[ -f "$rustdesk_conf" ]] && grep -qE "^[[:space:]]*stop-service[[:space:]]*=" "$rustdesk_conf"; then
+  log_debug "stop-service already set explicitly in $rustdesk_conf, leaving it"
+else
+  log_info "Setting stop-service='Y' (the GUI alone will not register this machine)"
+  if [[ ! -f "$rustdesk_conf" ]]; then
+    mkdir -p "$(dirname "$rustdesk_conf")"
+    # Každé pole Config2 je #[serde(default)], takže soubor s jedinou tabulkou
+    # [options] se načte a při prvním uložení se dopíše zbytek.
+    printf "[options]\nstop-service = 'Y'\n" >"$rustdesk_conf"
+  elif grep -qE "^\[options\]" "$rustdesk_conf"; then
+    sed -i "/^\[options\]/a stop-service = 'Y'" "$rustdesk_conf"
+  else
+    printf "\n[options]\nstop-service = 'Y'\n" >>"$rustdesk_conf"
+  fi
+  if pgrep -u "$USER" -f '(^|/)rustdesk$' >/dev/null; then
+    log_warn "RustDesk is open — restart the window, it may rewrite the config from memory"
+  fi
+fi
+
+log_info "RustDesk installed: $(rpm -q --queryformat '%{VERSION}' rustdesk) (outgoing only)"

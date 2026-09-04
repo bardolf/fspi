@@ -110,4 +110,14 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   and live in Bitwarden (search "NAS 192.168.1.11"). `optional/printer-cetin/`
   adds the CETIN office printer as a CUPS SMB queue (`cetin`); needs the CETIN
   VPN up, and the AD password goes in `/etc/cetin-printer.cred` (not in the repo).
+- **RustDesk**: `steps/19b_rustdesk.sh` installs the upstream RPM but keeps the
+  machine outgoing-only — it disables `rustdesk.service` from boot and sets
+  RustDesk's own `stop-service` flag, so just opening the GUI does not register
+  this machine on the public rendezvous server. Opening the client on both sides
+  is **not** enough to be controlled: with no `rustdesk --server` process
+  RustDesk sends both screen and input through the RemoteDesktop portal, which
+  `xdg-desktop-portal-wlr` does not implement (ScreenCast and Screenshot only),
+  so an inbound session dies before the first frame. Let someone in for a single
+  session with `~/scripts/rustdesk-inbound.sh on` (and `off` afterwards); the
+  unit is never re-enabled at boot.
 - No tests, no CI — validation is "run it on a Fedora Sway box."
