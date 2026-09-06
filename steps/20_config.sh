@@ -96,5 +96,6 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/yazi/keymap.toml" "$HOME/.config/yazi/keymap.toml" \
   "$SCRIPT_DIR/config/yazi/theme.toml" "$HOME/.config/yazi/theme.toml" \
   "$SCRIPT_DIR/config/yazi/plugins/smart-enter.yazi/main.lua" "$HOME/.config/yazi/plugins/smart-enter.yazi/main.lua" \
+  "$SCRIPT_DIR/config/wireplumber/51-webcam-no-split.conf" "$HOME/.config/wireplumber/wireplumber.conf.d/51-webcam-no-split.conf" \
   "$SCRIPT_DIR/config/mimeapps.list" "$HOME/.config/mimeapps.list" \
   "$SCRIPT_DIR/config/ssh/config" "$HOME/.ssh/config"

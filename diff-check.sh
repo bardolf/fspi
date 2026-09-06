@@ -152,6 +152,7 @@ CONFIG_PAIRS=(
   "config/yazi/keymap.toml" "$HOME/.config/yazi/keymap.toml"
   "config/yazi/theme.toml" "$HOME/.config/yazi/theme.toml"
   "config/yazi/plugins/smart-enter.yazi/main.lua" "$HOME/.config/yazi/plugins/smart-enter.yazi/main.lua"
+  "config/wireplumber/51-webcam-no-split.conf" "$HOME/.config/wireplumber/wireplumber.conf.d/51-webcam-no-split.conf"
   "config/mimeapps.list" "$HOME/.config/mimeapps.list"
   "config/zsh/zshrc" "$HOME/.zshrc"
   "config/zsh/zshenv" "$HOME/.zshenv"
