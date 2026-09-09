@@ -37,7 +37,8 @@ fspi/
 ├── docs/archive/       Superseded hardware notes (kept for reference)
 ├── lc0-amd-setup.md    Leela Chess Zero with ROCm on AMD (by hand)
 ├── chess-relay-setup.md  Stockfish + Lc0 exposed over TCP for remote play
-└── fingerprint-swaylock-setup.md   PAM setup for fingerprint unlock on swaylock
+├── fingerprint-swaylock-setup.md   PAM setup for fingerprint unlock on swaylock
+└── audio-mic-setup.md  Webcam mic + BT earbuds; the dead-HFP-mic traps
 ```
 
 Numbering convention for `steps/`: `00–09` base system, `10–19` tools built or
@@ -120,4 +121,13 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   so an inbound session dies before the first frame. Let someone in for a single
   session with `~/scripts/rustdesk-inbound.sh on` (and `off` afterwards); the
   unit is never re-enabled at boot.
+- **Audio — webcam mic, not the earbuds' mic**: see `audio-mic-setup.md`. Output
+  goes to the soundcore Liberty 5 over A2DP/AAC, but their microphone returns
+  **digital silence** (peak 0) in both HFP codecs, so the LifeCam webcam's mic is
+  the machine's only working one. Two traps recorded there: apps still offer the
+  earbuds as a mic (WirePlumber keeps a loopback node present in A2DP), and
+  switching them to a headset profile tears down the A2DP endpoint until a
+  `bluetoothctl` reconnect. The webcam mic itself only exists thanks to
+  `config/wireplumber/51-webcam-no-split.conf`, whose rule must match on
+  `device.name` — a `device.form_factor` match silently never fires.
 - No tests, no CI — validation is "run it on a Fedora Sway box."
