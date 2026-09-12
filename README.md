@@ -38,7 +38,8 @@ fspi/
 ├── lc0-amd-setup.md    Leela Chess Zero with ROCm on AMD (by hand)
 ├── chess-relay-setup.md  Stockfish + Lc0 exposed over TCP for remote play
 ├── fingerprint-swaylock-setup.md   PAM setup for fingerprint unlock on swaylock
-└── audio-mic-setup.md  Webcam mic + BT earbuds; the dead-HFP-mic traps
+├── audio-mic-setup.md  Webcam mic + BT earbuds; the dead-HFP-mic traps
+└── luks-tang-setup.md  Network-bound LUKS unlock (clevis + tang on the NAS)
 ```
 
 Numbering convention for `steps/`: `00–09` base system, `10–19` tools built or
@@ -130,4 +131,13 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   `bluetoothctl` reconnect. The webcam mic itself only exists thanks to
   `config/wireplumber/51-webcam-no-split.conf`, whose rule must match on
   `device.name` — a `device.form_factor` match silently never fires.
+- **Disk unlocks itself from the NAS**: see `luks-tang-setup.md`. The LUKS2
+  volume is bound with clevis to a tang server at `192.168.1.11:7500`, so the
+  passphrase prompt normally never appears; keyslot 0 stays as the manual
+  fallback. The initrd therefore needs networking, and it uses a **static**
+  address (`ip=192.168.1.10::192.168.1.1:255.255.255.0::enp7s0:none`) — `ip=dhcp`
+  once took 31 s to get a lease and the passphrase got typed 8 s before it
+  arrived. Note that `clevis-luks-askpass` never times out: a prompt means the
+  network is late, not that clevis gave up, so waiting at it is worth a try.
+  Set up by hand; not deployed by `install.sh`.
 - No tests, no CI — validation is "run it on a Fedora Sway box."
