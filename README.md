@@ -29,7 +29,7 @@ fspi/
 ├── lib/
 │   ├── logging.sh      log_info, log_warn, log_error, log_debug
 │   └── utils.sh        ensure_package, ensure_symlink, ensure_file_copy, …
-├── steps/              Numbered scripts (00–30) executed sequentially
+├── steps/              Numbered scripts (00–31) executed sequentially
 ├── config/             Dotfiles deployed to ~/.config/ by steps/20_config.sh
 ├── scripts/            User scripts deployed to ~/scripts/ by steps/30_scripts.sh
 ├── files/              Static files (desktop entries, icons, systemd units)
@@ -125,12 +125,14 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
 - **Audio — webcam mic, not the earbuds' mic**: see `audio-mic-setup.md`. Output
   goes to the soundcore Liberty 5 over A2DP/AAC, but their microphone returns
   **digital silence** (peak 0) in both HFP codecs, so the LifeCam webcam's mic is
-  the machine's only working one. Two traps recorded there: apps still offer the
+  the machine's only working one. Three traps recorded there: apps still offer the
   earbuds as a mic (WirePlumber keeps a loopback node present in A2DP), and
   switching them to a headset profile tears down the A2DP endpoint until a
-  `bluetoothctl` reconnect. The webcam mic itself only exists thanks to
-  `config/wireplumber/51-webcam-no-split.conf`, whose rule must match on
-  `device.name` — a `device.form_factor` match silently never fires.
+  `bluetoothctl` reconnect. A third one: the LifeCam card intermittently comes up
+  at boot with an **empty profile list**, which both takes the mic away and
+  segfaults Steam on the resulting NULL `active_profile` pointer.
+  `steps/31_audio_guard.sh` installs a login-time guard that spots any card in
+  that state and restarts WirePlumber; by hand the cure is the same restart.
 - **Disk unlocks itself from the NAS**: see `luks-tang-setup.md`. The LUKS2
   volume is bound with clevis to a tang server at `192.168.1.11:7500`, so the
   passphrase prompt normally never appears; keyslot 0 stays as the manual

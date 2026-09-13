@@ -153,7 +153,6 @@ CONFIG_PAIRS=(
   "config/yazi/keymap.toml" "$HOME/.config/yazi/keymap.toml"
   "config/yazi/theme.toml" "$HOME/.config/yazi/theme.toml"
   "config/yazi/plugins/smart-enter.yazi/main.lua" "$HOME/.config/yazi/plugins/smart-enter.yazi/main.lua"
-  "config/wireplumber/51-webcam-no-split.conf" "$HOME/.config/wireplumber/wireplumber.conf.d/51-webcam-no-split.conf"
   "config/mimeapps.list" "$HOME/.config/mimeapps.list"
   "config/zsh/zshrc" "$HOME/.zshrc"
   "config/zsh/zshenv" "$HOME/.zshenv"
@@ -229,7 +228,16 @@ for ((i = 0; i < ${#CALENDAR_PAIRS[@]}; i += 2)); do
 done
 
 # =========================================================
-# Section 5: CETIN CA certs (mirrors steps/00d_cetin_certs.sh)
+# Section 5: Audio card profile guard (mirrors steps/31_audio_guard.sh)
+# =========================================================
+
+print_section "Audio card profile guard (systemd)"
+
+check_file "$SCRIPT_DIR/files/systemd/audio-card-profile-guard.service" \
+  "$HOME/.config/systemd/user/audio-card-profile-guard.service"
+
+# =========================================================
+# Section 6: CETIN CA certs (mirrors steps/00d_cetin_certs.sh)
 # =========================================================
 
 print_section "CETIN CA certificates"
@@ -243,7 +251,7 @@ for cert in "$CERTS_SRC"/*.crt; do
 done
 
 # =========================================================
-# Section 6: Optional - Dropbox sync (mirrors optional/dropbox/setup.sh)
+# Section 7: Optional - Dropbox sync (mirrors optional/dropbox/setup.sh)
 # Skipped silently if the optional component was never installed.
 # =========================================================
 
@@ -261,7 +269,7 @@ for ((i = 0; i < ${#DROPBOX_PAIRS[@]}; i += 2)); do
 done
 
 # =========================================================
-# Section 7: Optional - Samba/CIFS mounts (mirrors optional/samba/setup.sh)
+# Section 8: Optional - Samba/CIFS mounts (mirrors optional/samba/setup.sh)
 # The fstab block lives between markers inside /etc/fstab, so we extract that
 # block and compare it to the repo file. Credentials files are intentionally
 # not checked: they hold secrets and the repo only ships empty templates.

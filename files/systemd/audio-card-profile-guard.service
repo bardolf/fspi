@@ -1,0 +1,12 @@
+[Unit]
+Description=Restart WirePlumber if an ALSA card enumerated no profiles
+Documentation=file:%h/projects/fspi/audio-mic-setup.md
+After=wireplumber.service
+Wants=wireplumber.service
+
+[Service]
+Type=oneshot
+ExecStart=%h/scripts/audio-card-profile-guard.sh
+
+[Install]
+WantedBy=default.target

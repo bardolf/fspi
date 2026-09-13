@@ -2,8 +2,9 @@
 
 Working audio layout on the desktop: **output = soundcore Liberty 5 earbuds over
 A2DP/AAC, microphone = the USB webcam.** The earbuds' own microphone is dead at
-the hardware/transport level and must not be used. Diagnosed and fixed
-2026-09-09 on PipeWire 1.6.8 + WirePlumber 0.5.14.
+the hardware/transport level and must not be used. Diagnosed
+2026-09-09 on PipeWire 1.6.8 + WirePlumber 0.5.14; the Steam-killing half
+re-diagnosed 2026-09-13, see below.
 
 ## Hardware
 
@@ -61,21 +62,95 @@ bluetoothctl disconnect 7C:E9:13:58:59:84
 bluetoothctl connect 7C:E9:13:58:59:84     # comes back on a2dp-sink (AAC)
 ```
 
-## The webcam mic needs split disabled
+## The empty-profile flake that kills Steam
 
-The LifeCam only appears as a PipeWire source because of
-`config/wireplumber/51-webcam-no-split.conf` (deployed by `steps/20_config.sh`).
-With PipeWire's ALSA `split-enable` left on, this capture-only card ends up with
-an **empty profile list** and no source node at all — and, separately, Steam
-segfaults on the resulting NULL active-profile pointer (both confirmed gone once
-the rule actually matched).
+Intermittently, and so far only at boot, the LifeCam card comes up with an
+**empty ACP profile list**. `pactl list cards` prints it with no
+`Active Profile:` line at all, and pipewire-pulse logs:
 
-That rule must match on **`device.name`, not `device.form_factor`** — the ALSA
-monitor never sets `form_factor` on a card, so a form_factor match silently
-never fires and the card keeps `split-enable = true`. That exact bug sat in the
-file unnoticed and is what left the machine with no usable microphone. The
-config file's header comment carries the full reasoning; read it before touching
-the rule.
+```
+mod.protocol-pulse: card 50 port 0 profiles inconsistent (0 < 1)
+```
+
+`pw-dump` shows the same thing from the other side: `EnumProfile` is `[]` while
+the active `Profile` still reports `off`. There is no source node either, so the
+machine has no working microphone at all.
+
+The second casualty is Steam. pipewire-pulse resolves `pa_card_info.active_profile`
+by looking the active profile up in the profile list; with that list empty the
+pointer comes out NULL. Steam's bundled `libaudio.so` dereferences it in its
+`pa_context_get_card_info_list` callback and segfaults during startup, so Steam
+dies before it can launch anything:
+
+```
+#0 libaudio.so                              <- Steam's callback, NULL deref
+#1 context_get_card_info_callback  libpulse.so.0
+#2 run_action                      libpulsecommon-17.0.so
+```
+
+The bug is Steam's — a profile-less card is legal in the PulseAudio API — but
+Steam bootstraps its own client into `~/.local/share/Steam` and self-updates
+outside dnf, so pinning or reverting it is not an option.
+
+**The cure is `systemctl --user restart wireplumber`.** The ACP probe then
+enumerates `off / pro-audio / input:mono-fallback` normally and the mic comes
+back as a source.
+
+### It is a cold-boot flake, not a misconfiguration
+
+Not reproducible on demand: twelve consecutive WirePlumber restarts probed the
+card correctly every time. Across boots it is rare — of the nine boots between
+2026-09-09 and 2026-09-13, only the last one was affected. The probe opens the
+PCM (`pa_alsa_open_by_device_string` on `hw:2`) and drops every profile it
+cannot open, so something about the cold USB device makes that open fail. The
+exact trigger is not pinned down; these were ruled out along the way:
+
+- **The sddm greeter's audio stack.** Its user session only ever *listens* on
+  `pipewire.socket`; `pipewire.service` is never started for uid 979, so nothing
+  there ever holds the card.
+- **A busy PCM.** Holding `hw:2` open with `arecord` across a WirePlumber
+  restart makes the card **disappear entirely** and reappear when released —
+  a different symptom from the empty profile list.
+- **USB autosuspend** (the device sits at `power/control = auto`, 2 s delay, and
+  is usually found `suspended`) stays plausible as a trigger, but every restart
+  test resumed it without trouble.
+
+To capture the failing probe if it recurs:
+
+```bash
+systemctl --user set-environment WIREPLUMBER_DEBUG=D,acp:5,alsa:5
+systemctl --user restart wireplumber
+journalctl --user -t wireplumber -b | grep -B2 -A6 "probe card hw:2"
+# a healthy probe says: "Profile input:mono-fallback supported."
+```
+
+### The guard
+
+`scripts/audio-card-profile-guard.sh`, run at login by
+`audio-card-profile-guard.service` (deployed by `steps/31_audio_guard.sh`),
+checks every ALSA card for a missing `Active Profile:` line and restarts
+WirePlumber once if it finds one. It keys off that state rather than off the
+webcam, because any card in it kills Steam. It refuses to restart while streams
+are running — clients connected across a WirePlumber restart do not all
+reattach — and says so instead.
+
+### `api.alsa.split-enable` was a red herring
+
+An earlier round of this blamed WirePlumber's `api.alsa.split-enable` and
+deployed `config/wireplumber/51-webcam-no-split.conf` to turn it off for the
+webcam. **That rule was inert**, and it has been removed. Two independent
+checks, both on WirePlumber 0.5.14:
+
+- With the rule gone the card still enumerates all three profiles and still
+  lands on `input:mono-fallback`.
+- `/usr/share/wireplumber/scripts/monitors/alsa.lua` sets `api.alsa.use-acp = true`
+  unconditionally (line 32), and the split properties are only ever read on the
+  node-creation path behind `if dev_props["api.alsa.use-acp"] ~= "true"`
+  (line 193). With ACP on — always — nothing is ever split, so disabling
+  splitting changes nothing. It never touched profile enumeration.
+
+What actually cured the card the day the rule was written was the WirePlumber
+restart that came with deploying it.
 
 ## Restoring the defaults after a fresh install
 
@@ -91,8 +166,10 @@ pactl set-default-sink bluez_output.7C_E9_13_58_59_84.1
 ## Verifying
 
 ```bash
-pactl list cards | grep -A2 -i lifecam      # must show an "Active Profile:" line
-pactl list short sources | grep -i HD5000   # the mic must appear as a source
+# every card must have an "Active Profile:" line under its name; a card without
+# one is the empty-profile flake, and Steam will segfault on it
+pactl list cards | grep -E 'Name: alsa_card|Active Profile'
+pactl list short sources | grep -i lifecam  # the mic must appear as a source
 pactl info | grep -E 'Default (Sink|Source)'
 wpctl status                                # Sources: LifeCam marked *
 ```
