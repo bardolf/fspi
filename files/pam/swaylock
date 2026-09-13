@@ -1,0 +1,25 @@
+# PAM configuration for the swaylock screen locker — face unlock via Howdy.
+#
+# Deployed by steps/19c_howdy.sh. The stock file from the swaylock RPM is just
+# "auth include login"; this replaces it with a standalone auth stack, the same
+# shape fingerprint-swaylock-setup.md uses on the ThinkPad, and for the same
+# reason: the order is what decides whether the password fallback stays usable.
+#
+#   1. pam_unix first, so typing a password and pressing Enter unlocks straight
+#      away and the camera is never consulted.
+#   2. pam_howdy second, reached only once pam_unix has failed — which is what
+#      pressing Enter on an empty prompt does. That is the face-unlock path.
+#   3. pam_deny closes the stack.
+#
+# Putting pam_howdy first is the trap authselect's with-fingerprint feature
+# falls into, dissected at length in fingerprint-swaylock-setup.md: the first
+# module blocks the whole stack until its timeout expires, so every password
+# unlock would sit there waiting several seconds for the camera to give up.
+#
+# Password fallback can therefore never break. A missing pam_howdy.so, a dark
+# room or an unplugged webcam all just fail line 2 and leave line 1 doing the
+# job it already does today. "nullok" is safe here because the account has a
+# real password (passwd -S milan reports P), so an empty Enter fails line 1.
+auth  sufficient  pam_unix.so nullok
+auth  sufficient  pam_howdy.so
+auth  required    pam_deny.so

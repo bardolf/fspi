@@ -38,6 +38,7 @@ fspi/
 ├── lc0-amd-setup.md    Leela Chess Zero with ROCm on AMD (by hand)
 ├── chess-relay-setup.md  Stockfish + Lc0 exposed over TCP for remote play
 ├── fingerprint-swaylock-setup.md   PAM setup for fingerprint unlock on swaylock
+├── howdy-face-unlock.md  Face unlock on swaylock via Howdy (desktop webcam)
 ├── audio-mic-setup.md  Webcam mic + BT earbuds; the dead-HFP-mic traps
 └── luks-tang-setup.md  Network-bound LUKS unlock (clevis + tang on the NAS)
 ```
@@ -133,6 +134,17 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   segfaults Steam on the resulting NULL `active_profile` pointer.
   `steps/31_audio_guard.sh` installs a login-time guard that spots any card in
   that state and restarts WirePlumber; by hand the cure is the same restart.
+- **Face unlock on the desktop**: see `howdy-face-unlock.md`. `steps/19c_howdy.sh`
+  installs Howdy from `march7thdev/howdy-surface` (the `principis` COPR everyone
+  links is stale — its `python3-elevate` is still built for Python 3.13 and
+  nothing there provides `python3dist(dlib)`) and replaces `/etc/pam.d/swaylock`.
+  Only swaylock: sudo is NOPASSWD here and there is no polkit PAM file. The
+  stack is `pam_unix` **before** `pam_howdy` for the reason
+  `fingerprint-swaylock-setup.md` spells out — a biometric module placed first
+  blocks the typed password until its timeout expires. The webcam is RGB-only
+  with no IR, so this is convenience, not security. The step also disables the
+  unsigned `Evernight-Vista-Kernel` repo that `dnf copr enable` drags in behind
+  the COPR.
 - **Disk unlocks itself from the NAS**: see `luks-tang-setup.md`. The LUKS2
   volume is bound with clevis to a tang server at `192.168.1.11:7500`, so the
   passphrase prompt normally never appears; keyslot 0 stays as the manual
