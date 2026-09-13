@@ -40,7 +40,7 @@ means.
 The initrd needs an IP before any of that can work, hence on the kernel cmdline:
 
 ```
-rd.neednet=1 ip=192.168.1.10::192.168.1.1:255.255.255.0::enp7s0:none
+rd.neednet=1 ip=dhcp
 ```
 
 **These lines at the start of every boot are normal:**
@@ -52,10 +52,10 @@ clevis-luks-askpass[…]: Error communicating with server http://192.168.1.11:75
 Clevis starts ~0.1 s after the NIC driver loads and simply spins until the
 network is actually up. Six to ten of them per boot is the healthy case.
 
-## The trap: DHCP in the boot-critical path (fixed 2026-09-12)
+## The trap: DHCP sits in the boot-critical path
 
-The cmdline used to say `ip=dhcp`, and on 2026-09-12 the disk asked for the
-passphrase even though the NAS was up and reachable:
+On 2026-09-12 the disk asked for the passphrase even though the NAS was up and
+reachable:
 
 ```
 15:58:11.1  igb loaded, enp7s0 appears
@@ -81,30 +81,49 @@ Two things worth internalising from that:
 - **Tang being reachable "now" proves nothing about boot time.** The only thing
   that had gone wrong was address assignment.
 
-### The fix
+That first bullet *is* the mitigation. `ip=dhcp` stays.
 
-DHCP is out of the critical path — the address is static in the initrd. The
-router hands out `192.168.1.10` from a MAC reservation anyway (identical across
-every boot on record), so this changes no addressing, only *when* it is known:
+### Do not replace it with a static IP (tried 2026-09-12, reverted the next day)
 
-```bash
-sudo grubby --update-kernel=ALL --remove-args="ip" \
-  --args="ip=192.168.1.10::192.168.1.1:255.255.255.0::enp7s0:none"
-# and the same edit in /etc/kernel/cmdline, so new kernels inherit it
+The obvious fix is to take DHCP out of the critical path altogether:
+
+```
+ip=192.168.1.10::192.168.1.1:255.255.255.0::enp7s0:none
 ```
 
-Syntax is `ip=<client>:<peer>:<gateway>:<netmask>:<hostname>:<iface>:<autoconf>`;
-the empty hostname field is fine and `none` means "no autoconfiguration". No DNS
-is needed — the tang URL is an IP literal. Both files must be edited:
-`grubby` rewrites the existing BLS entries under `/boot/loader/entries/`,
-`/etc/kernel/cmdline` is what `kernel-install` copies into future ones.
+It works, and it works well — the next boot unlocked **0.8 s after link-up**,
+six "Error communicating" lines and no prompt. **It also silently kills DNS.**
 
-Real root networking is untouched: NetworkManager restarts after switch-root and
-goes back to DHCP on its own profile, landing on the same `.10`.
+`nm-initrd-generator` turns that cmdline into a connection profile in
+`/run/NetworkManager/system-connections/enp7s0.nmconnection`:
 
-The interface name is now load-bearing. If the NIC is ever replaced and the
-predictable name changes from `enp7s0`, the initrd gets no address and the boot
-falls back to the passphrase prompt — annoying, not fatal.
+```ini
+[ipv4]
+address1=192.168.1.10/24
+gateway=192.168.1.1
+method=manual        # ← and no dns= line at all
+```
+
+After switch-root the real-root NetworkManager **assumes** that profile
+(`device (enp7s0): state change: … managed-type: 'assume'`) instead of
+configuring the link itself, because there is **no persistent wired profile** in
+`/etc/NetworkManager/system-connections/` — only the wifi one. The wired link has
+always run on whatever the initrd left behind. Under `ip=dhcp` that is harmless:
+the generated profile is a DHCP profile, so `192.168.1.11` and `8.8.8.8` arrive
+with the lease. Under a static `ip=` the generated profile carries no name
+servers at all, so:
+
+- `resolvectl status` shows **zero DNS servers on link enp7s0**
+- the wired default route still wins on metric (100 vs. wifi's 600), so traffic
+  leaves over the cable while DNS depends entirely on wifi being up
+- wired-only — the normal state on this box — means **no DNS whatsoever**
+
+Nothing about either symptom points back at the bootloader, which is what makes
+it worth the paragraph. If a static `ip=` is ever wanted again it needs
+`nameserver=192.168.1.11 nameserver=8.8.8.8` on the cmdline as well. A
+persistent `/etc` profile alone does **not** rescue it: the generated profile's
+`autoconnect-priority=-100` only decides who wins a fresh autoconnect (a cable
+replug), and NetworkManager never preempts a connection it has already assumed.
 
 ## Verifying without rebooting
 
@@ -120,7 +139,7 @@ After a boot, the two numbers that matter:
 
 ```bash
 journalctl -b | grep -c "Error communicating with server"   # ~6–10 normal, dozens = network slow
-journalctl -b | grep "Unlocked /dev/nvme0n1p3"              # clevis says so when it wins
+journalctl -b | grep "Unlocked /dev/disk/by-uuid"      # clevis says so when it wins
 ```
 
 ## Re-creating it after a reinstall
@@ -129,8 +148,7 @@ journalctl -b | grep "Unlocked /dev/nvme0n1p3"              # clevis says so whe
 sudo dnf install clevis clevis-luks clevis-dracut clevis-systemd
 sudo clevis luks bind -d /dev/nvme0n1p3 tang '{"url":"http://192.168.1.11:7500"}'
 sudo dracut -f --regenerate-all
-sudo grubby --update-kernel=ALL --remove-args="ip" \
-  --args="rd.neednet=1 ip=<this-host>::192.168.1.1:255.255.255.0::<iface>:none"
+sudo grubby --update-kernel=ALL --args="rd.neednet=1 ip=dhcp"
 ```
 
 `clevis luks bind` asks for an existing passphrase (keyslot 0) and consumes the

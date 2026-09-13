@@ -148,10 +148,10 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
 - **Disk unlocks itself from the NAS**: see `luks-tang-setup.md`. The LUKS2
   volume is bound with clevis to a tang server at `192.168.1.11:7500`, so the
   passphrase prompt normally never appears; keyslot 0 stays as the manual
-  fallback. The initrd therefore needs networking, and it uses a **static**
-  address (`ip=192.168.1.10::192.168.1.1:255.255.255.0::enp7s0:none`) — `ip=dhcp`
-  once took 31 s to get a lease and the passphrase got typed 8 s before it
-  arrived. Note that `clevis-luks-askpass` never times out: a prompt means the
-  network is late, not that clevis gave up, so waiting at it is worth a try.
-  Set up by hand; not deployed by `install.sh`.
+  fallback. The initrd therefore needs networking (`rd.neednet=1 ip=dhcp`). Two
+  things recorded there: `clevis-luks-askpass` never times out, so a prompt means
+  the network is late rather than clevis giving up — waiting half a minute at it
+  is worth a try; and a static `ip=` on the cmdline is **not** the fix, because
+  NetworkManager assumes the initrd-generated profile in the real root and that
+  profile carries no DNS servers. Set up by hand; not deployed by `install.sh`.
 - No tests, no CI — validation is "run it on a Fedora Sway box."
