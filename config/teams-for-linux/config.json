@@ -1,0 +1,10 @@
+{
+  "awayOnSystemIdle": true,
+  "appIdleTimeout": 300,
+  "appIdleTimeoutCheckInterval": 10,
+  "appActiveCheckInterval": 2,
+  "idleDetection": {
+    "forceState": true,
+    "stateFile": "/home/$USER/.local/state/teams-for-linux-idle-state"
+  }
+}

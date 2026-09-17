@@ -106,6 +106,20 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   via a user-side `~/.config/sway/config.d/90-swayidle.conf` override.
   PAM service name stays `swaylock`, so the fingerprint setup above applies
   unchanged.
+- **Teams presence follows the lock screen**: `teams-for-linux` asks Electron's
+  `powerMonitor` whether the session is idle, and under sway that answer is
+  always "active" — Chromium's Linux idle query needs either X11's XScreenSaver
+  extension (we run the Wayland ozone backend) or an
+  `org.freedesktop.ScreenSaver` owner on the session bus, and this session has
+  neither. `awayOnSystemIdle` on its own therefore never fires and Teams shows
+  you green all night. The fix is upstream's `idleDetection.forceState`
+  (`config/teams-for-linux/config.json`): the app polls a state file instead,
+  and `~/scripts/teams-idle-state.sh` writes `inactive`/`active` from the
+  swayidle `timeout`/`resume` pair, so Teams goes Away the moment the screen
+  locks and returns to the previous status on the first keypress. The state
+  file has to live under `$HOME` — the flatpak gets a private `/tmp`, which
+  makes upstream's `/tmp/teams-for-linux-idle-state-$USER` default invisible to
+  the app. Config changes need a `flatpak kill` + relaunch to take effect.
 - **Optional components** under `optional/` are not run by `install.sh`; each
   carries its own `setup.sh` to opt in. `optional/samba/` adds CIFS mounts for
   the `192.168.1.11` NAS to `/etc/fstab` (only run it on machines that need

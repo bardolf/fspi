@@ -157,6 +157,7 @@ CONFIG_PAIRS=(
   "config/zsh/zshrc" "$HOME/.zshrc"
   "config/zsh/zshenv" "$HOME/.zshenv"
   "config/ssh/config" "$HOME/.ssh/config"
+  "config/teams-for-linux/config.json" "$HOME/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/teams-for-linux/config.json"
 )
 
 for ((i = 0; i < ${#CONFIG_PAIRS[@]}; i += 2)); do
