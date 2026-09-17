@@ -1,0 +1,12 @@
+[Unit]
+Description=Keep Teams presence in step with the screen lock
+Documentation=file:%h/projects/fspi/README.md
+
+[Service]
+Type=simple
+ExecStart=%h/scripts/teams-presence-watcher.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

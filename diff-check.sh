@@ -238,7 +238,16 @@ check_file "$SCRIPT_DIR/files/systemd/audio-card-profile-guard.service" \
   "$HOME/.config/systemd/user/audio-card-profile-guard.service"
 
 # =========================================================
-# Section 6: Howdy face unlock (mirrors steps/19c_howdy.sh)
+# Section 6: Teams presence watcher (mirrors steps/32_teams_presence.sh)
+# =========================================================
+
+print_section "Teams presence watcher (systemd)"
+
+check_file "$SCRIPT_DIR/files/systemd/teams-presence-watcher.service" \
+  "$HOME/.config/systemd/user/teams-presence-watcher.service"
+
+# =========================================================
+# Section 7: Howdy face unlock (mirrors steps/19c_howdy.sh)
 # /etc/pam.d/swaylock is replaced wholesale rather than block-managed, because
 # the order of the auth stack is the point — see files/pam/swaylock. Checked
 # only once Howdy is installed; the stock file is not ours to police.
@@ -253,7 +262,7 @@ else
 fi
 
 # =========================================================
-# Section 7: CETIN CA certs (mirrors steps/00d_cetin_certs.sh)
+# Section 8: CETIN CA certs (mirrors steps/00d_cetin_certs.sh)
 # =========================================================
 
 print_section "CETIN CA certificates"
@@ -267,7 +276,7 @@ for cert in "$CERTS_SRC"/*.crt; do
 done
 
 # =========================================================
-# Section 8: Optional - Dropbox sync (mirrors optional/dropbox/setup.sh)
+# Section 9: Optional - Dropbox sync (mirrors optional/dropbox/setup.sh)
 # Skipped silently if the optional component was never installed.
 # =========================================================
 
@@ -285,7 +294,7 @@ for ((i = 0; i < ${#DROPBOX_PAIRS[@]}; i += 2)); do
 done
 
 # =========================================================
-# Section 9: Optional - Samba/CIFS mounts (mirrors optional/samba/setup.sh)
+# Section 10: Optional - Samba/CIFS mounts (mirrors optional/samba/setup.sh)
 # The fstab block lives between markers inside /etc/fstab, so we extract that
 # block and compare it to the repo file. Credentials files are intentionally
 # not checked: they hold secrets and the repo only ships empty templates.

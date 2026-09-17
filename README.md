@@ -113,13 +113,23 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   `org.freedesktop.ScreenSaver` owner on the session bus, and this session has
   neither. `awayOnSystemIdle` on its own therefore never fires and Teams shows
   you green all night. The fix is upstream's `idleDetection.forceState`
-  (`config/teams-for-linux/config.json`): the app polls a state file instead,
-  and `~/scripts/teams-idle-state.sh` writes `inactive`/`active` from the
-  swayidle `timeout`/`resume` pair, so Teams goes Away the moment the screen
-  locks and returns to the previous status on the first keypress. The state
-  file has to live under `$HOME` — the flatpak gets a private `/tmp`, which
-  makes upstream's `/tmp/teams-for-linux-idle-state-$USER` default invisible to
-  the app. Config changes need a `flatpak kill` + relaunch to take effect.
+  (`config/teams-for-linux/config.json`), where the app polls a state file
+  instead. `teams-presence-watcher.service` (step 32) writes that file every
+  30s from `~/scripts/teams-idle-state.sh`, deciding on one question: is
+  `swaylock` running? Locked means `inactive` and Teams goes Away, unlocked
+  means `active` and the pre-idle status comes back. Two things make this a
+  poller rather than a pair of swayidle hooks: the state file is an override
+  that wins over everything, so a stale `inactive` pins you to Away with
+  nothing able to correct it (swayidle's `resume` only fires once its own
+  `timeout` has), and polling re-derives the answer every cycle so any drift —
+  a hand-edit, or the file surviving a `flatpak kill` — heals on its own. Idle
+  time itself is not pollable here: `ext-idle-notify-v1` is subscribe-only and
+  sway never populates logind's `IdleHint`. The state file has to live under
+  `$HOME`; the flatpak gets a private `/tmp`, which makes upstream's
+  `/tmp/teams-for-linux-idle-state-$USER` default invisible to the app. Config
+  changes need a `flatpak kill` + relaunch to take effect, and `Away` is as far
+  as this goes — the file only speaks `active`/`inactive`, so showing Offline
+  would mean killing the app.
 - **Optional components** under `optional/` are not run by `install.sh`; each
   carries its own `setup.sh` to opt in. `optional/samba/` adds CIFS mounts for
   the `192.168.1.11` NAS to `/etc/fstab` (only run it on machines that need
