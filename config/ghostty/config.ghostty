@@ -7,6 +7,12 @@ font-size = 13
 scrollback-limit = 104857600
 mouse-scroll-multiplier = 5
 copy-on-select = clipboard
+# Mouse always belongs to the terminal: drag selects, middle-click pastes,
+# even while a TUI that grabs the mouse is running (claude fullscreen, yazi,
+# nvim, btop, anything over ssh). The zsh precmd reset only helps once a
+# crashed app drops back to a local prompt; this covers live apps too.
+# Ctrl+Shift+M hands the mouse to the app when you actually want it.
+mouse-reporting = false
 mouse-hide-while-typing = true
 app-notifications = no-clipboard-copy
 
@@ -34,3 +40,4 @@ keybind = performable:down=navigate_search:previous
 # codes) and the prompt is too noisy to even type in. Same key as kitty's.
 # The zsh precmd hook in ~/.zshrc normally clears this on the next prompt.
 keybind = ctrl+shift+delete=reset
+keybind = ctrl+shift+m=toggle_mouse_reporting
