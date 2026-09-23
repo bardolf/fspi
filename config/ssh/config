@@ -28,8 +28,17 @@ Host desktop-jump
 	User milan
 	ProxyJump server
 
+# server: doma (výchozí brána = LAN MAC MikroTiku) rovnou přes LAN, jinak přes
+# veřejné skybit.cz (doma by to jelo hairpinem přes ~7 hopů). Match musí být
+# PŘED Host server — v ssh_config platí první nastavená hodnota. Test MAC brány
+# nic neposílá do sítě; ping na 192.168.1.11 by v cizí 192.168.1.0/24 síti
+# čekal na timeout.
+Match originalhost server exec "ip neigh show 192.168.1.1 | grep -qi 74:4d:28:f1:71:bf"
+	HostName 192.168.1.11
+# Stejný stroj pod oběma adresami → klíč se vždy ověřuje proti záznamu skybit.cz.
 Host server
 	HostName skybit.cz
+	HostKeyAlias skybit.cz
 	User milan
 Host root@mig
         HostName celrtsd401.server.cetin
