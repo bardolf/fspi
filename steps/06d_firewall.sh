@@ -13,11 +13,18 @@ log_info "Step 06d: Opening firewall ports for WinBox and qBittorrent"
 # každý příchozí port se povoluje tady. Zóna se schválně nemění.
 #
 #   5678/udp      MNDP — ohlašování MikroTiků; bez něj je WinBox → Neighbors prázdné
-#   20561/udp     WinBox připojení přes MAC
 #   7881/tcp+udp  qBittorrent — router předává 7881 z internetu na 192.168.1.10
 #                 (repo home_network), qBittorrent musí poslouchat právě na něm
 TORRENT_PORT=7881
-PORTS=(5678/udp 20561/udp "$TORRENT_PORT/tcp" "$TORRENT_PORT/udp")
+PORTS=(5678/udp "$TORRENT_PORT/tcp" "$TORRENT_PORT/udp")
+
+# WinBox přes MAC: klient posílá z náhodného portu na 255.255.255.255:20561 a
+# MikroTik odpovídá z 0.0.0.0:20561 na 255.255.255.255:<ten náhodný port>.
+# Conntrack takovou odpověď k dotazu nepřiřadí, takže otevřít cílový port 20561
+# nestačí (tam nic nechodí) — pouští se pakety se ZDROJOVÝM portem 20561, a jen
+# na broadcast, aby to nebyla díra do všech UDP portů. Bez toho WinBox hlásí
+# "MacConnection syn timeout".
+MAC_WINBOX_RULE='rule family="ipv4" destination address="255.255.255.255" source-port port="20561" protocol="udp" accept'
 
 if ! systemctl is-active --quiet firewalld; then
   log_warn "firewalld is not running, skipping"
@@ -35,6 +42,14 @@ for port in "${PORTS[@]}"; do
     reload=1
   fi
 done
+
+if run_sudo firewall-cmd --permanent --query-rich-rule="$MAC_WINBOX_RULE" >/dev/null 2>&1; then
+  log_debug "MAC-WinBox reply rule already present in zone $zone"
+else
+  log_info "Allowing MAC-WinBox replies (source port 20561/udp) in zone $zone"
+  run_sudo firewall-cmd --permanent --add-rich-rule="$MAC_WINBOX_RULE" >/dev/null
+  reload=1
+fi
 
 if [[ "$reload" -eq 1 ]]; then
   log_info "Reloading firewalld"

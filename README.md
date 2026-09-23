@@ -189,8 +189,14 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   word: the packets show up in `tcpdump` (it sees them before netfilter) but never
   reach the app. That is how WinBox → Neighbors stayed empty while both MikroTiks
   were announcing themselves fine. Kept on purpose; ports are opened one at a
-  time. `steps/06d_firewall.sh` opens MNDP `5678/udp` and MAC-WinBox `20561/udp`,
-  plus qBittorrent `7881/tcp+udp`, which the home router forwards from the
+  time. `steps/06d_firewall.sh` opens MNDP `5678/udp` for the Neighbors list.
+  Connecting over MAC needs a different kind of rule: WinBox sends from a random
+  port to `255.255.255.255:20561` and the MikroTik answers from `0.0.0.0:20561`
+  to `255.255.255.255:<that port>`, which conntrack cannot pair with the request.
+  Opening `20561/udp` as a destination port does nothing (tried); the step adds a
+  rich rule for *source* port 20561, limited to broadcast so it is not a hole
+  into every UDP port. Without it WinBox fails with "MacConnection syn timeout".
+  It also opens qBittorrent `7881/tcp+udp`, which the home router forwards from the
   internet to `192.168.1.10` (`home_network` repo). qBittorrent picks a random
   listening port on first start, so the step warns when its `Session\Port` is not
   7881. The same `VARIANT_ID` switch hands Sway the server polkit policy, which is
