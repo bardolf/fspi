@@ -51,7 +51,8 @@ touches.
 
 - **00–09** — sudoers, system upgrade, env vars, repos (RPM Fusion, Flathub,
   Vivaldi, git-secret, Terra), package install, SELinux off, flatpaks,
-  aliases, sysrq, swap off, earlyoom, timezone, VS Code, fonts.
+  aliases, sysrq, swap off, earlyoom, sshd, firewall ports, timezone, VS Code,
+  fonts.
 - **10–19** — LazyVim, gsettings, Docker, vpn-slice, wayfreeze, Satty, yazi,
   swaylock-effects (source build).
 - **20–29** — config files into `~/.config/`, nvim settings, color schemes,
@@ -178,4 +179,21 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   is worth a try; and a static `ip=` on the cmdline is **not** the fix, because
   NetworkManager assumes the initrd-generated profile in the real root and that
   profile carries no DNS servers. Set up by hand; not deployed by `install.sh`.
+- **Firewall zone is `public`, not `FedoraWorkstation`**: the `firewalld` package
+  picks its config at install time from `VARIANT_ID` in `/etc/os-release`, and
+  only `workstation`, `silverblue`, `kde` and `kinoite` get
+  `firewalld-workstation.conf` (zone `FedoraWorkstation`, every port 1025–65535
+  open). The Sway spin (`VARIANT_ID=sway`) falls through to
+  `firewalld-standard.conf` — default zone `public`, which lets in only ssh, mdns
+  and dhcpv6-client. So anything expecting inbound traffic is dropped without a
+  word: the packets show up in `tcpdump` (it sees them before netfilter) but never
+  reach the app. That is how WinBox → Neighbors stayed empty while both MikroTiks
+  were announcing themselves fine. Kept on purpose; ports are opened one at a
+  time. `steps/06d_firewall.sh` opens MNDP `5678/udp` and MAC-WinBox `20561/udp`,
+  plus qBittorrent `7881/tcp+udp`, which the home router forwards from the
+  internet to `192.168.1.10` (`home_network` repo). qBittorrent picks a random
+  listening port on first start, so the step warns when its `Session\Port` is not
+  7881. The same `VARIANT_ID` switch hands Sway the server polkit policy, which is
+  why `firewall-cmd` without sudo fails with "Authorization failed". The chess
+  relay's rich rules (`optional/chess-relay`) are the only other opening.
 - No tests, no CI — validation is "run it on a Fedora Sway box."
