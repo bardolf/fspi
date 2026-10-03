@@ -1,3 +1,16 @@
+# Uvnitř mc (subshell, nastavuje MC_SID) jen lehký zsh: mc posílá do subshellu každé cd a čeká na prompt –
+# s oh-my-zsh, pluginy, zoxide a mise to zdržovalo každý přechod do složky.
+if [[ -n $MC_SID ]]; then
+  export EDITOR=nvim
+  export PATH="$HOME/.local/bin:$HOME/.bun/bin:$PATH"
+  HISTFILE=~/.zsh_history HISTSIZE=500000 SAVEHIST=500000
+  alias k=kubectl
+  alias open='xdg-open'
+  alias icat='kitten icat'
+  PROMPT='%B%F{yellow}[%m]%f%b %F{cyan}%~%f %# '
+  return
+fi
+
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR=nvim
 ZSH_THEME="robbyrussell"
