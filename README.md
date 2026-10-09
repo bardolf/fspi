@@ -147,6 +147,14 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   so an inbound session dies before the first frame. Let someone in for a single
   session with `~/scripts/rustdesk-inbound.sh on` (and `off` afterwards); the
   unit is never re-enabled at boot.
+- **VPN home (WireGuard on the router)**: `~/scripts/vpn-home.sh split|full|down|status`.
+  `split` sends only home through the tunnel (router, desktop, NAS incl. samba
+  and ssh, Home Assistant, `*.skybit.cz` resolved to the LAN) and runs next to
+  `vpn-cetin.sh`; `full` sends everything (home IP, AdGuard on the go, capped by
+  the home upload, ~70 Mbit/s). One-time `vpn-home.sh setup <client.conf>` creates
+  both NetworkManager profiles from the config made on the NAS
+  (`~/projects/home_network/vpn/notebook-wg.secret`, not in git). Refuses to
+  connect on the home LAN. Router side and the reasoning: `home_network/vpn/README.md`.
 - **Audio — webcam mic, not the earbuds' mic**: see `audio-mic-setup.md`. Output
   goes to the soundcore Liberty 5 over A2DP/AAC, but their microphone returns
   **digital silence** (peak 0) in both HFP codecs, so the LifeCam webcam's mic is
