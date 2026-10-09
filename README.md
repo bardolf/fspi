@@ -153,7 +153,7 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   `vpn-cetin.sh`; `full` sends everything (home IP, AdGuard on the go, capped by
   the home upload, ~70 Mbit/s). One-time `vpn-home.sh setup <client.conf>` creates
   both NetworkManager profiles from the config made on the NAS
-  (`~/projects/home_network/vpn/notebook-wg.secret`, not in git). Refuses to
+  (`~/projects/home_network/vpn/<machine>-wg.secret`, not in git). Refuses to
   connect on the home LAN. Router side and the reasoning: `home_network/vpn/README.md`.
 - **Audio — webcam mic, not the earbuds' mic**: see `audio-mic-setup.md`. Output
   goes to the soundcore Liberty 5 over A2DP/AAC, but their microphone returns

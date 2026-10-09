@@ -13,8 +13,8 @@ set -euo pipefail
 #          70 Mbit/s) and dead when the home internet is down.
 #
 # Both are NetworkManager profiles with the same key (one router peer per
-# machine, 10.10.0.3 = this notebook); split vs full is decided only here on the
-# client, the router lets the peer into the whole LAN either way.
+# machine: 10.10.0.3 notebook, 10.10.0.4 work-desktop); split vs full is decided
+# only here on the client, the router lets the peer into the whole LAN either way.
 #
 #   vpn-home.sh setup <client.conf>   once per machine: create both profiles
 #   vpn-home.sh split | full          connect (switches from the other mode)
@@ -22,7 +22,7 @@ set -euo pipefail
 #   vpn-home.sh status
 #
 # client.conf is the wg-quick style config made on the NAS
-# (~/projects/home_network/vpn/notebook-wg.secret, not in git). After setup the
+# (~/projects/home_network/vpn/<machine>-wg.secret, not in git). After setup the
 # private key lives in /etc/NetworkManager/system-connections and the copy can go.
 #
 # Only single hosts go through the split tunnel, not the whole 192.168.1.0/24:
@@ -87,10 +87,13 @@ setup() {
     # more specific routes of vpn-cetin.sh still win); all DNS to the router,
     # dns-priority < 0 = exclusive, so nothing leaks to the local DNS. Home has no
     # IPv6: ::/0 goes into the tunnel too and the router drops it, otherwise IPv6
-    # would bypass the tunnel on networks that have it.
+    # would bypass the tunnel on networks that have it. The ULA only has to exist
+    # (NM needs an IPv6 address to route ::/0); its last group = last IPv4 octet.
+    local addr6="fd00:10:10::${addr##*.}"
+    addr6=${addr6%/*}/128
     nmcli connection add con-name home-full "${common[@]}" \
         ipv4.dns-search '~.' ipv4.dns-priority -50 \
-        ipv6.method manual ipv6.addresses fd00:10:10::3/128 \
+        ipv6.method manual ipv6.addresses "$addr6" \
         wireguard.peers "$pub endpoint=$endpoint allowed-ips=0.0.0.0/0;::/0 persistent-keepalive=25" \
         >/dev/null
 
