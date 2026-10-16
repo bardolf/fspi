@@ -315,6 +315,17 @@ else
 fi
 
 # =========================================================
+# Section 10: Optional - Gaming (mirrors optional/gaming/setup.sh)
+# Only the Terra repo override is a tracked file; the rest of that setup is
+# package installs. Skipped silently if the optional component was never run.
+# =========================================================
+
+print_section "Optional: Gaming (Terra repo override)"
+
+check_file "$SCRIPT_DIR/optional/gaming/files/99-terra-no-falcond.repo" \
+  "/etc/dnf/repos.override.d/99-terra-no-falcond.repo" true
+
+# =========================================================
 # Summary
 # =========================================================
 

@@ -1,0 +1,6 @@
+# Managed by fspi: optional/gaming/setup.sh
+# Terra's Steam has Recommends: falcond, and falcond has Conflicts: gamemode.
+# Hiding falcond from the repo keeps that weak dependency from ever being
+# pulled in, so `dnf install gamemode` stays resolvable.
+[terra]
+excludepkgs=falcond*

@@ -137,6 +137,11 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   and live in Bitwarden (search "NAS 192.168.1.11"). `optional/printer-cetin/`
   adds the CETIN office printer as a CUPS SMB queue (`cetin`); needs the CETIN
   VPN up, and the AD password goes in `/etc/cetin-printer.cred` (not in the repo).
+  `optional/gaming/` installs Steam, gamemode, mangohud and vulkan-tools — only
+  worth it on the Radeon desktop, since Steam drags in ~190 packages including
+  the whole i686 stack. It also excludes `falcond` from Terra: Terra's Steam
+  recommends it and it conflicts with `gamemode`, which otherwise breaks
+  `steps/02_packages.sh`.
 - **RustDesk**: `steps/19b_rustdesk.sh` installs the upstream RPM but keeps the
   machine outgoing-only — it disables `rustdesk.service` from boot and sets
   RustDesk's own `stop-service` flag, so just opening the GUI does not register
