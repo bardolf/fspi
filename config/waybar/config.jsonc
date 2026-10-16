@@ -239,7 +239,8 @@
         "exec": "~/scripts/waybar/gitlab-mr-status.sh",
         "return-type": "json",
         "interval": 20,
-        "on-click": "xdg-open \"$(cat ${XDG_RUNTIME_DIR:-/tmp}/waybar-gitlab-mrs/click_url)\"",
+        // MR homepage lists authored, assigned and review-requested MRs in one view
+        "on-click": "xdg-open https://devops.cetin/dashboard/merge_requests",
         "tooltip": true
     },
     "custom/media": {
