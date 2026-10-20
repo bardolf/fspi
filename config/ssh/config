@@ -10,13 +10,14 @@ Match exec "test -r %d/.ssh/id_ed25519"
 Match exec "test -r %d/.ssh/id_rsa"
 	IdentityFile ~/.ssh/id_rsa
 
-# desktop: auto-routes — direct when on the home LAN (192.168.1.0/24),
-# via `server` (skybit.cz) when away. The Match exec returns 0 (→ apply
-# ProxyJump) only when this machine has NO 192.168.1.x/24 address.
+# desktop: auto-routes — direct when on the home LAN (192.168.1.0/24) or when
+# the home VPN (vpn-home.sh, wg-home) routes it, via `server` (skybit.cz) when
+# away. The Match exec returns 0 (→ apply ProxyJump) only when this machine has
+# NO 192.168.1.x/24 address and 192.168.1.10 does not go via wg-home.
 Host desktop
 	HostName 192.168.1.10
 	User milan
-Match originalhost desktop exec "! ip -4 -o addr show | grep -qE 'inet 192.168.1.[0-9]+/24'"
+Match originalhost desktop exec "! ip -4 -o addr show | grep -qE 'inet 192.168.1.[0-9]+/24' && ! ip route get 192.168.1.10 | grep -q 'dev wg-home'"
 	ProxyJump server
 
 # Explicit overrides, in case auto-detection ever guesses wrong:
@@ -32,8 +33,10 @@ Host desktop-jump
 # veřejné skybit.cz (doma by to jelo hairpinem přes ~7 hopů). Match musí být
 # PŘED Host server — v ssh_config platí první nastavená hodnota. Test MAC brány
 # nic neposílá do sítě; ping na 192.168.1.11 by v cizí 192.168.1.0/24 síti
-# čekal na timeout.
-Match originalhost server exec "ip neigh show 192.168.1.1 | grep -qi 74:4d:28:f1:71:bf"
+# čekal na timeout. Se zapnutou VPN domů (wg-home) taky rovnou na 192.168.1.11
+# — přes veřejné skybit.cz se zbytečně počítají nová spojení do brute-force
+# blacklistu MikroTiku (4/min → ban celé veřejné IP na den).
+Match originalhost server exec "ip neigh show 192.168.1.1 | grep -qi 74:4d:28:f1:71:bf || ip route get 192.168.1.11 | grep -q 'dev wg-home'"
 	HostName 192.168.1.11
 # Stejný stroj pod oběma adresami → klíč se vždy ověřuje proti záznamu skybit.cz.
 Host server
