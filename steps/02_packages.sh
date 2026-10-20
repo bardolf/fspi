@@ -67,6 +67,8 @@ PACKAGES=(
   ghostty
   tuned-ppd
   mise
+  # uv + uvx — Python projekty a MCP servery (např. genealogy-tools).
+  uv
   musescore
   # Fedora ships jen java-*-openjdk-headless (JRE bez javac a bez AWT).
   # Ghidra v ~/opt/ghidra vyžaduje plný JDK — jeho LaunchSupport hledá
