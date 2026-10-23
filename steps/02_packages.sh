@@ -46,6 +46,7 @@ PACKAGES=(
   # /usr/lib64/dri-freeworld/, kam se libva dívá dřív než do /usr/lib64/dri.
   mesa-va-drivers-freeworld
   vivaldi-stable
+  google-chrome-stable
   libxkbcommon-devel
   postgresql
   ocrmypdf

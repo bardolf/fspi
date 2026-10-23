@@ -49,7 +49,7 @@ touches.
 ## What each step group does
 
 - **00–09** — sudoers, system upgrade, env vars, repos (RPM Fusion, Flathub,
-  Vivaldi, git-secret, Terra), package install, SELinux off, flatpaks,
+  Vivaldi, Google Chrome, git-secret, Terra), package install, SELinux off, flatpaks,
   aliases, sysrq, swap off, earlyoom, sshd, firewall ports, timezone, VS Code,
   fonts.
 - **10–19** — LazyVim, gsettings, Docker, vpn-slice, wayfreeze, Satty, yazi,

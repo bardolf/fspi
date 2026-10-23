@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 source "$SCRIPT_DIR/lib/logging.sh"
 
-log_info "Adding essential repositories (RPM Fusion, Flathub, Vivaldi, git-secret, Terra)"
+log_info "Adding essential repositories (RPM Fusion, Flathub, Vivaldi, Google Chrome, git-secret, Terra)"
 
 # --- RPM Fusion ---
 FREE_URL="https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
@@ -47,6 +47,25 @@ EOF
   sudo dnf makecache -y || sudo dnf5 makecache -y
 else
   log_debug "Vivaldi repository already present"
+fi
+
+# --- Google Chrome ---
+# Claude in Chrome (MCP) umí snímky obrazovky spolehlivě jen v Chrome; ve Vivaldi
+# Page.captureScreenshot visí.
+CHROME_REPO="/etc/yum.repos.d/google-chrome.repo"
+if [[ ! -f "$CHROME_REPO" ]]; then
+  log_info "Adding Google Chrome repository"
+  sudo tee "$CHROME_REPO" >/dev/null <<'EOF'
+[google-chrome]
+name=google-chrome
+baseurl=https://dl.google.com/linux/chrome/rpm/stable/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://dl.google.com/linux/linux_signing_key.pub
+EOF
+  sudo dnf makecache -y || sudo dnf5 makecache -y
+else
+  log_debug "Google Chrome repository already present"
 fi
 
 # --- git-secret ---
