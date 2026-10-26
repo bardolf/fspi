@@ -41,4 +41,18 @@ for app in "${APPS[@]}"; do
   fi
 done
 
+# Electron's tray icon requests the bus name
+# org.freedesktop.StatusNotifierItem-<pid>-<n> and silently gives up when the
+# flatpak D-Bus proxy refuses it, so Teams never shows up in the waybar tray.
+# Inside the sandbox the app is always pid 2 and Teams has a single icon, so
+# the name is fixed.
+TEAMS_APP="com.github.IsmaelMartinez.teams_for_linux"
+TEAMS_TRAY_NAME="org.freedesktop.StatusNotifierItem-2-1"
+if flatpak override --user --show "$TEAMS_APP" | grep -qF "$TEAMS_TRAY_NAME=own"; then
+  log_debug "Teams already allowed to own $TEAMS_TRAY_NAME"
+else
+  log_info "Allowing Teams to own $TEAMS_TRAY_NAME (tray icon)"
+  flatpak override --user --own-name="$TEAMS_TRAY_NAME" "$TEAMS_APP"
+fi
+
 log_info "Flatpak applications installed successfully."
