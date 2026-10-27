@@ -72,7 +72,10 @@ fi
 
 case $CLIENT in
   remote-viewer)
-    remote-viewer --title "VNC $HOST" "$@" "vnc://127.0.0.1:$lport" ;;
+    # --auto-resize=never: ve fullscreenu by jinak chtěl po wayvnc rozlišení
+    # monitoru v logických bodech (2953x1661 na scale 1.3); wayvnc ho nezmění,
+    # posílá dál 3840x2160 a gtk-vnc spojení shodí ("outside boundary").
+    remote-viewer --title "VNC $HOST" --auto-resize=never "$@" "vnc://127.0.0.1:$lport" ;;
   tigervnc|vncviewer)
     vncviewer "$@" "127.0.0.1::$lport" ;;
   *)
