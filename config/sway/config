@@ -220,6 +220,15 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+#
+# Passthrough: mód bez zkratek — všechny klávesy ($mod+číslo, …) jdou do okna
+# s fokusem, typicky VNC na desktop (scripts/vnc-desktop.sh). Waybar ukazuje mód.
+#
+mode "passthrough" {
+  bindsym $mod+Pause mode "default"
+}
+bindsym $mod+Pause mode "passthrough"
+
 
 bindsym $mod+l exec ~/.local/bin/swaylock-effects -C ~/.config/swaylock/effects.conf
 

@@ -81,6 +81,9 @@ PACKAGES=(
   # vncviewer — wayvnc na desktopu přes SSH tunel:
   # vncviewer -via desktop localhost::5900  (pozor: host:5900 = display 5900).
   tigervnc
+  # remote-viewer — výchozí klient scripts/vnc-desktop.sh: nativní Wayland,
+  # na scale 1.3 ukáže celou 4K plochu (TigerVNC přes XWayland jen výřez).
+  virt-viewer
 )
 
 for pkg in "${PACKAGES[@]}"; do
