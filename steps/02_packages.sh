@@ -78,6 +78,9 @@ PACKAGES=(
   java-25-openjdk-devel
   # scripts/nas-tmp montuje NAS přes sshfs (fusermount3 na odpojení).
   fuse-sshfs
+  # vncviewer — wayvnc na desktopu přes SSH tunel:
+  # vncviewer -via desktop localhost::5900  (pozor: host:5900 = display 5900).
+  tigervnc
 )
 
 for pkg in "${PACKAGES[@]}"; do
