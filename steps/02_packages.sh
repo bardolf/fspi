@@ -22,6 +22,8 @@ PACKAGES=(
   okular
   feh
   texlive-scheme-medium
+  # QR kódy v LaTeXu (kniha o rodu — odkazy na snímky matrik); scheme-medium ho neobsahuje.
+  texlive-qrcode
   gimp
   inkscape
   graphviz
