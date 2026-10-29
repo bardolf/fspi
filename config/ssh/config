@@ -58,3 +58,17 @@ Host runner01
 Host runner02
         Hostname celcrisprund402.server.cetin
         User root
+
+# Jedno TCP spojení na cíl, další ssh/scp/rsync/git jedou uvnitř něj. Domácí MikroTik
+# dá IP na den do brute-blacklistu po 4 nových spojeních na port 22 za minutu a pak
+# z ní zahazuje VŠECHNO (i HA a fotky) — 29. 10. 2026 na to stačila 4 běžná přihlášení
+# za 41 s. %C = hash uživatel+host+port: krátká cesta a doma/venku (jiný HostName pro
+# `server`) vlastní socket. ServerAlive: po uspání nebo výpadku wifi master do ~45 s
+# umře, jinak by se nové session věšely na mrtvé spojení.
+# Zavřít sdílené spojení ručně: ssh -O exit server
+Host *
+	ControlMaster auto
+	ControlPath ~/.ssh/cm-%C
+	ControlPersist 10m
+	ServerAliveInterval 15
+	ServerAliveCountMax 3
