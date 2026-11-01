@@ -18,6 +18,16 @@ KNOWN_DEVICES=(
 )
 
 # ============================================
+# Known USB audio devices (wired mode of BT headphones)
+# Format: VID:PID:SHORT_NAME (from lsusb)
+# No battery over USB: the REDMI HID interface only carries media keys,
+# no battery usage, so the kernel creates no power_supply for it.
+# ============================================
+KNOWN_USB_DEVICES=(
+    "2717:50f0:REDMI"
+)
+
+# ============================================
 # Handle volume change (called with argument)
 # ============================================
 if [[ "$1" == "up" ]]; then
@@ -116,6 +126,25 @@ get_bt_device() {
 }
 
 # ============================================
+# Find connected USB audio device from known list
+# Returns: SHORT_NAME|FULL_NAME
+# ============================================
+get_usb_device() {
+    local entry vid pid short_name dev
+    for entry in "${KNOWN_USB_DEVICES[@]}"; do
+        IFS=: read -r vid pid short_name <<< "$entry"
+        for dev in /sys/bus/usb/devices/*; do
+            [[ -r "$dev/idVendor" ]] || continue
+            if [[ "$(< "$dev/idVendor")" == "$vid" && "$(< "$dev/idProduct")" == "$pid" ]]; then
+                echo "${short_name}|$(cat "$dev/product" 2>/dev/null)"
+                return
+            fi
+        done
+    done
+    echo ""
+}
+
+# ============================================
 # Build output
 # ============================================
 
@@ -130,6 +159,16 @@ if [[ -n "$bt_result" ]]; then
     bt_name=$(echo "$bt_result" | cut -d'|' -f1)
     bt_full_name=$(echo "$bt_result" | cut -d'|' -f2)
     battery=$(echo "$bt_result" | cut -d'|' -f3)
+fi
+
+usb_name=""
+usb_full_name=""
+if [[ -z "$bt_result" ]]; then
+    usb_result=$(get_usb_device)
+    if [[ -n "$usb_result" ]]; then
+        usb_name=$(echo "$usb_result" | cut -d'|' -f1)
+        usb_full_name=$(echo "$usb_result" | cut -d'|' -f2)
+    fi
 fi
 
 # Volume icons - Nerd Font
@@ -187,6 +226,8 @@ fi
 bt_text=""
 if [[ -n "$bt_name" ]]; then
     bt_text="󰂯 ${bt_name}"
+elif [[ -n "$usb_name" ]]; then
+    bt_text="󰕓 ${usb_name}"
 fi
 
 # Combine output: volume | mic | [BT name] [battery]
@@ -225,6 +266,9 @@ if [[ -n "$bt_name" ]]; then
   else
     tooltip_parts+=("Bluetooth: ${bt_name}")
   fi
+elif [[ -n "$usb_name" ]]; then
+  tooltip_parts+=("USB: ${usb_full_name:-$usb_name}")
+  tooltip_parts+=("Battery: not reported over USB")
 fi
 
 # Battery
