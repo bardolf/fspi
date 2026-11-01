@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
-# Waybar module: System inhibitor (lid-switch + sleep)
-# Prevents suspend on lid close and sleep triggers.
+# Waybar module: System inhibitor (lid-switch + sleep + idle lock)
+# Prevents suspend on lid close and sleep triggers, and keeps swayidle from
+# auto-locking / blanking the screen.
 #
 # Usage:
 #   inhibitor.sh         - Output current state as JSON for waybar
 #   inhibitor.sh toggle  - Toggle inhibitor on/off
+#   inhibitor.sh active  - Exit 0 if active, 1 otherwise (used by swayidle)
 #
-# Uses systemd-inhibit to block handle-lid-switch and sleep.
+# Uses systemd-inhibit to block handle-lid-switch and sleep. swayidle ignores
+# logind idle inhibitors, so the idle part is a guard in the timeout commands
+# of config/sway/config.d/90-swayidle.conf that calls `inhibitor.sh active`.
 # PID tracked via $XDG_RUNTIME_DIR/waybar-inhibitor.pid
 
 PID_FILE="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/waybar-inhibitor.pid"
@@ -77,7 +81,7 @@ output_json() {
 
   if is_active; then
     text=$'\xef\x81\xae'   # U+F06E fa-eye
-    tooltip=$'Inhibitor active\nLid-switch and sleep inhibited\nClick to deactivate'
+    tooltip=$'Inhibitor active\nLid-switch, sleep and idle lock inhibited\nClick to deactivate'
     class="activated"
   else
     text=$'\xef\x81\xb0'   # U+F070 fa-eye-slash
@@ -98,6 +102,9 @@ output_json() {
 case "${1:-}" in
   toggle)
     toggle
+    ;;
+  active)
+    is_active
     ;;
   *)
     output_json
