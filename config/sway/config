@@ -223,11 +223,10 @@ bindsym $mod+r mode "resize"
 #
 # Passthrough: mód bez zkratek — všechny klávesy ($mod+číslo, …) jdou do okna
 # s fokusem, typicky VNC na desktop (scripts/vnc-desktop.sh). Waybar ukazuje mód.
+# $mod+Pause přepíná mód; definuje ho Fedora v
+# /usr/share/sway/config.d/65-mode-passthrough.conf (sway-config-fedora) —
+# nedefinovat znovu, duplicitní bindsym vyvolá swaynag "errors in your config".
 #
-mode "passthrough" {
-  bindsym $mod+Pause mode "default"
-}
-bindsym $mod+Pause mode "passthrough"
 
 
 bindsym $mod+l exec ~/.local/bin/swaylock-effects -C ~/.config/swaylock/effects.conf
