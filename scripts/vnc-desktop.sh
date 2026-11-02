@@ -27,7 +27,7 @@ pid=
 trap '[ -n "$pid" ] && kill "$pid" 2>/dev/null' EXIT
 if ! listening; then
   WAYLAND_DISPLAY=$(cd "$XDG_RUNTIME_DIR" && ls wayland-[0-9]* 2>/dev/null | grep -v '\.lock$' | head -n1)
-  [ -n "$WAYLAND_DISPLAY" ] || { echo "no wayland session on $(hostname)" >&2; exit 1; }
+  [ -n "$WAYLAND_DISPLAY" ] || { echo "no wayland session on $(hostname) — log in first: ssh $(hostname) ~/scripts/remote-login.sh" >&2; exit 1; }
   export WAYLAND_DISPLAY
   wayvnc 127.0.0.1 "$port" </dev/null >"$XDG_RUNTIME_DIR/wayvnc-ondemand.log" 2>&1 &
   pid=$!

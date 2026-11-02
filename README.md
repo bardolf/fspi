@@ -152,6 +152,13 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   so an inbound session dies before the first frame. Let someone in for a single
   session with `~/scripts/rustdesk-inbound.sh on` (and `off` afterwards); the
   unit is never re-enabled at boot.
+- **Remote graphical login (for VNC)**: VNC (`scripts/vnc-desktop.sh`) attaches
+  wayvnc to a running sway session, so after a reboot — SDDM greeter only — it has
+  nothing to show. `ssh desktop ~/scripts/remote-login.sh` starts the sway session
+  on seat0 through a one-time SDDM autologin (the drop-in is removed as soon as the
+  session is up, the next boot ends at the greeter again) and locks the screen;
+  unlock it in VNC with your password. Does nothing if you are already logged in
+  there, refuses if someone else is.
 - **VPN home (WireGuard on the router)**: `~/scripts/vpn-home.sh split|full|down|status`.
   `split` sends only home through the tunnel (router, desktop, NAS incl. samba
   and ssh, Home Assistant, `*.skybit.cz` resolved to the LAN) and runs next to
