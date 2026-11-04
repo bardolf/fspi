@@ -6,13 +6,18 @@ font-size = 13
 # Scrollback (~100 MiB; wezterm had 100k lines)
 scrollback-limit = 104857600
 mouse-scroll-multiplier = 5
+
+# Mouse: ordinary terminal behaviour, no mode toggle.
+#   * Apps that ask for the mouse (claude, yazi, mc, btop, anything over ssh)
+#     get it: click, wheel and drag go to the app.
+#   * Shift+drag / Shift+double-click is always a terminal selection, even
+#     inside those apps; `never` stops an app from claiming Shift via
+#     XTSHIFTESCAPE. Shift+middle-click pastes PRIMARY there too.
+#   * Selecting fills both PRIMARY and CLIPBOARD on purpose: one predictable
+#     clipboard, middle-click and Meta+V paste the same thing (matches
+#     Claude Code's own copy-on-select). Meta+C is only needed elsewhere.
 copy-on-select = clipboard
-# Mouse always belongs to the terminal: drag selects, middle-click pastes,
-# even while a TUI that grabs the mouse is running (claude fullscreen, yazi,
-# nvim, btop, anything over ssh). The zsh precmd reset only helps once a
-# crashed app drops back to a local prompt; this covers live apps too.
-# Ctrl+Shift+M hands the mouse to the app when you actually want it.
-mouse-reporting = false
+mouse-shift-capture = never
 mouse-hide-while-typing = true
 app-notifications = no-clipboard-copy
 
@@ -30,7 +35,13 @@ background-opacity = 1.0
 confirm-close-surface = false
 window-theme = dark
 
-# Paste on Shift+Insert (sent by Sway Meta+V via wtype)
+# Clipboard keys, sent by Sway via wtype:
+#   Meta+C -> Ctrl+Insert   copy (Ghostty default binding)
+#   Meta+X -> Shift+Delete  a terminal has nothing to cut, so it copies;
+#                           `performable:` passes it on to the app (mcedit
+#                           cut) when nothing is selected
+#   Meta+V -> Shift+Insert  paste
+keybind = performable:shift+delete=copy_to_clipboard
 keybind = shift+insert=paste_from_clipboard
 keybind = performable:up=navigate_search:next
 keybind = performable:down=navigate_search:previous
@@ -40,4 +51,3 @@ keybind = performable:down=navigate_search:previous
 # codes) and the prompt is too noisy to even type in. Same key as kitty's.
 # The zsh precmd hook in ~/.zshrc normally clears this on the next prompt.
 keybind = ctrl+shift+delete=reset
-keybind = ctrl+shift+m=toggle_mouse_reporting

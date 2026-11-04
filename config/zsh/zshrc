@@ -74,3 +74,7 @@ _reset_terminal_input_modes() {
 }
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _reset_terminal_input_modes
+
+# Shift+Delete is Sway's Meta+X (cut). With a selection Ghostty turns it into
+# copy; without one it reaches zsh, where it is unbound and types a stray `~`.
+bindkey '^[[3;2~' delete-char

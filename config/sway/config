@@ -168,8 +168,11 @@ bindsym Mod1+Shift+Tab focus prev sibling
   bindsym $mod+h splith
   bindsym $mod+b splitv
 
-  # Clipboard shortcuts (simulate Ctrl+Insert / Shift+Insert via wtype)
+  # Clipboard shortcuts: copy / cut / paste as the CUA keys Ctrl+Insert /
+  # Shift+Delete / Shift+Insert (via wtype), which GTK, Qt, browsers and the
+  # terminal all understand, unlike Ctrl+C/X/V vs Ctrl+Shift+C/V
   bindsym $mod+c exec wtype -M ctrl -k Insert
+  bindsym $mod+x exec wtype -M shift -k Delete
   bindsym $mod+v exec wtype -M shift -k Insert
 
   # Clipboard history (rofi picker over clipman's history; Delete removes an entry)
