@@ -1,0 +1,10 @@
+[Unit]
+Description=Záloha genealogie (stromy, snímky, Gramps Web) na NAS server:/media/disk3/zaloha-genealogie
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/scripts/zaloha-genealogie.sh
+Nice=10
+IOSchedulingClass=idle
