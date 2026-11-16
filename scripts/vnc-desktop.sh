@@ -21,13 +21,14 @@ shift || true
 # na stdin: EOF (konec skriptu, pád SSH) → úklid wayvnc, pokud ho spustila.
 REMOTE=$(cat <<'EOF'
 port=$1
+host=$2
 export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
 listening() { ss -Htln "sport = :$port" | grep -q .; }
 pid=
 trap '[ -n "$pid" ] && kill "$pid" 2>/dev/null' EXIT
 if ! listening; then
   WAYLAND_DISPLAY=$(cd "$XDG_RUNTIME_DIR" && ls wayland-[0-9]* 2>/dev/null | grep -v '\.lock$' | head -n1)
-  [ -n "$WAYLAND_DISPLAY" ] || { echo "no wayland session on $(hostname) — log in first: ssh $(hostname) ~/scripts/remote-login.sh" >&2; exit 1; }
+  [ -n "$WAYLAND_DISPLAY" ] || { echo "no wayland session on $(hostname) — log in first (on this laptop): remote-login.sh $host" >&2; exit 1; }
   export WAYLAND_DISPLAY
   wayvnc 127.0.0.1 "$port" </dev/null >"$XDG_RUNTIME_DIR/wayvnc-ondemand.log" 2>&1 &
   pid=$!
@@ -47,7 +48,7 @@ done
 
 coproc SSH {
   exec ssh -o ExitOnForwardFailure=yes -o ServerAliveInterval=15 \
-    -L "$lport:127.0.0.1:$RPORT" "$HOST" "bash -c $(printf '%q' "$REMOTE") _ $RPORT"
+    -L "$lport:127.0.0.1:$RPORT" "$HOST" "bash -c $(printf '%q' "$REMOTE") _ $RPORT $(printf '%q' "$HOST")"
 }
 # shellcheck disable=SC2153  # SSH_PID nastavuje coproc
 ssh_pid=$SSH_PID

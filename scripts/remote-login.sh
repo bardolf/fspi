@@ -6,7 +6,15 @@ set -euo pipefail
 # runs inside the session; after a reboot there is only the SDDM greeter, and
 # VNC has nothing to show until someone logs in at the keyboard.
 #
-#   ssh desktop ~/scripts/remote-login.sh     # then vnc-desktop.sh as usual
+#   remote-login.sh                # on the laptop: log in on ${VNC_HOST:-desktop}
+#   remote-login.sh desktop-jump   # same, explicit host
+#   ssh desktop ~/scripts/remote-login.sh     # the same thing, done by hand
+#
+# Started outside SSH (or with a host), it logs in on the remote machine, not
+# here. You're at this keyboard anyway, and a local run would only find your
+# own session and report "already logged in". It sends a copy of itself over
+# SSH, so the target needs no deployed copy. Over SSH with no host, it logs in
+# on the machine it runs on.
 #
 # SDDM nemá příkaz „přihlas uživatele X", autologin ale udělá při svém startu.
 # Takže: dočasný drop-in s [Autologin] → restart sddm → počkat na session →
@@ -21,9 +29,15 @@ SESSION_FILE="${REMOTE_LOGIN_SESSION:-sway.desktop}"
 DROPIN_DIR=/etc/sddm.conf.d
 DROPIN="$DROPIN_DIR/zz-remote-login.conf"
 
-if [[ $# -gt 0 ]]; then
-  echo "Usage: $(basename "$0")   (run on the machine to log in, e.g. ssh desktop ~/scripts/$(basename "$0"))" >&2
+if [[ $# -gt 1 ]]; then
+  echo "Usage: $(basename "$0") [host]   (default host \${VNC_HOST:-desktop}; over SSH without a host it logs in on this machine)" >&2
   exit 1
+fi
+
+if [[ $# -eq 1 || -z ${SSH_CONNECTION:-} ]]; then
+  host=${1:-${VNC_HOST:-desktop}}
+  echo "Logging in on $host's seat0 over SSH"
+  exec ssh "$host" "bash -c $(printf '%q' "$(<"${BASH_SOURCE[0]}")") remote-login"
 fi
 
 command -v jq >/dev/null || {
