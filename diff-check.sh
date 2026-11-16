@@ -326,6 +326,23 @@ check_file "$SCRIPT_DIR/optional/gaming/files/99-terra-no-falcond.repo" \
   "/etc/dnf/repos.override.d/99-terra-no-falcond.repo" true
 
 # =========================================================
+# Section 11: Optional - Genealogy backup (mirrors optional/zaloha-genealogie/setup.sh)
+# The script itself runs straight from the repo, so only the units are copies.
+# Skipped silently if the optional component was never installed.
+# =========================================================
+
+print_section "Optional: Genealogy backup to NAS (systemd)"
+
+GENEALOGIE_PAIRS=(
+  "optional/zaloha-genealogie/files/systemd/zaloha-genealogie.service" "$HOME/.config/systemd/user/zaloha-genealogie.service"
+  "optional/zaloha-genealogie/files/systemd/zaloha-genealogie.timer"   "$HOME/.config/systemd/user/zaloha-genealogie.timer"
+)
+
+for ((i = 0; i < ${#GENEALOGIE_PAIRS[@]}; i += 2)); do
+  check_file "$SCRIPT_DIR/${GENEALOGIE_PAIRS[i]}" "${GENEALOGIE_PAIRS[i + 1]}" true
+done
+
+# =========================================================
 # Summary
 # =========================================================
 

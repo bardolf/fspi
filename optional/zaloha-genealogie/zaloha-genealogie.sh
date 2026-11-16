@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Záloha genealogie na NAS (fspi: scripts/zaloha-genealogie.sh → ~/scripts, timer files/systemd/zaloha-genealogie.*, step 33)
+# Záloha genealogie na NAS (fspi: optional/zaloha-genealogie, nasazuje setup.sh; unit spouští skript přímo z repa)
 # (ssh `server`, /media/disk3/zaloha-genealogie):
 # stromy nemec + kohakova + kniha-ukazka + knihy (vč. snímků mimo git), workbench (.env, CLAUDE.local.md)
 # a dump Gramps Web (databáze + uživatelé). Snímky podle data přes rsync --link-dest

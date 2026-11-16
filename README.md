@@ -142,6 +142,10 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   the whole i686 stack. It also excludes `falcond` from Terra: Terra's Steam
   recommends it and it conflicts with `gamemode`, which otherwise breaks
   `steps/02_packages.sh`.
+  `optional/zaloha-genealogie/` backs up the genealogy trees, books and the
+  Gramps Web dump to the NAS (`server:/media/disk3/zaloha-genealogie`) every
+  3 days via a systemd user timer — only on the machine where
+  `~/projects/genealogy-*` and the Gramps Web containers live.
 - **RustDesk**: `steps/19b_rustdesk.sh` installs the upstream RPM but keeps the
   machine outgoing-only — it disables `rustdesk.service` from boot and sets
   RustDesk's own `stop-service` flag, so just opening the GUI does not register
