@@ -32,7 +32,16 @@ if command -v setenforce &>/dev/null; then
 fi
 
 # Verify
-STATUS=$(sestatus | grep "Current mode" || true)
+# getenforce místo `sestatus | grep "Current mode"`: na vypnutém SELinuxu
+# sestatus řádek "Current mode" vůbec nevypíše a log hlásil "unknown".
+STATUS=$(getenforce 2>/dev/null || true)
 log_info "Current SELinux mode: ${STATUS:-unknown}"
 
-log_warn "A reboot is required for full SELinux disable to take effect."
+# Dokud běží jádro, které policy načetlo, je SELinux jen permissive — vypnutý
+# je až po rebootu. Hlásit jen tehdy; na už vypnutém stroji (re-run) mlčet.
+# install.sh to na konci zopakuje, aby to nezapadlo ve scrollbacku.
+if selinuxenabled 2>/dev/null; then
+    log_warn "A reboot is required for full SELinux disable to take effect."
+else
+    log_debug "SELinux not loaded in the running kernel, no reboot needed."
+fi
