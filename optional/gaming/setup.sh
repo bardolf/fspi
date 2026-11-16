@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# optional: Steam, gamemode, mangohud, vulkan-tools (Radeon desktop only, ~190 packages)
+# installed: rpm -q steam
 set -euo pipefail
 
 STEP_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)

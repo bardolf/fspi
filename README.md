@@ -25,6 +25,7 @@ reconcile drift.
 ```
 fspi/
 ├── install.sh          Entry point — runs every steps/*.sh in order
+├── optional.sh         Menu of optional/* components (install.sh shows it at the end)
 ├── diff-check.sh       Compare repo files against deployed system files
 ├── secrets.list        Inventory of passwords/tokens/keys kept outside the repo
 ├── secrets.sh          status / pull <host> / scan for the entries in secrets.list
@@ -155,7 +156,11 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   as this goes — the file only speaks `active`/`inactive`, so showing Offline
   would mean killing the app.
 - **Optional components** under `optional/` are not run by `install.sh`; each
-  carries its own `setup.sh` to opt in. `optional/samba/` adds CIFS mounts for
+  carries its own `setup.sh` to opt in. `install.sh` ends with `./optional.sh`, a
+  menu listing them with an `[installed]` mark — pick by number or name, Enter
+  skips (it can also run on its own, e.g. `./optional.sh fingerprint`).
+  `optional/fingerprint/` sets up fingerprint unlock for swaylock (see
+  `fingerprint-swaylock-setup.md`); fingers are enrolled by hand. `optional/samba/` adds CIFS mounts for
   the `192.168.1.11` NAS to `/etc/fstab` (only run it on machines that need
   them); passwords are not in the repo — they go in `/etc/cifs-credentials/*.cred`
   and live in Bitwarden (search "NAS 192.168.1.11"). `optional/printer-cetin/`

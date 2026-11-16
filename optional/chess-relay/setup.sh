@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# optional: Stockfish + Lc0 as UCI engines over TCP for the NAS (Radeon desktop)
+# installed: systemctl is-enabled --quiet stockfish.socket
 set -euo pipefail
 
 STEP_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)

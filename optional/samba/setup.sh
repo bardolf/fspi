@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# optional: NAS CIFS shares (//192.168.1.11) in /etc/fstab (password from Bitwarden)
+# installed: grep -qF '# >>> fspi samba cifs mounts >>>' /etc/fstab
 set -euo pipefail
 
 STEP_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)

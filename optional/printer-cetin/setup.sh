@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# optional: CETIN office printer as CUPS queue 'cetin' (CETIN VPN + AD password)
+# installed: lpstat -p cetin
 set -euo pipefail
 
 STEP_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)

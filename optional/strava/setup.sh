@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# optional: Strava: clear Huawei-injected activity descriptions (systemd user timer)
+# installed: systemctl --user is-enabled --quiet strava-cleanup.timer
 set -euo pipefail
 
 STEP_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)

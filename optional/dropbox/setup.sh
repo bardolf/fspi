@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# optional: rclone read-only sync Dropbox -> ~/Dropbox (systemd user timer)
+# installed: systemctl --user is-enabled --quiet rclone-dropbox.timer
 set -euo pipefail
 
 STEP_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)

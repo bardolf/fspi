@@ -89,6 +89,12 @@ this — reach for them first. `install.sh` calls every step on every run, so
 `true` flag that silently skips when the optional component was never
 installed.
 
+`optional.sh` (run at the end of `install.sh`, or standalone) builds its menu
+from two header lines right under the shebang of every `optional/*/setup.sh`:
+`# optional: <one-line description>` and `# installed: <shell test, exit 0 =
+installed>`. A new optional component needs both, or it shows up in the menu
+without description or state.
+
 ### Secrets inventory
 
 `secrets.list` (driven by `secrets.sh status|pull <host>|scan`) lists every

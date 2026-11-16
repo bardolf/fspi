@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# optional: genealogy backup to NAS every 3 days (only where genealogy-* + Gramps Web live)
+# installed: systemctl --user is-enabled --quiet zaloha-genealogie.timer
 set -euo pipefail
 
 STEP_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)

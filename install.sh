@@ -14,6 +14,10 @@ done
 
 log_info "Setup complete!"
 
+# Volitelné komponenty: přehled se stavem a výběr (bez terminálu jen přehled).
+# Selhání některé z nich nesmí spolknout upozornění na reboot níž.
+"$SCRIPT_DIR/optional.sh" || log_warn "Some optional components failed (see above)"
+
 # Upozornění na reboot až úplně na konci — varování ze stepů (03 SELinux,
 # 00b nové jádro) jinak zapadnou stovky řádků vysoko ve scrollbacku.
 # Odvozuje se ze stavu systému, ne z markeru, takže sedí i při re-runu.
