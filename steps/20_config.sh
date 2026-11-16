@@ -70,6 +70,7 @@ config_step_copy_collection \
   "$SCRIPT_DIR/config/waybar/style.css" "$HOME/.config/waybar/style.css" \
   "$SCRIPT_DIR/config/foot/foot.ini" "$HOME/.config/foot/foot.ini" \
   "$SCRIPT_DIR/config/git/gitconfig" "$HOME/.gitconfig" \
+  "$SCRIPT_DIR/config/git/ignore" "$HOME/.config/git/ignore" \
   "$SCRIPT_DIR/config/mise/config.toml" "$HOME/.config/mise/config.toml" \
   "$SCRIPT_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua" \
   "$SCRIPT_DIR/config/dunst/dunstrc" "$HOME/.config/dunst/dunstrc" \

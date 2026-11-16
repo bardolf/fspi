@@ -126,6 +126,7 @@ CONFIG_PAIRS=(
   "config/waybar/style.css" "$HOME/.config/waybar/style.css"
   "config/foot/foot.ini" "$HOME/.config/foot/foot.ini"
   "config/git/gitconfig" "$HOME/.gitconfig"
+  "config/git/ignore" "$HOME/.config/git/ignore"
   "config/mise/config.toml" "$HOME/.config/mise/config.toml"
   "config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua"
   "config/dunst/dunstrc" "$HOME/.config/dunst/dunstrc"
