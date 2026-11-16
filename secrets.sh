@@ -280,7 +280,7 @@ cmd_scan() {
     -o -name '*.keystore' -o -name '*.kdbx' -o -name '.netrc*' -o -name '.pgpass' \
     -o -name 'auth.json' -o -name '.npmrc' -o -name 'gradle.properties' -o -name 'rclone.conf' \
     -o -name '*.ovpn' -o -name 'id_rsa' -o -name 'id_ecdsa' -o -name 'id_ed25519' \
-    -o -name '.env' -o -name '.env.*' \) \
+    -o -name '.env' -o -name '.env.*' -o -name '*.env' \) \
     ! -name '*.pub' ! -name '.env.example' ! -name '.env.sample' ! -name '.env.template' \
     -print0 2>/dev/null)
 
