@@ -1,0 +1,5 @@
+# PAM configuration for swaylock (fspi: optional/fingerprint, see fingerprint-swaylock-setup.md)
+# Password first, fingerprint on empty Enter
+auth  sufficient  pam_unix.so nullok
+auth  sufficient  pam_fprintd.so ignore-empty-password
+auth  required    pam_deny.so

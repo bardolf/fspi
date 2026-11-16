@@ -344,6 +344,20 @@ for ((i = 0; i < ${#GENEALOGIE_PAIRS[@]}; i += 2)); do
 done
 
 # =========================================================
+# Section 12: Optional - Fingerprint unlock (mirrors optional/fingerprint/setup.sh)
+# /etc/pam.d/swaylock always exists (stock: "auth include login"), so the
+# component counts as installed only once that file uses pam_fprintd.
+# =========================================================
+
+print_section "Optional: Fingerprint unlock (swaylock PAM)"
+
+if grep -q pam_fprintd /etc/pam.d/swaylock 2>/dev/null; then
+  check_file "$SCRIPT_DIR/optional/fingerprint/files/swaylock.pam" /etc/pam.d/swaylock
+else
+  log_debug "[SKIP]    /etc/pam.d/swaylock (optional fingerprint, not installed)"
+fi
+
+# =========================================================
 # Summary
 # =========================================================
 

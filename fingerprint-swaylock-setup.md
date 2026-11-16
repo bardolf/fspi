@@ -3,10 +3,15 @@
 Fingerprint unlock for swaylock on Fedora (Sway edition) using stock swaylock
 with a custom PAM configuration. Tested and working.
 
+Automated by `optional/fingerprint/setup.sh` (steps 2 and 3 below, plus checks);
+enrolling fingers (step 1) stays manual — the sensor needs a real finger.
+
 ## Hardware
 
 - Lenovo ThinkPad with Goodix MOC Fingerprint Sensor (`27c6:6594`)
-- Verify with: `lsusb | grep -i goodix`
+- Lenovo ThinkPad P14s Gen 6 AMD with Synaptics sensor (`06cb:00f9`), works with
+  stock Fedora 45 `libfprint` 1.94.100 (2026-11-16)
+- Verify with: `lsusb` and `fprintd-list $USER` (must say `found 1 devices`)
 
 ## Prerequisites
 
@@ -120,7 +125,8 @@ journalctl -u fprintd --since "10 min ago"
 
 ### Fingerprint not detected after suspend/resume
 
-fprintd may lose the USB device after suspend. A udev rule can help:
+fprintd may lose the USB device after suspend. A udev rule can help (IDs below
+are the Goodix ones — use the reader's own `idVendor:idProduct` from `lsusb`):
 
 ```bash
 # /etc/udev/rules.d/01-fingerprint.rules
