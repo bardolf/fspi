@@ -53,7 +53,7 @@ touches.
   aliases, sysrq, swap off, earlyoom, sshd, firewall ports, timezone, VS Code,
   fonts.
 - **10–19** — LazyVim, gsettings, Docker, vpn-slice, wayfreeze, Satty, yazi,
-  swaylock-effects (source build).
+  swaylock-effects (source build), Claude Code (native installer, self-updating).
 - **20–29** — config files into `~/.config/`, nvim settings, color schemes,
   desktop icons, zsh, calendar sync (vdirsyncer + khal + systemd timers).
 - **30+** — user scripts into `~/scripts/`.
