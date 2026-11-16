@@ -7,9 +7,11 @@ source "$SCRIPT_DIR/lib/utils.sh"
 
 # Install CETIN corporate CA certificates into the system trust store.
 # Runs before 01_repos so TLS-inspecting corporate networks don't break dnf.
-# Only the CETIN root + sub CA belong in anchors/ — the bundled
-# complete-with-defaults.crt is the full system bundle and is intentionally
-# not shipped here.
+# Only the CETIN CAs belong in anchors/ (root + sub CA 23, and the old root
+# "CA CETIN" valid till 2035 that makalu's README also imports into JDKs) —
+# the bundled complete-with-defaults.crt is the full system bundle and is
+# intentionally not shipped here. scripts/jdk-cetin-certs.sh copies whatever
+# lands in anchors/ into the mise JDKs (step 19d + mise postinstall hook).
 
 CERT_SRC="$SCRIPT_DIR/files/certs"
 ANCHOR_DIR="/etc/pki/ca-trust/source/anchors"

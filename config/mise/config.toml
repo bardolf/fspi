@@ -1,3 +1,7 @@
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
 
+[hooks]
+# Nová JDK (Temurin má vlastní cacerts) dostanou CETIN CA ze systémových kotev.
+# Skript sám skončí, když se neinstalovala Java. Viz scripts/jdk-cetin-certs.sh.
+postinstall = "$HOME/scripts/jdk-cetin-certs.sh"

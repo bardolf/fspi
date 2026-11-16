@@ -56,7 +56,10 @@ touches.
   aliases, sysrq, swap off, earlyoom, sshd, firewall ports, timezone, VS Code,
   fonts.
 - **10–19** — LazyVim, gsettings, Docker, vpn-slice, wayfreeze, Satty, yazi,
-  swaylock-effects (source build), Claude Code (native installer, self-updating).
+  swaylock-effects (source build), Claude Code (native installer, self-updating),
+  CETIN CA in mise JDKs (`scripts/jdk-cetin-certs.sh`; new JDKs get it from a
+  mise `postinstall` hook in `config/mise/config.toml`, since Temurin ships its
+  own `cacerts` and ignores the system trust store).
 - **20–29** — config files into `~/.config/`, nvim settings, color schemes,
   desktop icons, zsh, calendar sync (vdirsyncer + khal + systemd timers).
 - **30+** — user scripts into `~/scripts/`.
