@@ -26,6 +26,8 @@ reconcile drift.
 fspi/
 ├── install.sh          Entry point — runs every steps/*.sh in order
 ├── diff-check.sh       Compare repo files against deployed system files
+├── secrets.list        Inventory of passwords/tokens/keys kept outside the repo
+├── secrets.sh          status / pull <host> / scan for the entries in secrets.list
 ├── lib/
 │   ├── logging.sh      log_info, log_warn, log_error, log_debug
 │   └── utils.sh        ensure_package, ensure_symlink, ensure_file_copy, …
@@ -68,6 +70,28 @@ DEBUG=1 ./diff-check.sh   # also list files that already match
 
 Useful before committing local tweaks back upstream, or after running
 `install.sh` to confirm the deployment matches the tree.
+
+## Secrets (not in the repo)
+
+```bash
+./secrets.sh status        # which secrets.list entries this machine has / lacks
+./secrets.sh pull desktop  # copy the missing ones from another machine over ssh
+./secrets.sh scan          # secret-looking files secrets.list does not mention yet
+```
+
+`secrets.list` is the inventory of passwords, tokens and keys that `install.sh`
+cannot deploy — path and purpose only, never the content. `copy` entries move
+between machines: `pull` never overwrites, a local file that differs is only
+reported (placeholder templates seeded by the steps, e.g. step 25's
+`PASTE_…_HERE`, do get replaced). `local` entries belong to one machine (ssh
+key, WireGuard peer, Claude login, Strava's rotating token) and say how to
+recreate them; `ignore` silences scan noise. The GPG key that
+`~/projects/passwords` (git-secret) needs is imported, not copied, so the local
+keybox and trustdb stay intact.
+
+Keep the list alive: whenever a step, optional component, script or project
+starts reading a secret from outside the repo, add a line. `scan` catches what
+was forgotten.
 
 ## Adding a step
 

@@ -89,6 +89,16 @@ this — reach for them first. `install.sh` calls every step on every run, so
 `true` flag that silently skips when the optional component was never
 installed.
 
+### Secrets inventory
+
+`secrets.list` (driven by `secrets.sh status|pull <host>|scan`) lists every
+password/token/key the setup depends on that is **not** in the repo — paths
+only, never content. When a change makes anything read a secret from outside
+the repo (a step seeding a credentials template, an optional component, a
+script reading a token file, a project's gitignored `.env`), add a `copy` or
+`local` line to `secrets.list` in the same change. Never print secret file
+contents while working on this — compare by checksum, list by path.
+
 ## Repos and external dependencies
 
 `steps/01_repos.sh` enables RPM Fusion (free + nonfree), Flathub, Vivaldi,
