@@ -73,6 +73,7 @@ button:hover {
 #custom-media,
 #custom-gitlab-mrs,
 #custom-audio-status,
+#custom-jbl-anc,
 #custom-power-profile,
 #custom-cpu-info,
 #custom-memory-info,
@@ -100,6 +101,29 @@ button:hover {
 #custom-cpu-info {
     font-size: 1rem;
     min-width: 8rem;
+}
+
+/* JBL noise control — barva podle režimu, Off a nespojeno ztlumeně */
+#custom-jbl-anc {
+    font-size: 1rem;
+}
+
+#custom-jbl-anc.anc {
+    color: #a6e3a1;
+}
+
+#custom-jbl-anc.ambient {
+    color: #f9e2af;
+}
+
+#custom-jbl-anc.talkthru {
+    color: #89b4fa;
+}
+
+#custom-jbl-anc.off,
+#custom-jbl-anc.connecting,
+#custom-jbl-anc.unavailable {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 #custom-memory-info {
@@ -280,6 +304,7 @@ button:hover {
 
 /* Hover effect for interactive modules */
 #custom-audio-status:hover,
+#custom-jbl-anc:hover,
 #custom-gitlab-mrs:hover,
 #network:hover,
 #battery:hover {

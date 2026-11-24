@@ -16,6 +16,7 @@
     "modules-right": [
         "custom/gitlab-mrs",
         "custom/audio-status",
+        "custom/jbl-anc",
         "network",
         "power-profiles-daemon",
         "custom/cpu-info",
@@ -214,6 +215,18 @@
         "on-click": "pavucontrol",
         "on-scroll-up": "~/scripts/waybar/audio-status.sh up",
         "on-scroll-down": "~/scripts/waybar/audio-status.sh down",
+    },
+    // ANC / Ambient Aware / TalkThru sluchátek JBL (Tour One M3 a další
+    // "Protocol4" modely). Skript běží trvale, drží BLE ovládací kanál a vypíše
+    // řádek při každé změně, i z tlačítka na sluchátkách. Bez připojených
+    // sluchátek vypisuje prázdný text, takže se modul skryje.
+    "custom/jbl-anc": {
+        "exec": "~/scripts/waybar/jbl-anc.py watch",
+        "return-type": "json",
+        "restart-interval": 10,
+        "on-click": "~/scripts/waybar/jbl-anc.py cycle",
+        "on-click-right": "~/scripts/waybar/jbl-anc.py talkthru",
+        "on-click-middle": "~/scripts/waybar/jbl-anc.py off"
     },
     "custom/cpu-info": {
         "exec": "~/scripts/waybar/cpu-info.sh",

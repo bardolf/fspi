@@ -65,6 +65,10 @@ PACKAGES=(
   zoxide
   vdirsyncer
   python3-aiohttp-oauthlib
+  # D-Bus + GLib bindingy pro scripts/waybar/jbl-anc.py (BlueZ GATT). Na Fedoře
+  # je zatím tahají jiné balíčky (firewalld, dnf-plugins), ale jen náhodou.
+  python3-dbus
+  python3-gobject
   khal
   rclone
   ghostty
