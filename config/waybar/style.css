@@ -103,9 +103,11 @@ button:hover {
     min-width: 8rem;
 }
 
-/* JBL noise control — barva podle režimu, Off a nespojeno ztlumeně */
+/* JBL noise control — barva podle režimu, Off a nespojeno ztlumeně; min-width,
+   aby přepnutí ANC ↔ TT ↔ "…" neposouvalo sousední moduly */
 #custom-jbl-anc {
     font-size: 1rem;
+    min-width: 3.5rem;
 }
 
 #custom-jbl-anc.anc {
