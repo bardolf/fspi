@@ -56,7 +56,9 @@ touches.
   aliases, sysrq, swap off, earlyoom, sshd, firewall ports, timezone, VS Code,
   fonts.
 - **10–19** — LazyVim, gsettings, Docker, vpn-slice, wayfreeze, Satty, yazi,
-  swaylock-effects (source build), Claude Code (native installer, self-updating),
+  swaylock-effects (source build), Claude Code (native installer, self-updating; wires
+  `scripts/claude-status-line-command.sh` into `~/.claude/settings.json` →
+  `statusLine`),
   IntelliJ IDEA Ultimate (JetBrains tar.gz into `~/opt/idea/idea`, installed
   once, then updated by the IDE itself; licence = JetBrains Account login),
   CETIN CA in mise JDKs (`scripts/jdk-cetin-certs.sh`; new JDKs get it from a

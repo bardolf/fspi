@@ -263,6 +263,31 @@ for cert in "$CERTS_SRC"/*.crt; do
 done
 
 # =========================================================
+# Section 7b: Claude Code status line (mirrors steps/19c_claude_code.sh)
+# One key inside ~/.claude/settings.json, not a whole file: Claude writes its
+# own settings there, so only .statusLine.command is compared.
+# =========================================================
+
+print_section "Claude Code status line (settings.json key)"
+
+CLAUDE_SETTINGS="$HOME/.claude/settings.json"
+# shellcheck disable=SC2088 # literal string as stored in settings.json
+CLAUDE_STATUS_CMD="~/scripts/claude-status-line-command.sh"
+
+((total++)) || true
+if [[ ! -f "$CLAUDE_SETTINGS" ]]; then
+  ((missing_count++)) || true
+  echo -e "  ${COLOR_ERROR}[MISSING]${COLOR_RESET} $CLAUDE_SETTINGS"
+  echo "            # managed key — re-run: bash \"$SCRIPT_DIR/steps/19c_claude_code.sh\""
+elif [[ "$(jq -r '.statusLine.command // empty' "$CLAUDE_SETTINGS" 2>/dev/null)" == "$CLAUDE_STATUS_CMD" ]]; then
+  log_debug "[OK]      $CLAUDE_SETTINGS (.statusLine)"
+else
+  ((diff_count++)) || true
+  echo -e "  ${COLOR_WARN}[DIFF]${COLOR_RESET}    $CLAUDE_SETTINGS (.statusLine)"
+  echo "            # managed key — re-run: bash \"$SCRIPT_DIR/steps/19c_claude_code.sh\""
+fi
+
+# =========================================================
 # Section 8: Optional - Dropbox sync (mirrors optional/dropbox/setup.sh)
 # Skipped silently if the optional component was never installed.
 # =========================================================
