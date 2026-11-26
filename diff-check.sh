@@ -383,6 +383,17 @@ else
 fi
 
 # =========================================================
+# Section 13: Optional - VMware (mirrors optional/vmware/setup.sh)
+# Only the KVM modprobe option is a tracked file; the rest is the VMware
+# bundle and kernel modules. Skipped silently if never installed.
+# =========================================================
+
+print_section "Optional: VMware (KVM modprobe option)"
+
+check_file "$SCRIPT_DIR/optional/vmware/files/kvm-virt-on-demand.conf" \
+  "/etc/modprobe.d/kvm-virt-on-demand.conf" true
+
+# =========================================================
 # Summary
 # =========================================================
 

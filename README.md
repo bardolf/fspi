@@ -42,7 +42,9 @@ fspi/
 ├── chess-relay-setup.md  Stockfish + Lc0 exposed over TCP for remote play
 ├── fingerprint-swaylock-setup.md   PAM setup for fingerprint unlock on swaylock
 ├── audio-mic-setup.md  Webcam mic + BT earbuds; the dead-HFP-mic traps
-└── luks-tang-setup.md  Network-bound LUKS unlock (clevis + tang on the NAS)
+├── luks-tang-setup.md  Network-bound LUKS unlock (clevis + tang on the NAS)
+├── vmware-win11-setup.md   Windows 11 + Fusion in VMware Workstation (optional/vmware)
+└── fusion-wine-attempt.md  Autodesk Fusion under Wine on Sway — tried, unusable; the traps
 ```
 
 Numbering convention for `steps/`: `00–09` base system, `10–19` tools built or
@@ -182,6 +184,13 @@ helpers). Conventions and code style are documented in `AGENTS.md`.
   Gramps Web dump to the NAS (`server:/media/disk3/zaloha-genealogie`) every
   3 days via a systemd user timer — only on the machine where
   `~/projects/genealogy-*` and the Gramps Web containers live.
+  `optional/vmware/` installs VMware Workstation Pro from the bundle you
+  download into `~/Downloads` (Broadcom login), builds `vmmon`/`vmnet` (re-run
+  after a kernel update) and stops KVM from holding AMD-V/VT-x
+  (`enable_virt_at_load=0`). `optional/vmware/new-win11-vm.sh` then creates a
+  Windows 11 VM with 3D acceleration that installs itself unattended, VMware
+  Tools and Autodesk Fusion included. Why VMware and not Wine/KVM, and the
+  traps (btrfs NOCOW, `.vmem` without swap, host RAM): `vmware-win11-setup.md`.
 - **RustDesk**: `steps/19b_rustdesk.sh` installs the upstream RPM but keeps the
   machine outgoing-only — it disables `rustdesk.service` from boot and sets
   RustDesk's own `stop-service` flag, so just opening the GUI does not register
